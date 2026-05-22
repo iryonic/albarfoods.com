@@ -169,7 +169,7 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
                     <div class="dropdown-divider"></div>
                     <ul class="dropdown-menu-list">
                         <li>
-                            <a href="#" class="dropdown-menu-item">
+                            <a href="profile.php" class="dropdown-menu-item">
                                 <span class="item-icon">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                 </span>
@@ -177,7 +177,7 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="dropdown-menu-item">
+                            <a href="orders.php" class="dropdown-menu-item">
                                 <span class="item-icon">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                                 </span>
@@ -185,7 +185,7 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="dropdown-menu-item">
+                            <a href="wishlist.php" class="dropdown-menu-item">
                                 <span class="item-icon">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                                 </span>
@@ -325,6 +325,9 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
                 <li><a href="about.php"><span class="drawer-icon">🌿</span> About Us</a></li>
                 <li><a href="contact.php"><span class="drawer-icon">📞</span> Contact Us</a></li>
                 <li><a href="index.php#offers-section" class="nav-highlight"><span class="drawer-icon">🎁</span> Special Offers</a></li>
+                <li class="drawer-user-only" style="display: none;"><a href="profile.php"><span class="drawer-icon">👤</span> My Profile</a></li>
+                <li class="drawer-user-only" style="display: none;"><a href="orders.php"><span class="drawer-icon">📦</span> My Orders</a></li>
+                <li class="drawer-user-only" style="display: none;"><a href="wishlist.php"><span class="drawer-icon">❤️</span> Wishlist</a></li>
             </ul>
             
             <div class="drawer-contact-info">
@@ -486,6 +489,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (drawerActions) {
                     drawerActions.innerHTML = `<button onclick="handleHeaderSignOut(event)" class="drawer-user-btn btn-signin" style="width: 100%; border: 1px solid var(--color-border); background: none; color: var(--color-blue-dark); text-align: center; cursor: pointer;">Sign Out</button>`;
                 }
+
+                // Update Mobile bottom nav link target if logged in
+                const mobileAccountLink = document.getElementById('mobile-account-link');
+                if (mobileAccountLink) {
+                    mobileAccountLink.setAttribute('href', 'profile.php');
+                    const span = mobileAccountLink.querySelector('span');
+                    if (span) span.innerText = 'Profile';
+                }
+
+                // Show authenticated user-only links in mobile drawer
+                document.querySelectorAll('.drawer-user-only').forEach(el => {
+                    el.style.display = 'block';
+                });
             }
         } catch (e) {
             console.error("Failed to parse user details from local storage", e);
@@ -500,6 +516,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const href = link.getAttribute('href');
         if (href === currentPath || (currentPath === '' && href === 'index.php')) {
             link.classList.add('active');
+        } else if (href === 'signin.php' || href === 'profile.php') {
+            if (['signin.php', 'signup.php', 'profile.php', 'orders.php', 'wishlist.php'].includes(currentPath)) {
+                link.classList.add('active');
+            }
         }
     });
 });

@@ -736,6 +736,317 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* -----------------------------------------
+           NEW ENHANCEMENTS: Visual Roadmap, Ratings, Actions & Cancel Modal
+           ----------------------------------------- */
+        
+        /* Status Cancelled style for badge */
+        .status-cancelled {
+            background-color: #ffebee !important;
+            color: #c62828 !important;
+        }
+
+        /* Visual Roadmap Card */
+        .roadmap-container {
+            background: #fff;
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-lg);
+            position: relative;
+        }
+
+        .roadmap-graphic-wrap {
+            position: relative;
+            width: 100%;
+            overflow-x: auto;
+            padding: 15px 0 35px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .roadmap-svg {
+            min-width: 780px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Roadmap Nodes styling */
+        .roadmap-node circle {
+            fill: #ffffff;
+            stroke: #e1e8e4;
+            stroke-width: 4px;
+            transition: all 0.4s ease;
+        }
+
+        .roadmap-node text {
+            transition: all 0.4s ease;
+        }
+
+        /* Node States */
+        .roadmap-node.completed circle {
+            fill: #018849 !important;
+            stroke: #018849 !important;
+        }
+
+        .roadmap-node.completed text.node-icon {
+            fill: #ffffff !important;
+        }
+
+        .roadmap-node.active circle {
+            stroke: #FF5500 !important;
+            stroke-width: 5px !important;
+            animation: nodePulse 2s infinite;
+        }
+
+        @keyframes nodePulse {
+            0% { stroke-width: 4px; }
+            50% { stroke-width: 8px; }
+            100% { stroke-width: 4px; }
+        }
+
+        .roadmap-node.active text.node-icon {
+            fill: #FF5500 !important;
+            font-weight: bold;
+        }
+
+        .roadmap-node.cancelled circle {
+            fill: #eceff1 !important;
+            stroke: #b0bec5 !important;
+            stroke-width: 4px !important;
+        }
+
+        .roadmap-node.cancelled text {
+            fill: #b0bec5 !important;
+        }
+
+        /* Node Labels */
+        .roadmap-node-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            fill: var(--color-text-primary);
+            text-anchor: middle;
+            font-family: var(--font-secondary);
+        }
+
+        .roadmap-node-sublabel {
+            font-size: 0.62rem;
+            fill: var(--color-text-muted);
+            text-anchor: middle;
+        }
+
+        .roadmap-node.active .roadmap-node-label {
+            fill: #FF5500;
+            font-weight: 800;
+        }
+
+        .roadmap-node.completed .roadmap-node-label {
+            fill: #018849;
+        }
+
+        /* Action Buttons */
+        .btn-track-action {
+            padding: 10px 20px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-secondary);
+        }
+
+        .btn-track-secondary {
+            border: 1.5px solid var(--color-border);
+            background-color: #fff;
+            color: var(--color-blue-dark);
+        }
+
+        .btn-track-secondary:hover {
+            background-color: var(--color-cream);
+            transform: translateY(-1px);
+        }
+
+        .btn-track-danger {
+            border: none;
+            background-color: #c62828;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(198, 40, 40, 0.15);
+        }
+
+        .btn-track-danger:hover {
+            background-color: #b71c1c;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(198, 40, 40, 0.25);
+        }
+
+        .btn-track-danger:active, .btn-track-secondary:active {
+            transform: translateY(1px);
+        }
+
+        /* Rating Panel */
+        .rating-stars-interactive {
+            display: flex;
+            gap: 6px;
+        }
+
+        .rating-stars-interactive .star-item {
+            font-size: 1.8rem;
+            color: var(--color-border);
+            cursor: pointer;
+            transition: color 0.15s, transform 0.15s;
+        }
+
+        .rating-stars-interactive .star-item:hover,
+        .rating-stars-interactive .star-item.selected {
+            color: #FFB300;
+            transform: scale(1.15);
+        }
+
+        /* Cancellation Modal Overlay */
+        .cancel-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(11, 25, 44, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-md);
+        }
+
+        .cancel-modal-card {
+            background-color: #fff;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--color-border);
+            overflow: hidden;
+            animation: modalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes modalScaleUp {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .cancel-modal-header {
+            padding: var(--spacing-lg) var(--spacing-lg) 10px var(--spacing-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cancel-modal-title {
+            font-family: var(--font-secondary);
+            font-size: 1.25rem;
+            color: var(--color-blue-dark);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .cancel-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            line-height: 1;
+        }
+
+        .cancel-modal-body {
+            padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+        }
+
+        .cancel-modal-text {
+            font-size: 0.92rem;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .cancel-reason-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid var(--color-border);
+            border-radius: var(--radius-xs);
+            font-size: 0.9rem;
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-md);
+            resize: none;
+        }
+
+        .cancel-reason-input:focus {
+            border-color: var(--color-blue-medium);
+            outline: none;
+        }
+
+        .cancel-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background-color: var(--color-cream-light);
+            border-top: 1px solid var(--color-border-light);
+        }
+
+        .btn-modal-cancel {
+            padding: 9px 18px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            border: 1.5px solid var(--color-border);
+            background-color: #fff;
+            color: var(--color-text-primary);
+        }
+
+        .btn-modal-confirm {
+            padding: 9px 18px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            border: none;
+            background-color: #c62828;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(198, 40, 40, 0.2);
+        }
+        
+        .verified-stamp {
+            border: 2px solid #018849;
+            color: #018849;
+            padding: 5px 10px;
+            font-weight: bold;
+            border-radius: 5px;
+            transform: rotate(-5deg);
+            display: inline-block;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        #invoice-print-frame {
+            display: none;
+        }
+            
+        @media (max-width: 768px) {
+            .roadmap-graphic-wrap {
+                justify-content: flex-start;
+            }
+        }
+        
+        /* ----------------------------------------- */
+            }
+        }
     </style>
 </head>
 <body>
@@ -875,6 +1186,101 @@
                         </div>
                     </div>
 
+                    <!-- Rating Card (shown only when Delivered) -->
+                    <div class="track-rating-card" id="track-rating-card" style="display: none; background-color: var(--color-cream-light); border: 1.5px dashed var(--color-blue-medium); border-radius: 16px; padding: var(--spacing-md); margin-top: var(--spacing-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <h4 style="margin: 0 0 4px 0; color: var(--color-blue-dark); font-family: var(--font-secondary); font-size: 1.05rem;">🌟 Rate Freshness & Delivery</h4>
+                            <p style="margin: 0; font-size: 0.82rem; color: var(--color-text-secondary);">Your feedback helps us sustain traditional organic agriculture.</p>
+                        </div>
+                        <div class="rating-stars-interactive" id="track-rating-stars">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Actions Bar (Cancel and Invoice) -->
+                    <div class="track-actions-bar" id="track-actions-bar" style="display: flex; gap: 12px; margin-top: var(--spacing-md); border-top: 1px solid var(--color-border-light); padding-top: var(--spacing-md); justify-content: flex-end; flex-wrap: wrap;">
+                        <button class="btn-track-action btn-track-danger" id="btn-cancel-order" style="display: none;" onclick="triggerCancelModal()">❌ Cancel Order</button>
+                        <button class="btn-track-action btn-track-secondary" id="btn-print-invoice" onclick="printInvoice()">📄 Download Tax Invoice</button>
+                    </div>
+
+                </div>
+
+                <!-- Visual Wavy Roadmap journey -->
+                <div class="roadmap-container" id="visual-roadmap-card">
+                    <h3 class="route-title" style="margin-bottom: 0;">
+                        <span>🗺️</span> Orchard-to-Doorstep Journey Map
+                    </h3>
+                    <div class="roadmap-graphic-wrap">
+                        <svg viewBox="0 0 800 160" width="100%" height="auto" class="roadmap-svg" style="display: block;">
+                            <defs>
+                                <linearGradient id="road-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#e1e8e4" />
+                                    <stop offset="100%" stop-color="#e1e8e4" />
+                                </linearGradient>
+                                <linearGradient id="road-active-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#018849" />
+                                    <stop offset="100%" stop-color="#FF5500" />
+                                </linearGradient>
+                                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="4" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                </filter>
+                            </defs>
+
+                            <!-- Background wavy road line -->
+                            <path id="road-bg-path" d="M 60 80 C 200 20, 250 140, 400 80 C 550 20, 600 140, 740 80" fill="none" stroke="#e1e8e4" stroke-width="8" stroke-linecap="round" />
+                            
+                            <!-- Active/Completed road line -->
+                            <path id="road-active-path" d="M 60 80 C 200 20, 250 140, 400 80 C 550 20, 600 140, 740 80" fill="none" stroke="url(#road-active-grad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="800" stroke-dashoffset="800" style="transition: stroke-dashoffset 1s ease-in-out;" />
+
+                            <!-- Path Landmarks/Nodes -->
+                            <!-- Node 1: Srinagar Orchard -->
+                            <g class="roadmap-node" id="roadmap-node-1" transform="translate(60, 80)">
+                                <circle r="22" />
+                                <text y="5" font-size="16" text-anchor="middle" class="node-icon">🌳</text>
+                                <text y="38" class="roadmap-node-label">Srinagar Orchard</text>
+                                <text y="50" class="roadmap-node-sublabel">Valley Sourcing</text>
+                            </g>
+
+                            <!-- Node 2: Srinagar Central Hub -->
+                            <g class="roadmap-node" id="roadmap-node-2" transform="translate(210, 56)">
+                                <circle r="22" />
+                                <text y="5" font-size="16" text-anchor="middle" class="node-icon">⚙️</text>
+                                <text y="38" class="roadmap-node-label">Processing Hub</text>
+                                <text y="50" class="roadmap-node-sublabel">Hygiene Seal</text>
+                            </g>
+
+                            <!-- Node 3: Highway Transit -->
+                            <g class="roadmap-node" id="roadmap-node-3" transform="translate(390, 84)">
+                                <circle r="22" />
+                                <text y="5" font-size="16" text-anchor="middle" class="node-icon">🚚</text>
+                                <text y="38" class="roadmap-node-label">Pampore Bypass</text>
+                                <text y="50" class="roadmap-node-sublabel">Valley Express</text>
+                            </g>
+
+                            <!-- Node 4: Regional Gateway -->
+                            <g class="roadmap-node" id="roadmap-node-4" transform="translate(570, 56)">
+                                <circle r="22" />
+                                <text y="5" font-size="16" text-anchor="middle" class="node-icon">🏍️</text>
+                                <text y="38" class="roadmap-node-label">Local Hub</text>
+                                <text y="50" class="roadmap-node-sublabel">Sorting Gate</text>
+                            </g>
+
+                            <!-- Node 5: Destination -->
+                            <g class="roadmap-node" id="roadmap-node-5" transform="translate(740, 80)">
+                                <circle r="22" />
+                                <text y="5" font-size="16" text-anchor="middle" class="node-icon">🏠</text>
+                                <text y="38" class="roadmap-node-label">Your Home</text>
+                                <text y="50" class="roadmap-node-sublabel">Doorstep Delivery</text>
+                            </g>
+
+                            <!-- Animated Delivery Vehicle (Truck/Scooter) -->
+                            <g id="roadmap-vehicle" transform="translate(-50, -50)" style="display: none; transition: transform 1s ease-in-out;">
+                                <circle r="15" fill="#FF5500" filter="url(#glow)" />
+                                <text y="5" font-size="14" text-anchor="middle" id="vehicle-emoji" fill="#fff">🚚</text>
+                            </g>
+                        </svg>
+                    </div>
                 </div>
 
                 <!-- 2. Detailed route logs and map representation -->
@@ -953,6 +1359,28 @@
     <?php include 'includes/sidebar-cart.php'; ?>
     <?php include 'includes/quick-view.php'; ?>
     <div class="toast-container" id="toast-container"></div>
+
+    <!-- Cancellation Dialog Modal -->
+    <div class="cancel-modal-overlay" id="cancel-order-modal">
+        <div class="cancel-modal-card">
+            <div class="cancel-modal-header">
+                <h3 class="cancel-modal-title">Cancel Order</h3>
+                <button class="cancel-modal-close" onclick="closeCancelModal()">&times;</button>
+            </div>
+            <div class="cancel-modal-body">
+                <p class="cancel-modal-text">We are sorry to hear you want to cancel your order. Please let us know the reason to help us improve our service:</p>
+                <textarea id="cancel-reason" class="cancel-reason-input" rows="3" placeholder="e.g. Changed my mind, found another product, incorrect details..."></textarea>
+                <p class="cancel-modal-text" style="color: #c62828; font-weight: bold; font-size: 0.85rem;">⚠️ Warning: This action is permanent and cannot be undone.</p>
+            </div>
+            <div class="cancel-modal-footer">
+                <button class="btn-modal-cancel" onclick="closeCancelModal()">Keep Order</button>
+                <button class="btn-modal-confirm" onclick="handleOrderCancellation()">Confirm Cancellation</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Printing Iframe for Invoice -->
+    <iframe id="invoice-print-frame"></iframe>
 
     <!-- Footer Include -->
     <?php include 'includes/footer.php'; ?>
@@ -1038,9 +1466,10 @@
             }
         };
 
+        let currentTrackedOrderId = null;
+
         // Deterministic generator based on input string hash
         function generateCustomTrackOrder(orderId, contact) {
-            // Get simple hash code
             let hash = 0;
             const fullStr = orderId + contact;
             for (let i = 0; i < fullStr.length; i++) {
@@ -1048,16 +1477,13 @@
             }
             hash = Math.abs(hash);
 
-            // Determine status
             const statuses = ['Placed', 'Processed', 'Shipped', 'Out for Delivery'];
             const statusIdx = hash % 4;
             const status = statuses[statusIdx];
 
-            // Setup date references relative to current local time (May 22, 2026)
             const orderDateStr = 'May 21, 2026';
             const estDateStr = 'May 24, 2026';
 
-            // Setup items list based on hash
             const possibleItems = [
                 { image: 'assets/img/products/product1.png', title: 'Premium Mamra Almonds', weight: '500g', price: 1450.00 },
                 { image: 'assets/img/products/product2.png', title: 'Kashmiri Mogra Saffron', weight: '1g', price: 350.00 },
@@ -1078,19 +1504,15 @@
             const delivery = subtotal >= 2000 ? 0.00 : 60.00;
             const grandTotal = subtotal + delivery;
 
-            // Generate delivery address
             const cities = ['Srinagar', 'Anantnag', 'Baramulla', 'Sopore', 'Pulwama', 'Budgam'];
             const chosenCity = cities[hash % cities.length];
             const address = `Main Bazaar Ward ${hash % 10 + 1}, ${chosenCity}, Jammu & Kashmir - ${190001 + (hash % 200)}`;
 
-            // Extract contact
             const displayPhone = contact.includes('@') ? '94190XXXXX' : contact;
             const displayName = contact.includes('@') ? contact.split('@')[0] : 'Al Barr Patron';
 
-            // Setup tracking route checkpoints
             const route = [];
             const r_date = 'May 21, 2026';
-            const r_time_base = '11:00 AM';
 
             if (status === 'Placed') {
                 route.push({
@@ -1234,30 +1656,46 @@
                 btn.innerHTML = `<span>🔍</span> Track Order`;
                 btn.disabled = false;
 
-                // 1. Look up Order details
                 let order = null;
-                
-                // Format input to uppercase for consistency
                 const lookupId = orderId.toUpperCase();
                 
-                if (PRE_BAKED_ORDERS[lookupId]) {
-                    order = PRE_BAKED_ORDERS[lookupId];
-                } else if (/^ALB-\d+-KASH$/i.test(lookupId) || lookupId.startsWith('ALB-')) {
-                    // Generate logical dynamic tracking if formatted correctly
-                    order = generateCustomTrackOrder(lookupId, contact);
+                // Fetch local storage orders
+                let localOrders = [];
+                const savedOrders = localStorage.getItem('al_barr_orders');
+                if (savedOrders) {
+                    try {
+                        localOrders = JSON.parse(savedOrders);
+                    } catch(e) {
+                        console.error("Failed to parse orders list from localStorage", e);
+                    }
+                }
+
+                // Check in local storage first
+                let matchedOrder = localOrders.find(o => o.orderId.toUpperCase() === lookupId);
+                if (matchedOrder) {
+                    order = matchedOrder;
+                } else if (PRE_BAKED_ORDERS[lookupId]) {
+                    order = JSON.parse(JSON.stringify(PRE_BAKED_ORDERS[lookupId]));
+                    // Save to local storage for future updates (rating, cancellation)
+                    localOrders.push(order);
+                    localStorage.setItem('al_barr_orders', JSON.stringify(localOrders));
                 } else {
-                    // Fallback to custom generator for any lookup string
                     order = generateCustomTrackOrder(lookupId, contact);
+                    // Save to local storage for future updates (rating, cancellation)
+                    localOrders.push(order);
+                    localStorage.setItem('al_barr_orders', JSON.stringify(localOrders));
                 }
 
                 if (!order) {
                     if (typeof AlBarrCart !== 'undefined' && AlBarrCart.showToast) {
-                        AlBarrCart.showToast('Order not found. Please verify Order ID format.', 'error');
+                        AlBarrCart.showToast('Order not found. Please check Order ID format.', 'error');
                     }
                     return;
                 }
 
-                // 2. Hide Initial Screen & Show results
+                currentTrackedOrderId = order.orderId;
+
+                // Hide Initial Screen & Show results
                 document.getElementById('track-initial-view').style.display = 'none';
                 const resultsWrap = document.getElementById('track-results-view');
                 resultsWrap.style.display = 'flex';
@@ -1278,45 +1716,73 @@
                 
                 let stepperPercent = 0;
                 let activeNodeIndex = 1;
+                const isCancelled = (order.status === 'Cancelled');
 
-                if (order.status === 'Placed') {
-                    badge.classList.add('status-placed');
-                    badge.innerHTML = `<span>📥</span> Placed`;
-                    stepperPercent = 0;
-                    activeNodeIndex = 1;
-                } else if (order.status === 'Processed') {
-                    badge.classList.add('status-processed');
-                    badge.innerHTML = `<span>⚙️</span> Processed`;
-                    stepperPercent = 25;
-                    activeNodeIndex = 2;
-                } else if (order.status === 'Shipped') {
-                    badge.classList.add('status-shipped');
-                    badge.innerHTML = `<span>🚚</span> Shipped`;
-                    stepperPercent = 50;
-                    activeNodeIndex = 3;
-                } else if (order.status === 'Out for Delivery') {
-                    badge.classList.add('status-out');
-                    badge.innerHTML = `<span>🏍️</span> Out for Delivery`;
-                    stepperPercent = 75;
-                    activeNodeIndex = 4;
-                } else if (order.status === 'Delivered') {
-                    badge.classList.add('status-delivered');
-                    badge.innerHTML = `<span>🎁</span> Delivered`;
-                    stepperPercent = 100;
-                    activeNodeIndex = 5;
+                if (isCancelled) {
+                    badge.className = 'summary-status-badge status-cancelled';
+                    badge.innerHTML = `<span>❌</span> Cancelled`;
+                    
+                    // Determine cancellation point by counting valid checkpoints
+                    const validRoute = (order.route || []).filter(c => 
+                        !c.location.includes('Cancelled') && 
+                        !c.desc.includes('cancelled') &&
+                        !c.desc.includes('Cancelled')
+                    );
+                    activeNodeIndex = Math.max(1, Math.min(validRoute.length, 5));
+                    stepperPercent = (activeNodeIndex - 1) * 25;
+                } else {
+                    if (order.status === 'Placed') {
+                        badge.classList.add('status-placed');
+                        badge.innerHTML = `<span>📥</span> Placed`;
+                        stepperPercent = 0;
+                        activeNodeIndex = 1;
+                    } else if (order.status === 'Processed') {
+                        badge.classList.add('status-processed');
+                        badge.innerHTML = `<span>⚙️</span> Processed`;
+                        stepperPercent = 25;
+                        activeNodeIndex = 2;
+                    } else if (order.status === 'Shipped') {
+                        badge.classList.add('status-shipped');
+                        badge.innerHTML = `<span>🚚</span> Shipped`;
+                        stepperPercent = 50;
+                        activeNodeIndex = 3;
+                    } else if (order.status === 'Out for Delivery') {
+                        badge.classList.add('status-out');
+                        badge.innerHTML = `<span>🏍️</span> Out for Delivery`;
+                        stepperPercent = 75;
+                        activeNodeIndex = 4;
+                    } else if (order.status === 'Delivered') {
+                        badge.classList.add('status-delivered');
+                        badge.innerHTML = `<span>🎁</span> Delivered`;
+                        stepperPercent = 100;
+                        activeNodeIndex = 5;
+                    }
                 }
 
                 // Update Stepper fill width
-                document.getElementById('stepper-fill').style.width = `${stepperPercent}%`;
+                const fillBar = document.getElementById('stepper-fill');
+                fillBar.style.width = `${stepperPercent}%`;
+                if (isCancelled) {
+                    fillBar.style.background = '#c62828';
+                } else {
+                    fillBar.style.background = 'var(--color-gold-gradient)';
+                }
 
                 // Update Stepper Nodes styles
                 for (let i = 1; i <= 5; i++) {
                     const node = document.getElementById(`step-node-${i}`);
                     node.classList.remove('completed', 'active');
+                    node.style.opacity = '1';
+                    node.style.color = '';
                     
                     const circle = node.querySelector('.stepper-circle');
                     const dateLbl = document.getElementById(`step-date-${i}`);
                     
+                    // Reset styling modifications
+                    circle.style.borderColor = '';
+                    circle.style.backgroundColor = '';
+                    circle.style.color = '';
+
                     // Reset icon contents based on step number
                     if (i === 1) circle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                     if (i === 2) circle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
@@ -1324,26 +1790,38 @@
                     if (i === 4) circle.innerHTML = '🏍️';
                     if (i === 5) circle.innerHTML = '🎁';
 
-                    if (i < activeNodeIndex) {
-                        node.classList.add('completed');
-                        // Ensure checkmark SVG is displayed inside completed circles
-                        circle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-                    } else if (i === activeNodeIndex) {
-                        if (order.status === 'Delivered') {
+                    if (isCancelled) {
+                        if (i < activeNodeIndex) {
                             node.classList.add('completed');
                             circle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-                        } else {
+                        } else if (i === activeNodeIndex) {
                             node.classList.add('active');
+                            node.style.color = '#c62828';
+                            circle.innerHTML = '❌';
+                            circle.style.borderColor = '#c62828';
+                            circle.style.backgroundColor = '#ffebee';
+                            circle.style.color = '#c62828';
+                        } else {
+                            node.style.opacity = '0.5';
+                        }
+                    } else {
+                        if (i < activeNodeIndex) {
+                            node.classList.add('completed');
+                            circle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                        } else if (i === activeNodeIndex) {
+                            if (order.status === 'Delivered') {
+                                node.classList.add('completed');
+                                circle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                            } else {
+                                node.classList.add('active');
+                            }
                         }
                     }
 
                     // Setup step dates
                     if (i === 1) dateLbl.innerText = order.date.split(',')[0];
                     else if (i === 2 && activeNodeIndex >= 2) dateLbl.innerText = order.date.split(',')[0];
-                    else if (i === 3 && activeNodeIndex >= 3) {
-                        // calculate relative dates
-                        dateLbl.innerText = 'May 21';
-                    }
+                    else if (i === 3 && activeNodeIndex >= 3) dateLbl.innerText = 'May 21';
                     else if (i === 4 && activeNodeIndex >= 4) dateLbl.innerText = 'May 22';
                     else if (i === 5 && activeNodeIndex >= 5) dateLbl.innerText = 'May 22';
                     else dateLbl.innerText = '-';
@@ -1407,11 +1885,490 @@
                 document.getElementById('res-shipping-address').innerText = order.shippingAddress;
                 document.getElementById('res-payment-method').innerText = order.paymentMethod;
 
+                // Action Buttons updates
+                const cancelBtn = document.getElementById('btn-cancel-order');
+                if (order.status === 'Placed' || order.status === 'Processed') {
+                    cancelBtn.style.display = 'inline-flex';
+                } else {
+                    cancelBtn.style.display = 'none';
+                }
+
+                // Update visual SVG roadmap
+                updateVisualRoadmap(order);
+
+                // Render dynamic ratings panel
+                renderRatingWidget(order);
+
                 if (typeof AlBarrCart !== 'undefined' && AlBarrCart.showToast) {
                     AlBarrCart.showToast(`Order details loaded for ${orderId}`);
                 }
 
             }, 1000);
+        }
+
+        // SVG Visual Journey Map Updater
+        function updateVisualRoadmap(order) {
+            const vehicle = document.getElementById('roadmap-vehicle');
+            const vehicleEmoji = document.getElementById('vehicle-emoji');
+            const roadActivePath = document.getElementById('road-active-path');
+            
+            if (!vehicle || !roadActivePath) return;
+            
+            let activeNodeIndex = 1;
+            const isCancelled = (order.status === 'Cancelled');
+            
+            if (isCancelled) {
+                const validRoute = (order.route || []).filter(c => 
+                    !c.location.includes('Cancelled') && 
+                    !c.desc.includes('cancelled') &&
+                    !c.desc.includes('Cancelled')
+                );
+                activeNodeIndex = Math.max(1, Math.min(validRoute.length, 5));
+            } else {
+                if (order.status === 'Placed') activeNodeIndex = 1;
+                else if (order.status === 'Processed') activeNodeIndex = 2;
+                else if (order.status === 'Shipped') activeNodeIndex = 3;
+                else if (order.status === 'Out for Delivery') activeNodeIndex = 4;
+                else if (order.status === 'Delivered') activeNodeIndex = 5;
+            }
+            
+            const coordinates = {
+                1: { x: 60, y: 80, emoji: '📦' },
+                2: { x: 210, y: 56, emoji: '⚙️' },
+                3: { x: 390, y: 84, emoji: '🚚' },
+                4: { x: 570, y: 56, emoji: '🏍️' },
+                5: { x: 740, y: 80, emoji: '🎁' }
+            };
+            
+            const coord = coordinates[activeNodeIndex] || coordinates[1];
+            
+            // Animate vehicle position
+            vehicle.style.display = 'block';
+            vehicle.setAttribute('transform', `translate(${coord.x}, ${coord.y})`);
+            vehicleEmoji.textContent = isCancelled ? '❌' : coord.emoji;
+            
+            // Draw route fill path
+            let dashoffset = 800 - ((activeNodeIndex - 1) * 200);
+            if (isCancelled) {
+                roadActivePath.setAttribute('stroke', '#b0bec5');
+            } else {
+                roadActivePath.setAttribute('stroke', 'url(#road-active-grad)');
+            }
+            roadActivePath.setAttribute('stroke-dashoffset', dashoffset);
+            
+            // Update node style attributes and classes
+            for (let i = 1; i <= 5; i++) {
+                const svgNode = document.getElementById(`roadmap-node-${i}`);
+                if (!svgNode) continue;
+                
+                svgNode.classList.remove('completed', 'active', 'cancelled');
+                const nodeIcon = svgNode.querySelector('.node-icon');
+                
+                // Reset custom icons to default values
+                if (nodeIcon) {
+                    if (i === 1) nodeIcon.textContent = '🌳';
+                    else if (i === 2) nodeIcon.textContent = '⚙️';
+                    else if (i === 3) nodeIcon.textContent = '🚚';
+                    else if (i === 4) nodeIcon.textContent = '🏍️';
+                    else if (i === 5) nodeIcon.textContent = '🏠';
+                }
+
+                if (isCancelled) {
+                    if (i < activeNodeIndex) {
+                        svgNode.classList.add('completed');
+                    } else if (i === activeNodeIndex) {
+                        svgNode.classList.add('cancelled');
+                        if (nodeIcon) nodeIcon.textContent = '❌';
+                    } else {
+                        svgNode.classList.add('cancelled');
+                    }
+                } else {
+                    if (i < activeNodeIndex) {
+                        svgNode.classList.add('completed');
+                    } else if (i === activeNodeIndex) {
+                        if (order.status === 'Delivered') {
+                            svgNode.classList.add('completed');
+                        } else {
+                            svgNode.classList.add('active');
+                        }
+                    }
+                }
+            }
+        }
+
+        // Render stars in quality feedback widget
+        function renderRatingWidget(order) {
+            const ratingCard = document.getElementById('track-rating-card');
+            const ratingStars = document.getElementById('track-rating-stars');
+            if (!ratingCard || !ratingStars) return;
+            
+            if (order.status === 'Delivered') {
+                ratingCard.style.display = 'flex';
+                ratingStars.innerHTML = '';
+                
+                const activeRating = order.rating || 0;
+                
+                for (let val = 1; val <= 5; val++) {
+                    const star = document.createElement('span');
+                    star.className = `star-item${val <= activeRating ? ' selected' : ''}`;
+                    star.innerHTML = '★';
+                    star.title = `${val} Star${val > 1 ? 's' : ''}`;
+                    star.onclick = () => saveOrderRating(order.orderId, val);
+                    
+                    // Add micro-animations
+                    star.onmouseenter = () => {
+                        const siblings = ratingStars.children;
+                        for (let j = 0; j < siblings.length; j++) {
+                            if (j < val) {
+                                siblings[j].classList.add('selected');
+                            } else {
+                                siblings[j].classList.remove('selected');
+                            }
+                        }
+                    };
+                    
+                    star.onmouseleave = () => {
+                        const siblings = ratingStars.children;
+                        const currentRating = order.rating || 0;
+                        for (let j = 0; j < siblings.length; j++) {
+                            if (j < currentRating) {
+                                siblings[j].classList.add('selected');
+                            } else {
+                                siblings[j].classList.remove('selected');
+                            }
+                        }
+                    };
+                    
+                    ratingStars.appendChild(star);
+                }
+            } else {
+                ratingCard.style.display = 'none';
+            }
+        }
+
+        // Save order rating feedback locally
+        function saveOrderRating(orderId, ratingVal) {
+            const savedOrders = localStorage.getItem('al_barr_orders');
+            if (savedOrders) {
+                try {
+                    let orders = JSON.parse(savedOrders);
+                    let idx = orders.findIndex(o => o.orderId.toUpperCase() === orderId.toUpperCase());
+                    if (idx !== -1) {
+                        orders[idx].rating = ratingVal;
+                        localStorage.setItem('al_barr_orders', JSON.stringify(orders));
+                        
+                        renderRatingWidget(orders[idx]);
+                        
+                        if (typeof AlBarrCart !== 'undefined' && AlBarrCart.showToast) {
+                            AlBarrCart.showToast(`Thank you! Order rated ${ratingVal} stars successfully!`, 'success');
+                        }
+                    }
+                } catch(e) {
+                    console.error("Failed to save quality feedback rating", e);
+                }
+            }
+        }
+
+        // Cancel dialog modal functions
+        function triggerCancelModal() {
+            document.getElementById('cancel-order-modal').style.display = 'flex';
+            document.getElementById('cancel-reason').value = '';
+        }
+
+        function closeCancelModal() {
+            document.getElementById('cancel-order-modal').style.display = 'none';
+        }
+
+        function handleOrderCancellation() {
+            if (!currentTrackedOrderId) return;
+            const reason = document.getElementById('cancel-reason').value.trim() || 'Changed my mind';
+            
+            const savedOrders = localStorage.getItem('al_barr_orders');
+            if (savedOrders) {
+                try {
+                    let orders = JSON.parse(savedOrders);
+                    let idx = orders.findIndex(o => o.orderId.toUpperCase() === currentTrackedOrderId.toUpperCase());
+                    if (idx !== -1) {
+                        const order = orders[idx];
+                        order.status = 'Cancelled';
+                        
+                        const now = new Date();
+                        const dateString = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                        const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                        
+                        // Prep logs timeline
+                        order.route.unshift({
+                            location: 'Cancelled',
+                            time: `${dateString}, ${timeString}`,
+                            desc: `Order cancelled by customer. Reason: ${reason}. Refund check initiated.`,
+                            completed: true,
+                            active: true
+                        });
+                        
+                        // Disable active status of older checkpoints
+                        order.route.forEach((c, idx) => {
+                            if (idx > 0) c.active = false;
+                        });
+                        
+                        localStorage.setItem('al_barr_orders', JSON.stringify(orders));
+                        closeCancelModal();
+                        
+                        // Re-render
+                        loadTrackingDetails(order.orderId, order.shippingPhone);
+                        
+                        if (typeof AlBarrCart !== 'undefined' && AlBarrCart.showToast) {
+                            AlBarrCart.showToast('Order cancelled successfully.', 'success');
+                        }
+                    }
+                } catch(e) {
+                    console.error("Failed to process order cancellation", e);
+                }
+            }
+        }
+
+        // PDF print trigger via hidden iframe write procedure
+        function printInvoice() {
+            const savedOrders = localStorage.getItem('al_barr_orders');
+            if (!savedOrders || !currentTrackedOrderId) return;
+            
+            try {
+                const orders = JSON.parse(savedOrders);
+                const order = orders.find(o => o.orderId.toUpperCase() === currentTrackedOrderId.toUpperCase());
+                if (!order) return;
+                
+                const printFrame = document.getElementById('invoice-print-frame');
+                const doc = printFrame.contentDocument || printFrame.contentWindow.document;
+                
+                // Formulate rows
+                let itemsHtml = '';
+                order.items.forEach((item, index) => {
+                    itemsHtml += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.title} (${item.weight})</td>
+                            <td>₹${item.price.toFixed(2)}</td>
+                            <td>${item.qty}</td>
+                            <td>₹${(item.price * item.qty).toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+                
+                const invoiceHtml = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Invoice_${order.orderId}</title>
+                        <style>
+                            body {
+                                font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+                                color: #333;
+                                margin: 40px;
+                                padding: 0;
+                            }
+                            .invoice-box {
+                                max-width: 800px;
+                                margin: auto;
+                                border: 1px solid #eee;
+                                padding: 30px;
+                                border-radius: 12px;
+                                position: relative;
+                            }
+                            .invoice-header {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                border-bottom: 2px solid #018849;
+                                padding-bottom: 20px;
+                                margin-bottom: 25px;
+                            }
+                            .brand-logo {
+                                font-size: 26px;
+                                font-weight: 800;
+                                color: #0B192C;
+                            }
+                            .brand-logo span {
+                                color: #018849;
+                            }
+                            .company-details {
+                                text-align: right;
+                                font-size: 11px;
+                                color: #666;
+                                line-height: 1.4;
+                            }
+                            .invoice-meta-grid {
+                                display: grid;
+                                grid-template-columns: 1fr 1fr;
+                                gap: 20px;
+                                margin-bottom: 30px;
+                            }
+                            .meta-block h4 {
+                                margin: 0 0 6px 0;
+                                font-size: 13px;
+                                color: #018849;
+                                text-transform: uppercase;
+                                letter-spacing: 0.5px;
+                            }
+                            .meta-block p {
+                                margin: 0;
+                                font-size: 12px;
+                                line-height: 1.4;
+                            }
+                            .invoice-table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin-bottom: 30px;
+                            }
+                            .invoice-table th {
+                                background-color: #f7f9f7;
+                                color: #333;
+                                text-align: left;
+                                padding: 12px;
+                                font-size: 12px;
+                                font-weight: 700;
+                                border-bottom: 1px solid #ddd;
+                            }
+                            .invoice-table td {
+                                padding: 12px;
+                                font-size: 12px;
+                                border-bottom: 1px solid #eee;
+                            }
+                            .totals-block {
+                                width: 250px;
+                                margin-left: auto;
+                                margin-top: 20px;
+                            }
+                            .totals-row {
+                                display: flex;
+                                justify-content: space-between;
+                                font-size: 12px;
+                                margin-bottom: 6px;
+                            }
+                            .totals-row.grand-total {
+                                font-size: 15px;
+                                font-weight: bold;
+                                color: #0B192C;
+                                border-top: 1.5px solid #018849;
+                                padding-top: 8px;
+                                margin-top: 8px;
+                            }
+                            .footer {
+                                margin-top: 50px;
+                                text-align: center;
+                                font-size: 11px;
+                                color: #888;
+                                border-top: 1px solid #eee;
+                                padding-top: 15px;
+                            }
+                            .stamp-container {
+                                position: absolute;
+                                bottom: 120px;
+                                right: 50px;
+                                opacity: 0.85;
+                            }
+                            .organic-seal {
+                                border: 3px double #018849;
+                                color: #018849;
+                                padding: 8px 12px;
+                                font-weight: 800;
+                                border-radius: 6px;
+                                transform: rotate(-12deg);
+                                font-size: 13px;
+                                text-align: center;
+                                display: inline-block;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="invoice-box">
+                            <div class="invoice-header">
+                                <div class="brand-logo">Al Barr<span>.com</span></div>
+                                <div class="company-details">
+                                    <strong>Al Barr Organic Farm Foods Private Limited</strong><br>
+                                    GSTIN: 01AABCA1234F1Z8<br>
+                                    Shalimar Orchards Belt, Srinagar, J&K - 190021<br>
+                                    support@albarr.com | +91 94190 12345
+                                </div>
+                            </div>
+                            
+                            <div class="invoice-meta-grid">
+                                <div class="meta-block">
+                                    <h4>Invoice Details</h4>
+                                    <p>
+                                        <strong>Invoice No:</strong> INV-${order.orderId.replace('ALB-', '')}<br>
+                                        <strong>Date:</strong> ${order.date}<br>
+                                        <strong>Order ID:</strong> ${order.orderId}<br>
+                                        <strong>Payment Mode:</strong> ${order.paymentMethod}
+                                    </p>
+                                </div>
+                                <div class="meta-block">
+                                    <h4>Ship To</h4>
+                                    <p>
+                                        <strong>${order.shippingName}</strong><br>
+                                        ${order.shippingAddress}<br>
+                                        <strong>Phone:</strong> ${order.shippingPhone}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <table class="invoice-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 8%">S.No</th>
+                                        <th>Item Description</th>
+                                        <th style="width: 18%">Rate</th>
+                                        <th style="width: 12%">Qty</th>
+                                        <th style="width: 18%">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${itemsHtml}
+                                </tbody>
+                            </table>
+                            
+                            <div class="totals-block">
+                                <div class="totals-row">
+                                    <span>Subtotal:</span>
+                                    <span>₹${order.subtotal.toFixed(2)}</span>
+                                </div>
+                                ${order.discount > 0 ? `
+                                <div class="totals-row" style="color: #018849;">
+                                    <span>Discount:</span>
+                                    <span>-₹${order.discount.toFixed(2)}</span>
+                                </div>` : ''}
+                                <div class="totals-row">
+                                    <span>Delivery Fee:</span>
+                                    <span>₹${order.delivery.toFixed(2)}</span>
+                                </div>
+                                <div class="totals-row grand-total">
+                                    <span>Total:</span>
+                                    <span>₹${order.grandTotal.toFixed(2)}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stamp-container">
+                                <div class="organic-seal">AL BARR VERIFIED<br>100% ORGANIC</div>
+                            </div>
+                            
+                            <div class="footer">
+                                Thank you for patronizing the traditional organic agriculture of Kashmir Valley.<br>
+                                This is a computer-generated tax invoice and requires no physical signature.
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                `;
+                
+                doc.open();
+                doc.write(invoiceHtml);
+                doc.close();
+                
+                printFrame.contentWindow.focus();
+                setTimeout(() => {
+                    printFrame.contentWindow.print();
+                }, 250);
+            } catch (err) {
+                console.error("Failed to generate and print invoice", err);
+            }
         }
     </script>
 </body>

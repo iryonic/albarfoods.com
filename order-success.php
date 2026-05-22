@@ -676,6 +676,48 @@
             let orderData;
             try {
                 orderData = JSON.parse(rawOrder);
+                
+                // Add to persistent orders history in localStorage
+                let localOrders = [];
+                try {
+                    const saved = localStorage.getItem('al_barr_orders');
+                    if (saved) localOrders = JSON.parse(saved);
+                } catch (err) {
+                    console.error("Error reading al_barr_orders from localStorage", err);
+                }
+                
+                // Ensure it's not already added (prevent duplicate on refresh)
+                const exists = localOrders.some(o => o.orderId === orderData.orderId);
+                if (!exists) {
+                    const fullOrder = {
+                        orderId: orderData.orderId,
+                        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                        status: 'Placed',
+                        estDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                        partner: 'Al Barr Express Logistics',
+                        consignment: 'ABE-' + Math.floor(100000 + Math.random() * 899999) + '-KASH',
+                        paymentMethod: orderData.paymentMethod,
+                        shippingName: orderData.shippingName,
+                        shippingPhone: orderData.shippingPhone,
+                        shippingAddress: orderData.shippingAddress,
+                        subtotal: orderData.subtotal,
+                        discount: orderData.discount || 0.00,
+                        delivery: orderData.delivery,
+                        grandTotal: orderData.grandTotal,
+                        items: orderData.items,
+                        route: [
+                            {
+                                location: 'Orchard Processing Center, Srinagar',
+                                time: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                                desc: 'Order received and registered in Al Barr system. Preparing packaging material with hygiene protocol.',
+                                completed: true,
+                                active: true
+                            }
+                        ]
+                    };
+                    localOrders.unshift(fullOrder);
+                    localStorage.setItem('al_barr_orders', JSON.stringify(localOrders));
+                }
             } catch (e) {
                 console.error("Failed to parse order session details", e);
                 successView.style.display = 'none';
