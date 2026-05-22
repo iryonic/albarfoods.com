@@ -150,8 +150,8 @@
 </div>
 
 <!-- JavaScript Inclusions -->
-<script src="assets/js/slider.js?v=20260522j"></script>
-<script src="assets/js/cart.js?v=20260522j"></script>
-<script src="assets/js/app.js?v=20260522j"></script>
-<script src="assets/js/pwa.js?v=20260522j"></script>
+<script src="assets/js/slider.js?v=<?php echo time(); ?>"></script>
+<script src="assets/js/cart.js?v=<?php echo time(); ?>"></script>
+<script src="assets/js/app.js?v=<?php echo time(); ?>"></script>
+<script src="assets/js/pwa.js?v=<?php echo time(); ?>"></script>
 

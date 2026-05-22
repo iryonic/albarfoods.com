@@ -1,6 +1,6 @@
 /* Service Worker — Network-First for dev, Cache fallback for offline */
 
-const CACHE_NAME = 'albarr-cache-v6';
+const CACHE_NAME = 'albarr-cache-v7';
 const OFFLINE_URL = './offline.php';
 
 // Minimal shell to pre-cache for offline fallback only
@@ -51,7 +51,7 @@ self.addEventListener('fetch', (event) => {
     if (isImage) {
         // ── Images: Cache-First (fast loads, rarely change) ──
         event.respondWith(
-            caches.match(event.request).then((cached) => {
+            caches.match(event.request, { ignoreSearch: true }).then((cached) => {
                 if (cached) return cached;
                 return fetch(event.request).then((response) => {
                     if (response && response.status === 200) {
@@ -76,7 +76,7 @@ self.addEventListener('fetch', (event) => {
                 })
                 .catch(() => {
                     // Offline — try cache, or show offline page for navigation
-                    return caches.match(event.request).then((cached) => {
+                    return caches.match(event.request, { ignoreSearch: true }).then((cached) => {
                         if (cached) return cached;
                         if (isPage) return caches.match(OFFLINE_URL);
                         return new Response('', { status: 503 });

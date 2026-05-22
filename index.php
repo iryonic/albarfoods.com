@@ -93,9 +93,9 @@ function renderProductCard($p) {
     <meta name="theme-color" content="#0B192C">
     
     <!-- CSS Foundations -->
-    <link rel="stylesheet" href="assets/css/variables.css?v=20260522m">
-    <link rel="stylesheet" href="assets/css/main.css?v=20260522m">
-    <link rel="stylesheet" href="assets/css/components.css?v=20260522m">
+    <link rel="stylesheet" href="assets/css/variables.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/main.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/components.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
