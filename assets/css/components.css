@@ -82,7 +82,10 @@
    ============================================================ */
 .hero-slider {
     position: relative;
-    height: 520px;
+    height: 620px;
+    margin: 20px auto;
+    width: 90%;
+    border-radius: var(--radius-lg);
     background-color: var(--color-dark-obsidian);
     overflow: hidden;
 }
@@ -363,9 +366,15 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    flex-wrap: wrap;
     gap: var(--spacing-xl);
-    overflow: aut;
     padding: var(--spacing-md) 0;
+}
+
+/* Use <a> tag so it's a real link; strip default anchor styles */
+a.category-circle-card {
+    text-decoration: none;
+    color: inherit;
 }
 
 .category-circle-card {
@@ -374,86 +383,162 @@
     align-items: center;
     text-align: center;
     cursor: pointer;
-    width: 130px;
-    transition: var(--transition-normal);
+    width: 140px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Subtle lift only — no aggressive jump */
 .category-circle-card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-5px);
 }
 
 .category-circle-visual {
-    width: 100px;
-    height: 100px;
+    width: 118px;
+    height: 118px;
     border-radius: 50%;
-    background-color: var(--color-cream-card);
+    background-color: var(--cat-bg, var(--color-cream-card));
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;          /* Image is clipped inside circle */
     margin-bottom: var(--spacing-sm);
     position: relative;
-    box-shadow: var(--shadow-md);
-    transition: var(--transition-normal);
-    overflow: hidden;
-    /* Gradient border ring */
-    border: 3px solid transparent;
-    background-clip: padding-box;
-    outline: 3px solid var(--color-border-light);
-    outline-offset: 2px;
+    /* Inner solid border */
+    border: 3px solid var(--color-brand-green);
+    box-shadow: 0 4px 16px rgba(1, 136, 73, 0.10);
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
+/* Hatched/dashed middle ring */
+.category-circle-visual::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 3px dashed var(--color-brand-green);
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 0;
+    transition:
+        border-color 0.3s ease,
+        opacity 0.3s ease,
+        transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Outer thin solid ring */
+.category-circle-visual::after {
+    content: '';
+    position: absolute;
+    inset: -13px;
+    border-radius: 50%;
+    border: 1px solid var(--color-brand-green);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+    transition:
+        border-color 0.3s ease,
+        opacity 0.3s ease,
+        transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ---- HOVER: ring color + glow ---- */
 .category-circle-card:hover .category-circle-visual {
-    outline-color: var(--color-gold);
-    box-shadow: var(--shadow-gold);
+    border-color: var(--color-gold);
+    box-shadow:
+        0 0 0 4px rgba(255, 179, 0, 0.12),
+        0 12px 32px rgba(255, 179, 0, 0.20);
 }
 
-.category-circle-visual svg {
-    width: 42px;
-    height: 42px;
-    color: var(--color-gold);
-    transition: var(--transition-normal);
+.category-circle-card:hover .category-circle-visual::before {
+    border-color: var(--color-gold);
+    opacity: 0.7;
+    transform: rotate(15deg);
+}
+
+.category-circle-card:hover .category-circle-visual::after {
+    border-color: var(--color-gold);
+    opacity: 0.5;
+    transform: scale(1.04);
+}
+
+/* ---- Image inside circle: smooth in-circle zoom ---- */
+.category-circle-img {
+    width: 82%;
+    height: 82%;
+    object-fit: cover;
+    border-radius: 50%;
     z-index: 1;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
 }
 
-.category-circle-card:hover .category-circle-visual svg {
-    transform: scale(1.15) rotate(5deg);
-    color: var(--color-saffron-orange);
+.category-circle-card:hover .category-circle-img {
+    transform: scale(1.12);
 }
 
+/* ---- Label ---- */
 .category-circle-name {
     font-family: var(--font-secondary);
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: var(--color-brand-green);
-    transition: var(--transition-fast);
+    color: var(--color-text-primary);
+    transition: color 0.25s ease;
     line-height: 1.3;
+    margin-top: 10px;
+    position: relative;
 }
 
-.category-circle-count {
-    font-size: 0.72rem;
-    color: var(--color-text-muted);
-    font-weight: 500;
-    margin-top: 2px;
+/* Animated underline on label */
+.category-circle-name::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -2px;
+    transform: translateX(-50%) scaleX(0);
+    width: 70%;
+    height: 2px;
+    background: var(--color-gold);
+    border-radius: 2px;
+    transition: transform 0.3s ease;
+    transform-origin: center;
 }
 
 .category-circle-card:hover .category-circle-name {
-    color: var(--color-saffron-orange);
+    color: var(--color-brand-green);
 }
 
+.category-circle-card:hover .category-circle-name::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+/* ---- Responsive ---- */
 @media (max-width: 900px) {
     .categories-circle-flex { gap: var(--spacing-lg); }
-    .category-circle-card { width: 100px; }
-    .category-circle-visual { width: 82px; height: 82px; }
-    .category-circle-visual svg { width: 34px; height: 34px; }
-    .category-circle-name { font-size: 0.82rem; }
+    .category-circle-card { width: 110px; }
+    .category-circle-visual { width: 95px; height: 95px; border-width: 2.5px; }
+    .category-circle-visual::before { inset: -6px; border-width: 2.5px; }
+    .category-circle-visual::after { inset: -10px; }
+    .category-circle-name { font-size: 0.84rem; }
 }
 
-@media (max-width: 480px) {
-    .categories-circle-flex { gap: var(--spacing-md); }
-    .category-circle-card { width: 80px; }
-    .category-circle-visual { width: 68px; height: 68px; }
-    .category-circle-visual svg { width: 28px; height: 28px; }
-    .category-circle-name { font-size: 0.75rem; }
+@media (max-width: 600px) {
+    .categories-circle-flex { gap: 20px 14px; }
+    .category-circle-card { width: 90px; }
+    .category-circle-visual { width: 78px; height: 78px; border-width: 2px; }
+    .category-circle-visual::before { inset: -5px; border-width: 2px; }
+    .category-circle-visual::after { inset: -8px; }
+    .category-circle-name { font-size: 0.78rem; margin-top: 7px; }
+}
+
+@media (max-width: 380px) {
+    .categories-circle-flex { gap: 14px 8px; }
+    .category-circle-card { width: 78px; }
+    .category-circle-visual { width: 66px; height: 66px; border-width: 2px; }
+    .category-circle-visual::before { inset: -4px; }
+    .category-circle-visual::after { inset: -7px; }
+    .category-circle-name { font-size: 0.72rem; }
 }
 
 /* ============================================================
@@ -2290,6 +2375,10 @@
 .sale-section-wrapper {
     padding: var(--spacing-xl) 0;
     background: linear-gradient(135deg, #0B1F1A 0%, #0D2620 50%, #122B23 100%);
+    width: 90%;
+    margin: 20px auto;
+    border-radius: var(--radius-lg);
+
     position: relative;
     overflow: hidden;
 }
@@ -2603,7 +2692,10 @@
 }
 
 @media (max-width: 600px) {
-    .sale-section-wrapper { padding: var(--spacing-lg) 0; }
+    .hero-slider{
+        width: 95%; border-radius:var(--radius-sm) !important;
+    }
+    .sale-section-wrapper { width: 95%; border-radius:var(--radius-sm) !important;}
     .sale-headline { font-size: 1.65rem; }
     .sale-desc { font-size: 0.82rem; }
     .sale-countdown-card .countdown-time-box { width: 60px; height: 60px; }
@@ -2701,29 +2793,7 @@
     }
 }
 
-/* -- Categories circle flex -- */
-@media (max-width: 600px) {
-    .categories-circle-flex {
-        gap: var(--spacing-md);
-        justify-content: center;
-    }
-    .category-circle-visual {
-        width: 64px;
-        height: 64px;
-    }
-    .category-circle-name {
-        font-size: 0.72rem;
-    }
-}
-@media (max-width: 380px) {
-    .categories-circle-flex {
-        gap: var(--spacing-sm);
-    }
-    .category-circle-visual {
-        width: 56px;
-        height: 56px;
-    }
-}
+/* Redundant categories media query overrides removed */
 
 /* ============================================================
    20. NEWSLETTER SECTION

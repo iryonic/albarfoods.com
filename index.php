@@ -212,44 +212,50 @@ function renderProductCard($p) {
     <section class="section-padding" id="categories-section">
         <div class="container">
             <h2 class="section-title">Our Categories</h2>
-           
             
             <div class="categories-circle-flex" id="categories-circles-wrapper">
                 <!-- Dry Fruits -->
-                <div class="category-circle-card" onclick="location.href='#featured-section'">
-                    <div class="category-circle-visual">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10H2C2 17.523 6.477 22 12 22z"></path><path d="M12 2a5 5 0 0 1 5 5v5H7V7a5 5 0 0 1 5-5z"></path></svg>
+                <a class="category-circle-card" href="#featured-section">
+                    <div class="category-circle-visual" style="--cat-bg: var(--color-brand-green-light);">
+                        <img src="assets/img/cat-dry-fruits.png" alt="Dry Fruits" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Dry Fruits</span>
-                </div>
+                </a>
                 <!-- Spices & Saffron -->
-                <div class="category-circle-card" onclick="location.href='#featured-section'">
-                    <div class="category-circle-visual">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                <a class="category-circle-card" href="#featured-section">
+                    <div class="category-circle-visual" style="--cat-bg: var(--color-saffron-light);">
+                        <img src="assets/img/cat-spices.png" alt="Spices & Saffron" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Spices</span>
-                </div>
+                </a>
                 <!-- Dried Fruits -->
-                <div class="category-circle-card" onclick="location.href='#featured-section'">
-                    <div class="category-circle-visual">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 0 8.5C17 15 15 17 11 20z"></path><path d="M19 2c-2.26 4.33-5.27 7.14-8 8"></path></svg>
+                <a class="category-circle-card" href="#featured-section">
+                    <div class="category-circle-visual" style="--cat-bg: var(--color-gold-light);">
+                        <img src="assets/img/cat-dried-fruits.png" alt="Dried Fruits" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Dried Fruits</span>
-                </div>
+                </a>
+                <!-- Honey -->
+                <a class="category-circle-card" href="#seeds-section">
+                    <div class="category-circle-visual" style="--cat-bg: #FFF8E1;">
+                        <img src="assets/img/cat-honey.png" alt="Pure Honey" class="category-circle-img">
+                    </div>
+                    <span class="category-circle-name">Honey</span>
+                </a>
                 <!-- Dried Seeds -->
-                <div class="category-circle-card" onclick="location.href='#featured-section'">
-                    <div class="category-circle-visual">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path></svg>
+                <a class="category-circle-card" href="#seeds-section">
+                    <div class="category-circle-visual" style="--cat-bg: var(--color-saffron-light);">
+                        <img src="assets/img/cat-seeds.png" alt="Dried Seeds" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Dried Seeds</span>
-                </div>
+                </a>
                 <!-- Pulses -->
-                <div class="category-circle-card" onclick="location.href='#featured-section'">
-                    <div class="category-circle-visual">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22h18M6 18V6c0-1 1-2 2-2h8c1 0 2 1 2 2v12"></path><circle cx="12" cy="11" r="2"></circle></svg>
+                <a class="category-circle-card" href="#seeds-section">
+                    <div class="category-circle-visual" style="--cat-bg: var(--color-brand-green-light);">
+                        <img src="assets/img/cat-pulses.png" alt="Pulses" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Pulses</span>
-                </div>
+                </a>
             </div>
         </div>
     </section>
