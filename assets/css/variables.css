@@ -1,0 +1,92 @@
+/* CSS Variables - Brand Identity & Design System */
+
+:root {
+    /* Color Palette - Vibrant Luxury Organic Theme */
+    --color-cream: #FCF9F3;        /* Primary warm alabaster cream background */
+    --color-cream-dark: #F5EFE4;   /* Secondary warm sand backdrop panel */
+    --color-cream-card: #FFFFFF;   /* Clean white card surface */
+    
+    /* Brand Greens (Named 'blue' for stylesheet compatibility but optimized as vibrant organic greens) */
+    --color-blue-dark: #018849;    /* Vibrant Kashmiri Fir/Spruce Green - primary text & brand elements */
+    --color-blue-medium: #029A4D;  /* Secondary Green - interactive elements, active links */
+    --color-blue-light: #E6F5EC;   /* Soft sage green wash for highlights */
+    
+    --color-brand-green: #018849;
+    --color-brand-green-medium: #029A4D;
+    --color-brand-green-light: #E6F5EC;
+    
+    /* Neon Accent Mint - for quantity selectors, primary CTA text/borders */
+    --color-accent-mint: #00C853;  
+    --color-accent-mint-hover: #00B24A;
+    --color-accent-mint-light: #E8F5E9;
+    
+    /* Vibrant Gold - for premium quality stars, honey/amber tags, gold lids */
+    --color-gold: #FFB300;         
+    --color-gold-hover: #FF8F00;   
+    --color-gold-light: #FFF8E1;   
+    --color-gold-gradient: linear-gradient(135deg, #FFD043 0%, #FFB300 100%);
+    
+    /* Sunset Saffron - representing fiery Kashmiri kesar & hot promotions */
+    --color-saffron-orange: #FF5500; 
+    --color-saffron-crimson: #FF2200; 
+    --color-saffron-light: #FFF3E0;  
+    --color-saffron-gradient: linear-gradient(135deg, #FF7700 0%, #FF2200 100%);
+    
+    /* Luxury Dark Obsidian - deep dark forest-obsidian for footer, dark cards, bottom nav bars */
+    --color-dark-obsidian: #0B1311; 
+    --color-dark-obsidian-card: #14201D;
+    
+    --color-green-accent: #00C853; 
+    --color-green-light: #E8F5E9;
+    
+    --color-red: #E11D48;          /* Alert badges, sale notifications */
+    --color-red-light: #FFF1F2;
+    
+    --color-card-border-gold: rgba(255, 179, 0, 0.25);
+    
+    /* Typography colors */
+    --color-text-primary: #0B1311;  /* Soft deep dark forest green-charcoal */
+    --color-text-secondary: #4A5854;/* Muted forest charcoal */
+    --color-text-muted: #8C9C97;    /* Slate-tinted green-gray */
+    
+    --color-border: #EBE5DA;       /* Warm linen gray border */
+    --color-border-light: #F5EFE4; /* Ultra soft warm border */
+    
+    /* Typography */
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-secondary: 'Outfit', sans-serif;
+    
+    /* Spacing System */
+    --spacing-xs: 0.25rem;  /* 4px */
+    --spacing-sm: 0.5rem;   /* 8px */
+    --spacing-md: 1rem;     /* 16px */
+    --spacing-lg: 1.5rem;   /* 24px */
+    --spacing-xl: 2.5rem;   /* 40px */
+    --spacing-xxl: 4rem;    /* 64px */
+    
+    /* Border Radius (iOS/Android native capsule style) */
+    --radius-xs: 8px;
+    --radius-sm: 14px;
+    --radius-md: 20px;
+    --radius-lg: 28px;
+    --radius-circle: 50%;
+    
+    /* Shadow System (Soft, deep, modern iOS style shadows with warm color tints) */
+    --shadow-sm: 0 2px 8px rgba(11, 19, 17, 0.02);
+    --shadow-md: 0 10px 30px rgba(11, 19, 17, 0.04), 0 2px 6px rgba(11, 19, 17, 0.02);
+    --shadow-lg: 0 16px 40px rgba(11, 19, 17, 0.06), 0 4px 12px rgba(11, 19, 17, 0.02);
+    --shadow-xl: 0 24px 60px rgba(11, 19, 17, 0.1), 0 6px 20px rgba(11, 19, 17, 0.03);
+    --shadow-gold: 0 8px 24px rgba(255, 179, 0, 0.18);
+    --shadow-mint: 0 8px 24px rgba(0, 200, 83, 0.2);
+    
+    /* Layout Dimensions */
+    --header-height: 80px;
+    --header-mobile-height: 70px;
+    --max-width: 1280px;
+    --sidebar-cart-width: 420px;
+    
+    /* Transitions */
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
