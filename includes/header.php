@@ -269,13 +269,13 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
         <div class="container nav-container">
             <ul class="nav-links">
                 <li><a href="index.php">Home</a></li>
-                <li><a href="index.php#categories-section">Dry Fruits & Nuts</a></li>
-                <li><a href="product.php?id=2">Mogra Saffron</a></li>
-                <li><a href="index.php#categories-section">Dried Seeds</a></li>
-                <li><a href="index.php#categories-section">Kashmiri Pulses</a></li>
-                <li><a href="product.php?id=5">Pure Honey</a></li>
+                <li><a href="shop.php">Shop All</a></li>
+                <li><a href="shop.php?category=dry-fruits">Dry Fruits & Nuts</a></li>
+                <li><a href="shop.php?category=spices">Saffron & Spices</a></li>
+                <li><a href="shop.php?category=honey">Pure Honey</a></li>
+                <li><a href="about.php">About Us</a></li>
+                <li><a href="contact.php">Contact</a></li>
                 <li><a href="index.php#offers-section" class="nav-highlight">Special Offers <span class="hot-badge">HOT</span></a></li>
-                <li><a href="#footer-bank-details" class="nav-bank-link">Bank Details</a></li>
             </ul>
         </div>
     </nav>
@@ -318,13 +318,13 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
 
             <ul class="drawer-nav-links">
                 <li><a href="index.php"><span class="drawer-icon">🏠</span> Home</a></li>
-                <li><a href="index.php#categories-section"><span class="drawer-icon">🥜</span> Dry Fruits & Nuts</a></li>
-                <li><a href="product.php?id=2"><span class="drawer-icon">🌸</span> Mogra Saffron</a></li>
-                <li><a href="index.php#categories-section"><span class="drawer-icon">🌱</span> Dried Seeds</a></li>
-                <li><a href="index.php#categories-section"><span class="drawer-icon">🍲</span> Kashmiri Pulses</a></li>
-                <li><a href="product.php?id=5"><span class="drawer-icon">🍯</span> Pure Honey</a></li>
+                <li><a href="shop.php"><span class="drawer-icon">🛍️</span> Shop All</a></li>
+                <li><a href="shop.php?category=dry-fruits"><span class="drawer-icon">🥜</span> Dry Fruits & Nuts</a></li>
+                <li><a href="shop.php?category=spices"><span class="drawer-icon">🌸</span> Mogra Saffron</a></li>
+                <li><a href="shop.php?category=honey"><span class="drawer-icon">🍯</span> Pure Honey</a></li>
+                <li><a href="about.php"><span class="drawer-icon">🌿</span> About Us</a></li>
+                <li><a href="contact.php"><span class="drawer-icon">📞</span> Contact Us</a></li>
                 <li><a href="index.php#offers-section" class="nav-highlight"><span class="drawer-icon">🎁</span> Special Offers</a></li>
-                <li><a href="#footer-bank-details" class="nav-bank-link"><span class="drawer-icon">💳</span> Direct Bank Details</a></li>
             </ul>
             
             <div class="drawer-contact-info">

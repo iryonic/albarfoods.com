@@ -820,4 +820,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+
+    // 7. Redirect to checkout page on Proceed to Checkout click
+    const checkoutBtn = document.getElementById('drawer-checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cart = (typeof AlBarrCart !== 'undefined') ? AlBarrCart.get() : [];
+            if (cart.length === 0) {
+                if (typeof AlBarrCart !== 'undefined' && AlBarrCart.showToast) {
+                    AlBarrCart.showToast("Your cart is empty! Add products to proceed.", "error");
+                } else {
+                    alert("Your cart is empty!");
+                }
+                return;
+            }
+            window.location.href = 'checkout.php';
+        });
+    }
 });

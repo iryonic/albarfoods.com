@@ -18,10 +18,10 @@
                 <h3 class="footer-col-title">Explore</h3>
                 <ul class="footer-links">
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="index.php#categories-section">Our Categories</a></li>
-                    <li><a href="index.php#offers-section">Special Offers</a></li>
-                    <li><a href="#">About Purity Sourcing</a></li>
-                    <li><a href="#">Shipping & Return Policy</a></li>
+                    <li><a href="shop.php">Shop Our Catalog</a></li>
+                    <li><a href="about.php">About Purity Sourcing</a></li>
+                    <li><a href="contact.php">Contact & Support</a></li>
+                    <li><a href="terms.php#shipping">Shipping & Return Policy</a></li>
                 </ul>
             </div>
 
@@ -110,13 +110,13 @@
 
                 <!-- Center: Legal -->
                 <div class="footer-bottom-legal">
-                    <a href="#">Privacy Policy</a>
+                    <a href="privacy.php">Privacy Policy</a>
                     <span class="footer-legal-sep">·</span>
-                    <a href="#">Terms of Use</a>
+                    <a href="terms.php">Terms of Use</a>
                     <span class="footer-legal-sep">·</span>
-                    <a href="#">Shipping Policy</a>
+                    <a href="terms.php#shipping">Shipping Policy</a>
                     <span class="footer-legal-sep">·</span>
-                    <a href="#">Sitemap</a>
+                    <a href="contact.php">Sitemap</a>
                 </div>
 
                 <!-- Right: Social -->
