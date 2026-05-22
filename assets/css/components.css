@@ -2017,58 +2017,166 @@ a.category-circle-card {
 }
 
 /* ============================================================
-   14. TOAST NOTIFICATIONS
+   14. TOAST NOTIFICATIONS (Premium)
    ============================================================ */
+
+/* Desktop: top-right corner */
 .toast-container {
     position: fixed;
-    top: var(--spacing-lg);
+    top: 90px;
     right: var(--spacing-lg);
-    z-index: 3000;
+    z-index: 9999;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: 10px;
     pointer-events: none;
+    max-width: 340px;
+    width: 100%;
 }
 
 .toast-item {
-    background: linear-gradient(135deg, var(--color-dark-obsidian), #1a2e28);
-    color: #fff;
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-left: 4px solid var(--color-gold);
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-lg);
+    position: relative;
     display: flex;
     align-items: center;
-    gap: var(--spacing-md);
-    transform: translateY(-20px);
-    opacity: 0;
-    animation: fadeInUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    gap: 12px;
+    padding: 14px 42px 14px 14px; /* right padding for close btn */
+    border-radius: 14px;
+    overflow: hidden;
     pointer-events: auto;
-    min-width: 240px;
+    cursor: default;
+
+    /* Glassmorphism dark card */
+    background: rgba(15, 24, 22, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.28),
+        0 2px 8px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    /* Slide in from right on desktop */
+    animation: toastSlideInRight 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    will-change: transform, opacity;
 }
 
 .toast-item.hide {
-    animation: fadeIn 0.3s reverse forwards;
+    animation: toastSlideOutRight 0.32s ease-in forwards;
 }
 
-.toast-icon {
-    color: var(--color-accent-mint);
-    font-weight: 900;
-    font-size: 1rem;
-    width: 22px;
-    height: 22px;
-    background: rgba(0,200,83, 0.15);
+/* Success variant — left accent bar green */
+.toast-item.toast-success {
+    border-left: 3px solid var(--color-accent-mint);
+}
+
+/* Error variant — left accent bar red */
+.toast-item.toast-error {
+    border-left: 3px solid #FF4C6A;
+}
+
+/* Icon circle */
+.toast-icon-wrap {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.toast-message {
-    font-size: 0.88rem;
-    font-weight: 600;
-    flex: 1;
+.toast-success .toast-icon-wrap {
+    background: rgba(0, 200, 83, 0.15);
+    color: var(--color-accent-mint);
 }
+
+.toast-error .toast-icon-wrap {
+    background: rgba(255, 76, 106, 0.15);
+    color: #FF4C6A;
+}
+
+.toast-message {
+    flex: 1;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+    line-height: 1.45;
+    letter-spacing: 0.1px;
+}
+
+/* Close button */
+.toast-close {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    flex-shrink: 0;
+    pointer-events: auto;
+    border: none;
+}
+
+.toast-close:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+}
+
+/* Auto-dismiss progress bar */
+.toast-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    border-radius: 0 0 14px 14px;
+    animation: toastProgress 3.5s linear forwards;
+}
+
+.toast-success .toast-progress-bar {
+    background: linear-gradient(90deg, var(--color-accent-mint), #00e676);
+}
+
+.toast-error .toast-progress-bar {
+    background: linear-gradient(90deg, #FF4C6A, #ff8a80);
+}
+
+/* ---- Keyframes ---- */
+@keyframes toastSlideInRight {
+    from { opacity: 0; transform: translateX(60px) scale(0.95); }
+    to   { opacity: 1; transform: translateX(0)    scale(1); }
+}
+
+@keyframes toastSlideOutRight {
+    from { opacity: 1; transform: translateX(0)    scale(1); }
+    to   { opacity: 0; transform: translateX(60px) scale(0.95); }
+}
+
+@keyframes toastSlideInDown {
+    from { opacity: 0; transform: translateY(-24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)     scale(1); }
+}
+
+@keyframes toastSlideOutUp {
+    from { opacity: 1; transform: translateY(0)     scale(1); }
+    to   { opacity: 0; transform: translateY(-24px) scale(0.97); }
+}
+
+@keyframes toastProgress {
+    from { width: 100%; }
+    to   { width: 0%; }
+}
+
+
 
 /* ============================================================
    15. PWA INSTALL PROMPT
