@@ -1724,7 +1724,7 @@ h1, h2, h3, h4, h5, h6 {
 
     /* Microphone / voice hint icon on right (visual only) */
     .mobile-search-bar-wrapper .search-form::after {
-        content: 'ðŸŽ¤';
+        content: '';
         font-size: 0.9rem;
         opacity: 0.35;
         flex-shrink: 0;
@@ -1749,13 +1749,13 @@ h1, h2, h3, h4, h5, h6 {
     /* Body padding to not hide behind bottom nav */
     body { padding-bottom: 100px; }
 
-    /* Toast — top-center on mobile, slides DOWN from header */
+    /* Toast — bottom-center on mobile, slides UP from bottom */
     .toast-container {
-        top: 76px;       /* just below the mobile header */
-        right: 0;
-        left: 0;
-        bottom: auto;
-        width: calc(100% - 32px);
+        top: auto;
+        bottom: 82px;
+        right: 16px;
+        left: 16px;
+        width: auto;
         max-width: 420px;
         margin: 0 auto;
         align-items: center;
@@ -1763,11 +1763,11 @@ h1, h2, h3, h4, h5, h6 {
 
     .toast-item {
         width: 100%;
-        animation: toastSlideInDown 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        animation: toastSlideInUp 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
 
     .toast-item.hide {
-        animation: toastSlideOutUp 0.3s ease-in forwards;
+        animation: toastSlideOutDown 0.3s ease-in forwards;
     }
 }
 

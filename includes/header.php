@@ -154,16 +154,16 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
                     </div>
                     <div class="badge-texts">
                         <span class="badge-lbl">Welcome</span>
-                        <span class="badge-val" style="display: flex; align-items: center; gap: 4px;">Sign In <svg class="badge-arrow-down" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px; transition: transform var(--transition-fast);"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                        <span class="badge-val" id="header-user-welcome-val" style="display: flex; align-items: center; gap: 4px;">Sign In <svg class="badge-arrow-down" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px; transition: transform var(--transition-fast);"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
                     </div>
                 </div>
                 <div class="user-dropdown-menu" id="user-dropdown-menu">
                     <div class="dropdown-header">
-                        <p class="dropdown-welcome">Welcome to Al Barr</p>
-                        <p class="dropdown-subtext">Access your account & orders</p>
-                        <div class="dropdown-actions-row">
-                            <a href="#signin-modal" class="dropdown-btn btn-signin">Sign In</a>
-                            <a href="#signup-modal" class="dropdown-btn btn-signup">Sign Up</a>
+                        <p class="dropdown-welcome" id="header-dropdown-welcome">Welcome to Al Barr</p>
+                        <p class="dropdown-subtext" id="header-dropdown-subtext">Access your account & orders</p>
+                        <div class="dropdown-actions-row" id="header-dropdown-actions">
+                            <a href="signin.php" class="dropdown-btn btn-signin">Sign In</a>
+                            <a href="signup.php" class="dropdown-btn btn-signup">Sign Up</a>
                         </div>
                     </div>
                     <div class="dropdown-divider"></div>
@@ -305,13 +305,13 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     </div>
                     <div class="drawer-user-texts">
-                        <span class="drawer-user-welcome">Welcome, Guest</span>
-                        <span class="drawer-user-sub">Access account & orders</span>
+                        <span class="drawer-user-welcome" id="drawer-user-welcome">Welcome, Guest</span>
+                        <span class="drawer-user-sub" id="drawer-user-sub">Access account & orders</span>
                     </div>
                 </div>
-                <div class="drawer-user-actions">
-                    <a href="#signin-modal" class="drawer-user-btn btn-signin">Sign In</a>
-                    <a href="#signup-modal" class="drawer-user-btn btn-signup">Sign Up</a>
+                <div class="drawer-user-actions" id="drawer-user-actions">
+                    <a href="signin.php" class="drawer-user-btn btn-signin">Sign In</a>
+                    <a href="signup.php" class="drawer-user-btn btn-signup">Sign Up</a>
                 </div>
             </div>
             <div class="drawer-divider-line"></div>
@@ -351,21 +351,21 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
 <nav class="mobile-bottom-nav">
     <ul class="mobile-bottom-nav-list">
         <li class="mobile-bottom-item">
-            <a href="index.php" class="mobile-bottom-link active">
+            <a href="index.php" class="mobile-bottom-link">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                 <span>Home</span>
             </a>
         </li>
         <li class="mobile-bottom-item">
-            <a href="index.php#categories-section" class="mobile-bottom-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                <span>Categories</span>
+            <a href="shop.php" class="mobile-bottom-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                <span>Shop</span>
             </a>
         </li>
         <li class="mobile-bottom-item">
-            <a href="index.php#offers-section" class="mobile-bottom-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
-                <span>Offers</span>
+            <a href="track-order.php" class="mobile-bottom-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                <span>Track</span>
             </a>
         </li>
         <li class="mobile-bottom-item">
@@ -378,9 +378,9 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
             </a>
         </li>
         <li class="mobile-bottom-item">
-            <a href="#footer-bank-details" class="mobile-bottom-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-                <span>Payment</span>
+            <a href="signin.php" class="mobile-bottom-link" id="mobile-account-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Account</span>
             </a>
         </li>
     </ul>
@@ -448,3 +448,73 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Dynamic user state check
+    const userJson = localStorage.getItem('al_barr_user');
+    if (userJson) {
+        try {
+            const userData = JSON.parse(userJson);
+            if (userData && userData.loggedIn && userData.name) {
+                // Update Desktop Header Dropdown Badge
+                const headerWelcomeVal = document.getElementById('header-user-welcome-val');
+                if (headerWelcomeVal) {
+                    headerWelcomeVal.innerHTML = `${userData.name} <svg class="badge-arrow-down" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px; transition: transform var(--transition-fast);"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+                }
+                
+                // Update Desktop Dropdown Menu Content
+                const dropdownWelcome = document.getElementById('header-dropdown-welcome');
+                if (dropdownWelcome) dropdownWelcome.innerText = `Namaste, ${userData.name}!`;
+                
+                const dropdownSubtext = document.getElementById('header-dropdown-subtext');
+                if (dropdownSubtext) dropdownSubtext.innerText = userData.email || 'Verified Al Barr Customer';
+                
+                const dropdownActions = document.getElementById('header-dropdown-actions');
+                if (dropdownActions) {
+                    dropdownActions.innerHTML = `<button onclick="handleHeaderSignOut(event)" class="dropdown-btn btn-signin" style="width: 100%; border: 1px solid var(--color-border); background: none; color: var(--color-blue-dark); text-align: center; cursor: pointer;">Sign Out</button>`;
+                }
+
+                // Update Mobile Drawer
+                const drawerWelcome = document.getElementById('drawer-user-welcome');
+                if (drawerWelcome) drawerWelcome.innerText = `Welcome, ${userData.name}`;
+
+                const drawerSub = document.getElementById('drawer-user-sub');
+                if (drawerSub) drawerSub.innerText = userData.email || 'Verified Customer';
+
+                const drawerActions = document.getElementById('drawer-user-actions');
+                if (drawerActions) {
+                    drawerActions.innerHTML = `<button onclick="handleHeaderSignOut(event)" class="drawer-user-btn btn-signin" style="width: 100%; border: 1px solid var(--color-border); background: none; color: var(--color-blue-dark); text-align: center; cursor: pointer;">Sign Out</button>`;
+                }
+            }
+        } catch (e) {
+            console.error("Failed to parse user details from local storage", e);
+        }
+    }
+
+    // Active class for mobile bottom navigation capsule
+    const currentPath = window.location.pathname.split('/').pop() || 'index.php';
+    const mobileBottomLinks = document.querySelectorAll('.mobile-bottom-link');
+    mobileBottomLinks.forEach(link => {
+        link.classList.remove('active');
+        const href = link.getAttribute('href');
+        if (href === currentPath || (currentPath === '' && href === 'index.php')) {
+            link.classList.add('active');
+        }
+    });
+});
+
+function handleHeaderSignOut(e) {
+    e.preventDefault();
+    localStorage.removeItem('al_barr_user');
+    if (typeof AlBarrCart !== 'undefined' && AlBarrCart.showToast) {
+        AlBarrCart.showToast("Signed out successfully!");
+    } else {
+        alert("Signed out successfully!");
+    }
+    setTimeout(() => {
+        window.location.reload();
+    }, 800);
+}
+</script>
+
