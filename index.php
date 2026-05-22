@@ -93,9 +93,9 @@ function renderProductCard($p) {
     <meta name="theme-color" content="#0B192C">
     
     <!-- CSS Foundations -->
-    <link rel="stylesheet" href="assets/css/variables.css?v=20260522k">
-    <link rel="stylesheet" href="assets/css/main.css?v=20260522k">
-    <link rel="stylesheet" href="assets/css/components.css?v=20260522l">
+    <link rel="stylesheet" href="assets/css/variables.css?v=20260522m">
+    <link rel="stylesheet" href="assets/css/main.css?v=20260522m">
+    <link rel="stylesheet" href="assets/css/components.css?v=20260522m">
 </head>
 <body>
 
@@ -211,7 +211,7 @@ function renderProductCard($p) {
     <!-- Upgraded Circular Category Section -->
     <section class="section-padding" id="categories-section">
         <div class="container">
-            <h2 class="section-title">Explore Sourced Categories</h2>
+            <h2 class="section-title">Our Categories</h2>
            
             
             <div class="categories-circle-flex" id="categories-circles-wrapper">
