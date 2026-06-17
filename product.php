@@ -256,11 +256,24 @@ $product = $products[$productId];
                         </div>
                         
                         <div class="product-variant-selector">
-                            <select class="variant-dropdown" data-product-id="<?php echo $item['id']; ?>">
-                                <?php foreach ($item['variants'] as $wt => $priceinfo): ?>
-                                    <option value="<?php echo $wt; ?>" data-price="<?php echo $priceinfo['price']; ?>" data-orig="<?php echo $priceinfo['orig']; ?>"><?php echo $wt; ?> - ₹<?php echo number_format($priceinfo['price'], 2); ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                            <div class="variant-pill-wrapper">
+                                <?php 
+                                $idx = 0;
+                                foreach ($item['variants'] as $wt => $priceinfo): 
+                                    $activeClass = ($idx === 0) ? 'active' : '';
+                                ?>
+                                    <button class="variant-pill <?php echo $activeClass; ?>" 
+                                            data-weight="<?php echo htmlspecialchars($wt); ?>" 
+                                            data-price="<?php echo $priceinfo['price']; ?>" 
+                                            data-orig="<?php echo $priceinfo['orig']; ?>">
+                                        <span class="pill-weight"><?php echo htmlspecialchars($wt); ?></span>
+                                        <span class="pill-price">₹<?php echo number_format($priceinfo['price'], 0); ?></span>
+                                    </button>
+                                <?php 
+                                    $idx++;
+                                endforeach; 
+                                ?>
+                            </div>
                         </div>
                         
                         <div class="product-purchase-footer">

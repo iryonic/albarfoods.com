@@ -89,12 +89,7 @@
             <div class="regulatory-badge" title="Goods and Services Tax Identification Number">
                 💼 GSTIN: <span>01ACFFM4729H1ZF</span>
             </div>
-            <div class="regulatory-badge" title="Permanent Account Number">
-                💳 PAN: <span>ACFFM4729H</span>
-            </div>
-            <div class="regulatory-badge" title="Import Export Code Details">
-                🌍 IE Code: <span>ACFFM4729H</span>
-            </div>
+            
         </div>
     </div>
     

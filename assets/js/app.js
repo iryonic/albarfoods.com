@@ -442,7 +442,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // 5. Variant Dropdown Price adjustment details
+    // 5. Variant Pills and Dropdowns Selection Handler
+    document.addEventListener('click', (e) => {
+        const pill = e.target.closest('.variant-pill');
+        if (!pill) return;
+
+        // Find parent container (card, page column, or quick view modal)
+        const container = pill.closest('.product-card, .product-page-columns, .modal-content-box');
+        if (!container) return;
+
+        // Toggle active classes on pills
+        container.querySelectorAll('.variant-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+
+        // Extract values
+        const pid = parseInt(container.getAttribute('data-product-id'));
+        const price = parseFloat(pill.getAttribute('data-price'));
+        const orig = parseFloat(pill.getAttribute('data-orig'));
+
+        // Update price labels in the container
+        const currentPriceLabel = container.querySelector('.price-current, #detail-current-price, #qv-current-price, #price-current-' + pid);
+        const originalPriceLabel = container.querySelector('.price-original, #detail-original-price, #qv-original-price, #price-orig-' + pid);
+        const discountTag = container.querySelector('#detail-discount-tag');
+
+        if (currentPriceLabel) {
+            currentPriceLabel.innerText = `₹${price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+        }
+        if (originalPriceLabel) {
+            originalPriceLabel.innerText = `₹${orig.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+        }
+        if (discountTag && orig > price) {
+            const savings = orig - price;
+            const percentage = Math.round((savings / orig) * 100);
+            discountTag.innerText = `SAVE ${percentage}%`;
+        }
+
+        // Sync visual counter buttons state
+        if (window.AlBarrCart) {
+            window.AlBarrCart.syncUI();
+        }
+    });
+
     document.querySelectorAll('select.variant-dropdown').forEach(dropdown => {
         dropdown.addEventListener('change', (e) => {
             const pid = parseInt(dropdown.getAttribute('data-product-id'));
@@ -607,17 +647,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const cartBtnBox = document.getElementById('qv-cart-control-btn');
         if (cartBtnBox) cartBtnBox.setAttribute('data-product-id', pid);
 
-        // Populate variants dropdown
-        const select = document.getElementById('qv-variant-select');
-        select.innerHTML = '';
-        variantsArray.forEach(v => {
-            const opt = document.createElement('option');
-            opt.value = v.weight;
-            opt.setAttribute('data-price', v.price);
-            opt.setAttribute('data-orig', v.orig);
-            opt.innerText = `${v.weight} - Pack of 1 (₹${v.price.toLocaleString('en-IN', { minimumFractionDigits: 2 })})`;
-            select.appendChild(opt);
-        });
+        // Populate variants pills
+        const pillsContainer = document.getElementById('qv-variant-pills-container');
+        if (pillsContainer) {
+            pillsContainer.innerHTML = '';
+            variantsArray.forEach((v, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `variant-pill ${idx === 0 ? 'active' : ''}`;
+                btn.setAttribute('data-weight', v.weight);
+                btn.setAttribute('data-price', v.price);
+                btn.setAttribute('data-orig', v.orig);
+                btn.innerHTML = `
+                    <span class="pill-weight">${v.weight}</span>
+                    <span class="pill-price">₹${v.price}</span>
+                `;
+                pillsContainer.appendChild(btn);
+            });
+        }
 
         // Set initial pricing
         if (variantsArray.length > 0) {
@@ -651,21 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Modal variant dropdown selection change
-    const qvSelect = document.getElementById('qv-variant-select');
-    if (qvSelect) {
-        qvSelect.addEventListener('change', () => {
-            const option = qvSelect.options[qvSelect.selectedIndex];
-            const price = parseFloat(option.getAttribute('data-price'));
-            const orig = parseFloat(option.getAttribute('data-orig'));
-
-            document.getElementById('qv-current-price').innerText = `₹${price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-            document.getElementById('qv-original-price').innerText = `₹${orig.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-
-            // Sync layouts inside modal
-            AlBarrCart.syncUI();
-        });
-    }
+    // Modal variant dropdown selection change (Handled via generic .variant-pill listener)
 
     // Modal Blinkit Add triggers
     const qvAdd = document.getElementById('qv-add-btn');

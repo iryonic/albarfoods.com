@@ -23,10 +23,13 @@
         }
 
         .success-container {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
             text-align: center;
             width: 100%;
+            animation: fadeUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
         }
 
         .success-header {
@@ -105,6 +108,7 @@
         }
 
         /* Order Details Card */
+        /* Minimalist Receipt Snippet */
         .order-success-card {
             background: var(--color-cream-card);
             border: 1px solid var(--color-border);
@@ -115,6 +119,13 @@
             margin-bottom: var(--spacing-lg);
             position: relative;
             overflow: hidden;
+            animation: fadeUp 0.5s ease-out 0.2s forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .order-success-card::before {
@@ -125,6 +136,55 @@
             right: 0;
             height: 4px;
             background: var(--color-gold-gradient);
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px dashed var(--color-border-light);
+        }
+
+        .receipt-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .receipt-lbl {
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .receipt-val {
+            font-size: 1.05rem;
+            color: var(--color-blue-dark);
+            font-weight: 700;
+        }
+
+        .receipt-val.order-id {
+            font-family: monospace;
+            font-size: 1.15rem;
+            letter-spacing: 0.5px;
+        }
+
+        .receipt-total {
+            margin-top: var(--spacing-sm);
+            border-top: 1px solid var(--color-border) !important;
+            padding-top: var(--spacing-md);
+        }
+
+        .receipt-total .receipt-lbl {
+            font-size: 1rem;
+            color: var(--color-text-primary);
+        }
+
+        .receipt-total .receipt-val {
+            font-size: 1.4rem;
+            color: var(--color-gold);
         }
 
         .order-meta-grid {
@@ -512,77 +572,35 @@
 
                 <!-- 2. Header Text -->
                 <div class="success-header">
-                    <h1 class="success-title">Order Placed Successfully!</h1>
-                    <p class="success-subtitle">Thank you for ordering from Al Barr. Your staples are being packaged with extreme hygiene at our Srinagar orchards hub.</p>
+                    <h1 class="success-title">Order Confirmed!</h1>
+                    <p class="success-subtitle">Thank you for choosing Al Barr.</p>
                 </div>
 
-                <!-- 3. Details Card -->
+                <!-- 3. Minimal Receipt Snippet -->
                 <div class="order-success-card">
-                    
-                    <!-- Meta Grid (Order ID, Payment Mode, Name) -->
-                    <div class="order-meta-grid">
-                        <div class="meta-item">
-                            <span class="meta-item-label">Order Reference</span>
-                            <span class="meta-item-value order-id" id="lbl-order-id">ALB-2026-XXXX</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-item-label">Payment Method</span>
-                            <span class="meta-item-value" id="lbl-payment-method">Cash on Delivery (COD)</span>
-                        </div>
+                    <div class="receipt-row">
+                        <span class="receipt-lbl">Order Reference</span>
+                        <span class="receipt-val order-id" id="lbl-order-id">ALB-2026-XXXX</span>
                     </div>
+                    <div class="receipt-row">
+                        <span class="receipt-lbl">Payment Method</span>
+                        <span class="receipt-val" id="lbl-payment-method">Cash on Delivery (COD)</span>
+                    </div>
+                    <div class="receipt-row receipt-total">
+                        <span class="receipt-lbl">Grand Total</span>
+                        <span class="receipt-val" id="lbl-total">₹0.00</span>
+                    </div>
+                </div>
 
-                    <!-- Items Summary -->
-                    <div class="order-success-section">
-                        <h3 class="order-success-sec-title">
-                            <span>📦</span> Items Ordered
-                        </h3>
-                        <div class="success-items-list" id="success-items-container">
-                            <!-- JS populated -->
-                        </div>
+                <!-- 4. Next Steps Alert -->
+                <div class="success-instruction-alert" id="instruction-card">
+                    <span class="instruction-icon">🔔</span>
+                    <div class="instruction-text">
+                        <h4 id="instruction-title">What happens next?</h4>
+                        <p id="instruction-body">Your order is registered. We will send you dispatch updates via SMS or contact you directly on your primary telephone number to coordinate local doorstep delivery. Thank you!</p>
                         
-                        <!-- Totals Breakdown -->
-                        <div class="success-financials">
-                            <div class="financial-row">
-                                <span>Subtotal</span>
-                                <span id="lbl-subtotal">₹0.00</span>
-                            </div>
-                            <div class="financial-row discount" id="row-discount" style="display: none;">
-                                <span>Discount Applied (10% Off)</span>
-                                <span id="lbl-discount">-₹0.00</span>
-                            </div>
-                            <div class="financial-row">
-                                <span>Delivery Fee</span>
-                                <span id="lbl-delivery">₹60.00</span>
-                            </div>
-                            <div class="financial-row total">
-                                <span>Grand Total</span>
-                                <span id="lbl-total">₹0.00</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Shipping Address Summary -->
-                    <div class="order-success-section">
-                        <h3 class="order-success-sec-title">
-                            <span>📍</span> Delivery Address
-                        </h3>
-                        <div class="shipping-address-summary">
-                            <strong id="lbl-shipping-name">Irfan Manzoor</strong><br>
-                            <span id="lbl-shipping-address">Zakura, Srinagar, Jammu & Kashmir - 190006</span><br>
-                            <span>Phone: <span id="lbl-shipping-phone">9419012345</span></span>
-                        </div>
-                    </div>
-
-                    <!-- J&K Bank details card (Conditional display based on payment method) -->
-                    <div class="order-success-section" id="success-bank-section" style="display: none;">
-                        <h3 class="order-success-sec-title">
-                            <span>💳</span> Direct Bank Transfer Details
-                        </h3>
-                        <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: var(--spacing-sm);">
-                            Please execute the advance transfer and copy/save the bank details below. Send your transaction receipt on WhatsApp for instant validation.
-                        </p>
-                        
-                        <div class="bank-details-card-checkout">
+                        <!-- J&K Bank details card (Conditional display based on payment method) -->
+                        <div class="bank-details-card-checkout" id="success-bank-section" style="display: none; margin-top: var(--spacing-md);">
                             <div class="checkout-bank-row">
                                 <span class="checkout-bank-lbl">Bank Name:</span>
                                 <span class="checkout-bank-val" style="font-family: inherit;">J&amp;K Bank</span>
@@ -607,26 +625,13 @@
                             </div>
                         </div>
                     </div>
-
-                </div>
-
-                <!-- 4. Next Steps Alert -->
-                <div class="success-instruction-alert" id="instruction-card">
-                    <span class="instruction-icon">🔔</span>
-                    <div class="instruction-text">
-                        <h4 id="instruction-title">What happens next?</h4>
-                        <p id="instruction-body">Your order is registered. We will send you dispatch updates via SMS or contact you directly on your primary telephone number to coordinate local doorstep delivery. Thank you!</p>
-                    </div>
                 </div>
 
                 <!-- 5. Actions / CTAs -->
                 <div class="success-actions">
                     <a href="index.php" class="btn-success-action secondary" onclick="clearSuccessSession();">
-                        <span>🏠</span> Back to Home
+                         Back to Home
                     </a>
-                    <button class="btn-success-action secondary" onclick="window.print();">
-                        <span>🖨️</span> Print Receipt
-                    </button>
                     <a href="#" target="_blank" class="btn-success-action whatsapp-confirm" id="btn-whatsapp-confirm" style="display: none;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 18px; height: 18px;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                         Confirm on WhatsApp
@@ -728,38 +733,7 @@
             // 2. Populate Order Info
             document.getElementById('lbl-order-id').innerText = orderData.orderId;
             document.getElementById('lbl-payment-method').innerText = orderData.paymentMethod;
-            document.getElementById('lbl-shipping-name').innerText = orderData.shippingName;
-            document.getElementById('lbl-shipping-phone').innerText = orderData.shippingPhone;
-            document.getElementById('lbl-shipping-address').innerText = orderData.shippingAddress;
-
-            // Totals
-            document.getElementById('lbl-subtotal').innerText = `₹${orderData.subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-            if (orderData.discount > 0) {
-                document.getElementById('row-discount').style.display = 'flex';
-                document.getElementById('lbl-discount').innerText = `-₹${orderData.discount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-            }
-            document.getElementById('lbl-delivery').innerText = orderData.delivery === 0 ? 'FREE' : `₹${orderData.delivery.toFixed(2)}`;
             document.getElementById('lbl-total').innerText = `₹${orderData.grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-
-            // Items list
-            const itemsContainer = document.getElementById('success-items-container');
-            itemsContainer.innerHTML = '';
-            
-            orderData.items.forEach(item => {
-                const row = document.createElement('div');
-                row.className = 'success-item-row';
-                row.innerHTML = `
-                    <div class="success-item-details">
-                        <img src="${item.image}" alt="${item.title}" class="success-item-thumb" ${item.id === 4 ? 'style="filter: hue-rotate(45deg);"' : ''}>
-                        <div>
-                            <span class="success-item-name">${item.title}</span>
-                            <div class="success-item-qty">Weight: ${item.weight} | Qty: ${item.qty}</div>
-                        </div>
-                    </div>
-                    <span class="success-item-price">₹${(item.price * item.qty).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                `;
-                itemsContainer.appendChild(row);
-            });
 
             // 3. Conditional adjustments based on Payment Method
             const isBankTransfer = orderData.paymentMethod.includes('Bank');
@@ -773,8 +747,8 @@
                 bankSection.style.display = 'block';
                 
                 // Update instructions
-                alertTitle.innerText = "Advance Payment Pending";
-                alertBody.innerText = "Please complete the transfer to the J&K Bank account. Once transferred, send the receipt/screenshot via WhatsApp for immediate verification and dispatch.";
+                alertTitle.innerText = "Payment Pending";
+                alertBody.innerText = "Please transfer the amount below and share the receipt via WhatsApp.";
                 
                 // Configure WhatsApp button
                 const messageText = `Hello Al Barr Team, I have placed order *${orderData.orderId}* for *₹${orderData.grandTotal.toLocaleString('en-IN')}* using Direct Bank Transfer. Here is my transaction receipt.`;
@@ -782,10 +756,10 @@
                 whatsappBtn.style.display = 'inline-flex';
             } else {
                 // Cash on Delivery instructions
-                alertTitle.innerText = "Cash on Delivery Registered";
-                alertBody.innerText = "We will call you to confirm your order details and coordinate physical doorstep delivery. Please keep the exact cash amount or UPI scanner ready during delivery.";
+                alertTitle.innerText = "Order Confirmed";
+                alertBody.innerText = "We will contact you shortly to coordinate your delivery.";
                 
-                // COD optional WhatsApp confirmation (gives customers a quick way to say they are ready)
+                // COD optional WhatsApp confirmation
                 const messageText = `Hello Al Barr Team, I have placed COD order *${orderData.orderId}* for *₹${orderData.grandTotal.toLocaleString('en-IN')}*. Please confirm dispatch!`;
                 whatsappBtn.href = `https://wa.me/919419000000?text=${encodeURIComponent(messageText)}`;
                 whatsappBtn.style.display = 'inline-flex';

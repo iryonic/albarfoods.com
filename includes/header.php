@@ -46,25 +46,13 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
 <header class="main-header">
     <div class="container header-grid-container">
         
-        <!-- Hamburger Menu Button (Mobile) -->
-        <button class="mobile-menu-toggle-btn" id="mobile-menu-toggle" aria-label="Open Menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </button>
+        <!-- Left Column: Menu Toggle, Location Selector, Search Bar -->
+        <div class="header-left-col">
+            <!-- Hamburger Menu Button (Mobile) -->
+            <button class="mobile-menu-toggle-btn" id="mobile-menu-toggle" aria-label="Open Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
 
-        <!-- Brand Logo Area & Desktop Location Quick-Selector -->
-        <div class="brand-group">
-            <div class="logo-area">
-                <a href="index.php" class="logo-link">
-                    <div class="logo-badge-container">
-                        <img src="assets/img/logo.png" alt="Al barr logo" class="logo-image">
-                    </div>
-                    <div class="logo-text">
-                        <span class="brand-name">Al barr</span>
-                        <span class="brand-tagline">Khalis Wa Shifaf</span>
-                    </div>
-                </a>
-            </div>
-            
             <!-- Desktop Location Quick-Selector -->
             <div class="desktop-location-selector">
                 <svg class="loc-pin-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -76,56 +64,69 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
                     <span class="loc-region">Jammu & Kashmir Valleys</span>
                 </div>
             </div>
-        </div>
 
-        <!-- Search Bar (Desktop / Center Hub) -->
-        <div class="search-wrapper">
-            <div class="search-form">
-                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" id="header-search" class="search-input" placeholder="Search premium almonds, Mogra saffron, wild honey..." autocomplete="off">
-                <span class="search-accent-pill">100% Organic</span>
-            </div>
-            
-            <!-- Autocomplete suggestions panel -->
-            <div class="search-results-panel" id="search-panel">
-                <div class="results-grid">
-                    <div class="results-column suggestions-col">
-                        <div class="results-title">🔥 Trending Searches</div>
-                        <ul class="suggestions-list">
-                            <?php if (!empty($hdr_products)): ?>
-                                <?php foreach (array_slice($hdr_products, 0, 3) as $p): ?>
-                                    <li><a href="product.php?id=<?php echo $p['id']; ?>"><span style="color: var(--color-gold);">★</span> <?php echo htmlspecialchars($p['title']); ?></a></li>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <li><a href="product.php?id=1"><span style="color: var(--color-gold);">★</span> Kashmiri Mamra Almonds</a></li>
-                                <li><a href="product.php?id=2"><span style="color: var(--color-gold);">★</span> Mogra Saffron</a></li>
-                            <?php endif; ?>
-                        </ul>
-                        <div class="results-title" style="margin-top: var(--spacing-md);">🛍️ Popular Categories</div>
-                        <ul class="suggestions-list">
-                            <li><a href="index.php#categories-section">Dry Fruits</a></li>
-                            <li><a href="index.php#categories-section">Spices & Saffron</a></li>
-                            <li><a href="index.php#categories-section">Honey & Seeds</a></li>
-                        </ul>
-                    </div>
-                    <div class="results-column products-col">
-                        <div class="results-title">📦 Matching Products</div>
-                        <div class="products-suggestions" id="search-suggestions-container">
-                            <?php if (!empty($hdr_products)): ?>
-                                <?php foreach (array_slice($hdr_products, 0, 3) as $p): ?>
-                                    <a href="product.php?id=<?php echo $p['id']; ?>" class="prod-suggest-item">
-                                        <img src="<?php echo htmlspecialchars($p['image']); ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" class="prod-suggest-thumb" <?php if ($p['id'] === 4) echo 'style="filter: hue-rotate(45deg);"'; ?>>
-                                        <div class="prod-suggest-info">
-                                            <span class="prod-suggest-title"><?php echo htmlspecialchars($p['title']); ?></span>
-                                            <span class="prod-suggest-price">₹<?php echo number_format($p['variants'][array_key_first($p['variants'])]['price'], 2); ?> - <?php echo array_key_first($p['variants']); ?></span>
-                                        </div>
-                                    </a>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
+            <!-- Search Bar (Desktop / Left-Center Hub) -->
+            <div class="search-wrapper">
+                <div class="search-form">
+                    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="header-search" class="search-input" placeholder="Search premium almonds, Mogra saffron, wild honey..." autocomplete="off">
+                    <span class="search-accent-pill">100% Organic</span>
+                </div>
+                
+                <!-- Autocomplete suggestions panel -->
+                <div class="search-results-panel" id="search-panel">
+                    <div class="results-grid">
+                        <div class="results-column suggestions-col">
+                            <div class="results-title">🔥 Trending Searches</div>
+                            <ul class="suggestions-list">
+                                <?php if (!empty($hdr_products)): ?>
+                                    <?php foreach (array_slice($hdr_products, 0, 3) as $p): ?>
+                                        <li><a href="product.php?id=<?php echo $p['id']; ?>"><span style="color: var(--color-gold);">★</span> <?php echo htmlspecialchars($p['title']); ?></a></li>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <li><a href="product.php?id=1"><span style="color: var(--color-gold);">★</span> Kashmiri Mamra Almonds</a></li>
+                                    <li><a href="product.php?id=2"><span style="color: var(--color-gold);">★</span> Mogra Saffron</a></li>
+                                <?php endif; ?>
+                            </ul>
+                            <div class="results-title" style="margin-top: var(--spacing-md);">🛍️ Popular Categories</div>
+                            <ul class="suggestions-list">
+                                <li><a href="index.php#categories-section">Dry Fruits</a></li>
+                                <li><a href="index.php#categories-section">Spices & Saffron</a></li>
+                                <li><a href="index.php#categories-section">Honey & Seeds</a></li>
+                            </ul>
+                        </div>
+                        <div class="results-column products-col">
+                            <div class="results-title">📦 Matching Products</div>
+                            <div class="products-suggestions" id="search-suggestions-container">
+                                <?php if (!empty($hdr_products)): ?>
+                                    <?php foreach (array_slice($hdr_products, 0, 3) as $p): ?>
+                                        <a href="product.php?id=<?php echo $p['id']; ?>" class="prod-suggest-item">
+                                            <img src="<?php echo htmlspecialchars($p['image']); ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" class="prod-suggest-thumb" <?php if ($p['id'] === 4) echo 'style="filter: hue-rotate(45deg);"'; ?>>
+                                            <div class="prod-suggest-info">
+                                                <span class="prod-suggest-title"><?php echo htmlspecialchars($p['title']); ?></span>
+                                                <span class="prod-suggest-price">₹<?php echo number_format($p['variants'][array_key_first($p['variants'])]['price'], 2); ?> - <?php echo array_key_first($p['variants']); ?></span>
+                                            </div>
+                                        </a>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Center Brand Logo Area -->
+        <div class="logo-area">
+            <a href="index.php" class="logo-link">
+                <div class="logo-badge-container">
+                    <img src="assets/img/logo.png" alt="Al barr logo" class="logo-image">
+                </div>
+                <div class="logo-text">
+                    <span class="brand-name">AL BARR</span>
+                    <span class="brand-tagline">Khalis Wa Shifaf</span>
+                </div>
+            </a>
         </div>
 
         <!-- Utilities / Actions -->
@@ -270,9 +271,13 @@ window.AlBarrProductsDb = <?php echo json_encode($hdr_products); ?>;
             <ul class="nav-links">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="shop.php">Shop All</a></li>
-                <li><a href="shop.php?category=dry-fruits">Dry Fruits & Nuts</a></li>
-                <li><a href="shop.php?category=spices">Saffron & Spices</a></li>
-                <li><a href="shop.php?category=honey">Pure Honey</a></li>
+                <li><a href="shop.php?category=dry-fruits">Dry Fruits</a></li>
+                <li><a href="shop.php?category=spices">Spices</a></li>
+                <li><a href="shop.php?category=saffron">Saffron</a></li>
+
+                <li><a href="shop.php?category=spices">pulses</a></li>
+
+                <li><a href="shop.php?category=honey">Honey</a></li>
                 <li><a href="about.php">About Us</a></li>
                 <li><a href="contact.php">Contact</a></li>
                 <li><a href="index.php#offers-section" class="nav-highlight">Special Offers <span class="hot-badge">HOT</span></a></li>

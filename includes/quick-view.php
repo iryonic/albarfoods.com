@@ -38,11 +38,9 @@
                         <!-- Variant Picker -->
                         <div class="product-variant-selector">
                             <label style="font-size: 0.85rem; font-weight: 700; color: var(--color-blue-dark); display: block; margin-bottom: var(--spacing-xs);">Select Weight Variant:</label>
-                            <select class="variant-dropdown" id="qv-variant-select">
-                                <option value="250g" data-price="850" data-orig="990">250g - Pack of 1 (₹850.00)</option>
-                                <option value="500g" data-price="1650" data-orig="1900">500g - Pack of 1 (₹1,650.00)</option>
-                                <option value="1kg" data-price="3200" data-orig="3700">1kg - Pack of 1 (₹3,200.00)</option>
-                            </select>
+                            <div class="variant-pill-wrapper" id="qv-variant-pills-container">
+                                <!-- Populated dynamically by JS -->
+                            </div>
                         </div>
                     </div>
 

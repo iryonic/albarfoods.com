@@ -301,7 +301,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ---- Header Grid Row ---- */
 .header-grid-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: var(--spacing-lg);
     padding: 12px var(--spacing-lg);
@@ -312,17 +313,18 @@ h1, h2, h3, h4, h5, h6 {
     padding: 8px var(--spacing-lg);
 }
 
-/* ---- Brand Group (Logo + Desktop Location) ---- */
-.brand-group {
+/* ---- Header Columns ---- */
+.header-left-col {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-    flex-shrink: 0;
+    min-width: 0;
 }
 
 .logo-area {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .logo-link {
@@ -371,7 +373,7 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--color-gold-hover);
     font-weight: 800;
     letter-spacing: 1.8px;
-    text-transform: uppercase;
+    text-transform: capitalize;
     margin-top: 4px;
 }
 
@@ -614,6 +616,7 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     gap: var(--spacing-sm);
     flex-shrink: 0;
+    justify-content: flex-end;
 }
 
 /* ---- Action Badge ---- */
@@ -966,7 +969,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-links li a {
-    font-size: 0.86rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--color-text-secondary);
     padding: 4px 0;
@@ -1510,9 +1513,9 @@ h1, h2, h3, h4, h5, h6 {
     .cart-pill-right { padding: 6px 10px; }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• 
    MOBILE: â‰¤ 768px â€” Premium 2-row app-style header
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â•  */
 @media (max-width: 768px) {
 
     /* â”€â”€ 1. Whole header container â”€â”€ */
@@ -1525,9 +1528,9 @@ h1, h2, h3, h4, h5, h6 {
 
     /* â”€â”€ 3. ROW 1: Hamburger | Logo | Cart â”€â”€ */
     .header-grid-container {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        justify-content: space-between;
         padding: 10px 16px;
         gap: 10px;
         min-height: 58px;
@@ -1542,7 +1545,6 @@ h1, h2, h3, h4, h5, h6 {
     .mobile-menu-toggle-btn {
         display: flex;
         flex-shrink: 0;
-        order: 1;
         width: 40px;
         height: 40px;
         border-radius: 12px;
@@ -1564,11 +1566,18 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     /* Brand group â€” center, grows to fill space */
-    .brand-group {
-        flex: 1;
-        order: 2;
+    .header-left-col {
+        grid-column: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .logo-area {
+        grid-column: 2;
+        display: flex;
         justify-content: center;
-        min-width: 0;
+        align-items: center;
     }
 
     .logo-link {
@@ -1746,8 +1755,7 @@ h1, h2, h3, h4, h5, h6 {
     /* â”€â”€ 6. Bottom nav capsule visible â”€â”€ */
     .mobile-bottom-nav { display: block; }
 
-    /* Body padding to not hide behind bottom nav */
-    body { padding-bottom: 100px; }
+ 
 
     /* Toast — bottom-center on mobile, slides UP from bottom */
     .toast-container {
@@ -2136,7 +2144,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .whatsapp-widget {
-    background-color: #25D366;
+    background-color: #25d365b4;
     animation: pulseGreen 2.5s infinite;
 }
 
@@ -2201,25 +2209,7 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-/* Sourcing pledge: 4-col â†’ 2-col â†’ 1-col */
-.sourcing-pledge-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-lg);
-    margin-top: var(--spacing-xl);
-}
-
-@media (max-width: 900px) {
-    .sourcing-pledge-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 500px) {
-    .sourcing-pledge-grid {
-        grid-template-columns: 1fr;
-    }
-}
+/* Sourcing pledge: styled in components.css */
 
 /* Benefits: 4-col â†’ 2-col â†’ 1-col */
 .benefits-grid {

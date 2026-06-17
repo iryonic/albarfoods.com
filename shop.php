@@ -58,13 +58,24 @@ function renderProductCard($p) {
             </div>
             
             <div class="product-variant-selector">
-                <select class="variant-dropdown" data-product-id="<?php echo $p['id']; ?>">
-                    <?php foreach ($p['variants'] as $weight => $data): ?>
-                        <option value="<?php echo htmlspecialchars($weight); ?>" data-price="<?php echo $data['price']; ?>" data-orig="<?php echo $data['orig']; ?>">
-                            <?php echo htmlspecialchars($weight); ?> - ₹<?php echo number_format($data['price'], 2); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                <div class="variant-pill-wrapper">
+                    <?php 
+                    $idx = 0;
+                    foreach ($p['variants'] as $weight => $data): 
+                        $activeClass = ($idx === 0) ? 'active' : '';
+                    ?>
+                        <button class="variant-pill <?php echo $activeClass; ?>" 
+                                data-weight="<?php echo htmlspecialchars($weight); ?>" 
+                                data-price="<?php echo $data['price']; ?>" 
+                                data-orig="<?php echo $data['orig']; ?>">
+                            <span class="pill-weight"><?php echo htmlspecialchars($weight); ?></span>
+                            <span class="pill-price">₹<?php echo number_format($data['price'], 0); ?></span>
+                        </button>
+                    <?php 
+                        $idx++;
+                    endforeach; 
+                    ?>
+                </div>
             </div>
             
             <div class="product-purchase-footer">

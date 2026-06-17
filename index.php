@@ -47,13 +47,24 @@ function renderProductCard($p) {
             </div>
             
             <div class="product-variant-selector">
-                <select class="variant-dropdown" data-product-id="<?php echo $p['id']; ?>">
-                    <?php foreach ($p['variants'] as $weight => $data): ?>
-                        <option value="<?php echo htmlspecialchars($weight); ?>" data-price="<?php echo $data['price']; ?>" data-orig="<?php echo $data['orig']; ?>">
-                            <?php echo htmlspecialchars($weight); ?> - ₹<?php echo number_format($data['price'], 2); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                <div class="variant-pill-wrapper">
+                    <?php 
+                    $idx = 0;
+                    foreach ($p['variants'] as $weight => $data): 
+                        $activeClass = ($idx === 0) ? 'active' : '';
+                    ?>
+                        <button class="variant-pill <?php echo $activeClass; ?>" 
+                                data-weight="<?php echo htmlspecialchars($weight); ?>" 
+                                data-price="<?php echo $data['price']; ?>" 
+                                data-orig="<?php echo $data['orig']; ?>">
+                            <span class="pill-weight"><?php echo htmlspecialchars($weight); ?></span>
+                            <span class="pill-price">₹<?php echo number_format($data['price'], 0); ?></span>
+                        </button>
+                    <?php 
+                        $idx++;
+                    endforeach; 
+                    ?>
+                </div>
             </div>
             
             <div class="product-purchase-footer">
@@ -144,65 +155,6 @@ function renderProductCard($p) {
         <div class="slider-controls" id="hero-slider-dots">
             <span class="slider-dot active" data-slide="0"></span>
             <span class="slider-dot" data-slide="1"></span>
-        </div>
-    </section>
-
-    <!-- Trust Badges Bar (Premium) -->
-    <section class="trust-bar-section" id="trust-bar-section">
-        <div class="container">
-            <div class="trust-badges-row" id="trust-badges-grid">
-
-                <!-- Badge 1 -->
-                <div class="trust-badge-card">
-                    <div class="trust-icon-wrap trust-icon-green">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    </div>
-                    <div class="trust-text-wrap">
-                        <strong class="trust-title">FSSAI Verified Purity</strong>
-                        <span class="trust-sub">Lic: 11025430000232</span>
-                    </div>
-                </div>
-
-                <div class="trust-badge-divider"></div>
-
-                <!-- Badge 2 -->
-                <div class="trust-badge-card">
-                    <div class="trust-icon-wrap trust-icon-gold">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4M3 17l9 4 9-4M3 12l9 4 9-4"/></svg>
-                    </div>
-                    <div class="trust-text-wrap">
-                        <strong class="trust-title">Kashmiri Heritage Sourced</strong>
-                        <span class="trust-sub">Direct from Zakura &amp; Raj Bagh</span>
-                    </div>
-                </div>
-
-                <div class="trust-badge-divider"></div>
-
-                <!-- Badge 3 -->
-                <div class="trust-badge-card">
-                    <div class="trust-icon-wrap trust-icon-blue">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                    </div>
-                    <div class="trust-text-wrap">
-                        <strong class="trust-title">Secure Bank Settlement</strong>
-                        <span class="trust-sub">J&amp;K Bank — JAKA0GARDEN</span>
-                    </div>
-                </div>
-
-                <div class="trust-badge-divider"></div>
-
-                <!-- Badge 4 -->
-                <div class="trust-badge-card">
-                    <div class="trust-icon-wrap trust-icon-saffron">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H19M12 5l7 7-7 7"/></svg>
-                    </div>
-                    <div class="trust-text-wrap">
-                        <strong class="trust-title">Doorstep Delivery</strong>
-                        <span class="trust-sub">Cash on Delivery Available</span>
-                    </div>
-                </div>
-
-            </div>
         </div>
     </section>
 
@@ -343,84 +295,8 @@ function renderProductCard($p) {
         </div>
     </section>
 
-    <!-- Saffron Spotlight (Nutrikorner Content-Commerce style) -->
-    <section class="saffron-spotlight-section" id="spotlight-kesar-section">
-        <div class="container">
-            <div class="saffron-spotlight-box">
-                <!-- Content info -->
-                <div class="saffron-spotlight-content">
-                    <span class="spotlight-eyebrow">The Purity Standard</span>
-                    <h2 class="spotlight-title">How to Identify 100% Pure Saffron</h2>
-                    <p class="spotlight-desc">
-                        Genuine Kashmiri Saffron is famous globally for its deep red coloring strength and distinctive warm aroma. Unlike artificial alternatives, raw Kesar releases its rich golden hue slowly, keeping its crimson threads perfectly intact.
-                    </p>
-                    
-                    <div class="spotlight-highlights-grid">
-                        <div class="spotlight-highlight-card">
-                            <span class="highlight-icon">⏱️</span>
-                            <div class="highlight-info">
-                                <strong class="highlight-label">Gradual Infusion</strong>
-                                <span class="highlight-text">Releases golden color slowly, never bleaches instantly.</span>
-                            </div>
-                        </div>
-                        <div class="spotlight-highlight-card">
-                            <span class="highlight-icon">🔬</span>
-                            <div class="highlight-info">
-                                <strong class="highlight-label">Grade A+ Certified</strong>
-                                <span class="highlight-text">FSSAI licensed, highest Crocin density for wellness.</span>
-                            </div>
-                        </div>
-                        <div class="spotlight-highlight-card">
-                            <span class="highlight-icon">🔒</span>
-                            <div class="highlight-info">
-                                <strong class="highlight-label">Zakura Double Sealed</strong>
-                                <span class="highlight-text">Packed in glass jars with gold lids directly at source.</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="spotlight-action-row">
-                        <a href="product.php?id=2" class="btn btn-gold spotlight-cta-btn">
-                            <span>Shop Certified Pure Kesar</span>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                        </a>
-                    </div>
-                </div>
-                <!-- Graphic image -->
-                <div class="saffron-spotlight-img" style="background-image: url('assets/img/hero-saffron.png');" aria-label="Pure Kashmiri Saffron close-up"></div>
-            </div>
-        </div>
-    </section>
+    
 
-    <!-- Product Carousel 2: Rare Herbs & Superfood Seeds (Products 5-8) -->
-    <section class="section-padding" id="seeds-section" style="background-color: var(--color-cream-dark); border-top: 1px solid var(--color-border-light); border-bottom: 1px solid var(--color-border-light);">
-        <div class="container">
-            <h2 class="section-title">Trending Seeds & Rare Harvests</h2>
-         
-            
-            <div class="carousel-outer-wrap" id="carousel-wrap-seeds">
-                <!-- Navigation Arrows -->
-                <button class="carousel-arrow-btn prev" aria-label="Previous Products">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                </button>
-                
-                <div class="carousel-container-scroll" id="carousel-scroll-seeds">
-                    <?php
-                    // Render Products 5, 6, 7, 8
-                    for ($id = 5; $id <= 8; $id++) {
-                        if (isset($products[$id])) {
-                            echo renderProductCard($products[$id]);
-                        }
-                    }
-                    ?>
-                </div>
-                
-                <button class="carousel-arrow-btn next" aria-label="Next Products">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </button>
-            </div>
-        </div>
-    </section>
 
     <!-- Sourced Premium Combo Offers Section -->
     <section class="section-padding premium-combos-section" id="premium-combos-section">
@@ -555,34 +431,34 @@ function renderProductCard($p) {
     </section>
 
     <!-- The Al Barr Pledge (USP Grid Section) -->
-    <section class="section-padding" style="background-color: #fff;" id="pledge-usp-section">
+    <section class="pledge-usp-section" id="pledge-usp-section">
         <div class="container">
             <h2 class="section-title">The Al Barr Pledge</h2>
             
             <div class="sourcing-pledge-grid" id="pledge-grid-box">
                 <!-- Promise 1 -->
-                <div class="pledge-card" style="background-color: var(--color-cream-card); border: 1px solid var(--color-border-light); padding: var(--spacing-lg); border-radius: var(--radius-md); text-align: center; transition: var(--transition-normal); border-bottom: 3px solid var(--color-gold);">
-                    <div style="font-size: 2.5rem; margin-bottom: var(--spacing-sm);">⛰️</div>
-                    <h3 style="font-size: 1.1rem; color: var(--color-blue-dark); margin-bottom: var(--spacing-xs); font-family: var(--font-secondary);">Purity Sourced</h3>
-                    <p style="font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.5;">Direct from pristine orchards in Zakura and valleys of Jammu & Kashmir. No middle-agents, no diluted products.</p>
+                <div class="pledge-card">
+                    <div class="pledge-icon-box">⛰️</div>
+                    <h3 class="pledge-title">Purity Sourced</h3>
+                    <p class="pledge-desc">Direct from pristine orchards in Zakura and valleys of Jammu & Kashmir. No middle-agents, no diluted products.</p>
                 </div>
                 <!-- Promise 2 -->
-                <div class="pledge-card" style="background-color: var(--color-cream-card); border: 1px solid var(--color-border-light); padding: var(--spacing-lg); border-radius: var(--radius-md); text-align: center; transition: var(--transition-normal); border-bottom: 3px solid var(--color-gold);">
-                    <div style="font-size: 2.5rem; margin-bottom: var(--spacing-sm);">🔬</div>
-                    <h3 style="font-size: 1.1rem; color: var(--color-blue-dark); margin-bottom: var(--spacing-xs); font-family: var(--font-secondary);">Lab Certified</h3>
-                    <p style="font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.5;">Grade A+ certification for our Mogra Kesar (Saffron). Tested coloring indices and moisture safety.</p>
+                <div class="pledge-card">
+                    <div class="pledge-icon-box">🔬</div>
+                    <h3 class="pledge-title">Lab Certified</h3>
+                    <p class="pledge-desc">Grade A+ certification for our Mogra Kesar (Saffron). Tested coloring indices and moisture safety.</p>
                 </div>
                 <!-- Promise 3 -->
-                <div class="pledge-card" style="background-color: var(--color-cream-card); border: 1px solid var(--color-border-light); padding: var(--spacing-lg); border-radius: var(--radius-md); text-align: center; transition: var(--transition-normal); border-bottom: 3px solid var(--color-gold);">
-                    <div style="font-size: 2.5rem; margin-bottom: var(--spacing-sm);">📦</div>
-                    <h3 style="font-size: 1.1rem; color: var(--color-blue-dark); margin-bottom: var(--spacing-xs); font-family: var(--font-secondary);">Fresh Double Sealing</h3>
-                    <p style="font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.5;">Hermetically sealed packaging with gold lids to lock in the natural oils, crisp crunch, and fragrance.</p>
+                <div class="pledge-card">
+                    <div class="pledge-icon-box">📦</div>
+                    <h3 class="pledge-title">Fresh Double Sealing</h3>
+                    <p class="pledge-desc">Hermetically sealed packaging with gold lids to lock in the natural oils, crisp crunch, and fragrance.</p>
                 </div>
                 <!-- Promise 4 -->
-                <div class="pledge-card" style="background-color: var(--color-cream-card); border: 1px solid var(--color-border-light); padding: var(--spacing-lg); border-radius: var(--radius-md); text-align: center; transition: var(--transition-normal); border-bottom: 3px solid var(--color-gold);">
-                    <div style="font-size: 2.5rem; margin-bottom: var(--spacing-sm);">🌱</div>
-                    <h3 style="font-size: 1.1rem; color: var(--color-blue-dark); margin-bottom: var(--spacing-xs); font-family: var(--font-secondary);">Raw & Organic</h3>
-                    <p style="font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.5;">Unpolished almonds, raw shelled walnut halves, and natural cumin seeds. Free from additives or dyes.</p>
+                <div class="pledge-card">
+                    <div class="pledge-icon-box">🌱</div>
+                    <h3 class="pledge-title">Raw & Organic</h3>
+                    <p class="pledge-desc">Unpolished almonds, raw shelled walnut halves, and natural cumin seeds. Free from additives or dyes.</p>
                 </div>
             </div>
         </div>
@@ -648,45 +524,6 @@ function renderProductCard($p) {
                             <img src="assets/img/wellness-combo-banner.png" alt="Custom Kashmiri Wellness Box" class="banner-main-image">
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Shop By Benefit Section -->
-    <section class="section-padding" style="background-color: var(--color-cream-dark); border-top: 1px solid var(--color-border-light); border-bottom: 1px solid var(--color-border-light);" id="benefits-section">
-        <div class="container">
-            <h2 class="section-title">Shop by Health Benefit</h2>
-            <p class="section-subtitle">Harvest selected to target specific wellness requirements</p>
-            
-            <div class="benefits-grid" id="benefits-grid-box">
-                <!-- Benefit 1 -->
-                <div class="benefit-card" onclick="location.href='product.php?id=1'" style="cursor: pointer; background: #fff; padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--color-border-light); text-align: center; transition: var(--transition-normal);">
-                    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: rgba(166, 28, 28, 0.05); color: var(--color-saffron-crimson); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md) auto; font-size: 1.5rem; font-weight: bold;">🧠</div>
-                    <h3 style="font-size: 1.1rem; color: var(--color-blue-dark); margin-bottom: 8px; font-family: var(--font-secondary);">Memory Care</h3>
-                    <p style="font-size: 0.8rem; color: var(--color-text-secondary); line-height: 1.4; margin-bottom: var(--spacing-md);">Rich in organic lipids and vitamin E. Mamra almonds are perfect for cognitive development.</p>
-                    <span style="font-size: 0.8rem; color: var(--color-gold); font-weight: 700; text-transform: uppercase;">Explore Almonds →</span>
-                </div>
-                <!-- Benefit 2 -->
-                <div class="benefit-card" onclick="location.href='product.php?id=3'" style="cursor: pointer; background: #fff; padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--color-border-light); text-align: center; transition: var(--transition-normal);">
-                    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: rgba(166, 28, 28, 0.05); color: var(--color-saffron-crimson); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md) auto; font-size: 1.5rem; font-weight: bold;">❤️</div>
-                    <h3 style="font-size: 1.1rem; color: var(--color-blue-dark); margin-bottom: 8px; font-family: var(--font-secondary);">Heart Wellness</h3>
-                    <p style="font-size: 0.8rem; color: var(--color-text-secondary); line-height: 1.4; margin-bottom: var(--spacing-md);">Light kernel walnut halves packed with Omega-3. Reduces cholesterol naturally.</p>
-                    <span style="font-size: 0.8rem; color: var(--color-gold); font-weight: 700; text-transform: uppercase;">Explore Walnuts →</span>
-                </div>
-                <!-- Benefit 3 -->
-                <div class="benefit-card" onclick="location.href='product.php?id=2'" style="cursor: pointer; background: #fff; padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--color-border-light); text-align: center; transition: var(--transition-normal);">
-                    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: rgba(166, 28, 28, 0.05); color: var(--color-saffron-crimson); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md) auto; font-size: 1.5rem; font-weight: bold;">✨</div>
-                    <h3 style="font-size: 1.1rem; color: var(--color-blue-dark); margin-bottom: 8px; font-family: var(--font-secondary);">Immunity & Skin</h3>
-                    <p style="font-size: 0.8rem; color: var(--color-text-secondary); line-height: 1.4; margin-bottom: var(--spacing-md);">Mogra Saffron threads containing high crocin concentration for natural skin glow & immunity.</p>
-                    <span style="font-size: 0.8rem; color: var(--color-gold); font-weight: 700; text-transform: uppercase;">Explore Saffron →</span>
-                </div>
-                <!-- Benefit 4 -->
-                <div class="benefit-card" onclick="location.href='product.php?id=7'" style="cursor: pointer; background: #fff; padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--color-border-light); text-align: center; transition: var(--transition-normal);">
-                    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: rgba(166, 28, 28, 0.05); color: var(--color-saffron-crimson); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md) auto; font-size: 1.5rem; font-weight: bold;">🤰</div>
-                    <h3 style="font-size: 1.1rem; color: var(--color-blue-dark); margin-bottom: 8px; font-family: var(--font-secondary);">Pregnancy Care</h3>
-                    <p style="font-size: 0.8rem; color: var(--color-text-secondary); line-height: 1.4; margin-bottom: var(--spacing-md);">Nutrient-dense raw seeds and organic figs. Sourced with highest cleanliness levels.</p>
-                    <span style="font-size: 0.8rem; color: var(--color-gold); font-weight: 700; text-transform: uppercase;">Explore Seeds →</span>
                 </div>
             </div>
         </div>
@@ -820,6 +657,13 @@ function renderProductCard($p) {
                 <span class="testi-dot" data-slide="3"></span>
             </div>
         </div>
+        
+        <!-- Wavy divider separating testimonials and newsletter sections -->
+        <div class="testimonials-wave-divider">
+            <svg viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,40 C320,100 480,20 800,80 C1120,140 1280,40 1440,80 L1440,120 L0,120 Z" fill="#070D0C"></path>
+            </svg>
+        </div>
     </section>
 
     <!-- Newsletter Section -->
@@ -834,7 +678,7 @@ function renderProductCard($p) {
                 <div class="newsletter-content">
                     <span class="newsletter-eyebrow">📬 Stay in the Loop</span>
                     <h2 class="newsletter-title">Get Harvest Alerts &amp; Flash Sale Drops</h2>
-                    <p class="newsletter-desc">Be the first to know when fresh Kashmir harvests land — from limited Mogra Saffron batches to seasonal honey drops and exclusive flash deals.</p>
+                   
 
                     <div class="newsletter-perks">
                         <span class="newsletter-perk">✓ New harvest alerts</span>
