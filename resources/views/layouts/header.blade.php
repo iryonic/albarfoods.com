@@ -1,0 +1,588 @@
+@php
+    $raw_products = DB::table('products')
+        ->join('categories', 'products.category_id', '=', 'categories.id')
+        ->select('products.*', 'categories.name as category_name')
+        ->where('products.is_active', true)
+        ->get();
+    $hdr_products = [];
+    foreach ($raw_products as $p) {
+        $variants = DB::table('product_variants')->where('product_id', $p->id)->get();
+        $mapped_variants = [];
+        foreach ($variants as $v) {
+            $mapped_variants[$v->weight] = [
+                'price' => (float)$v->price,
+                'orig' => (float)$v->orig_price
+            ];
+        }
+        $reviews_count = DB::table('reviews')->where('product_id', $p->id)->where('status', 'Approved')->count();
+        if ($reviews_count === 0) {
+            $mock_reviews = [1 => 48, 2 => 94, 3 => 37, 4 => 22, 5 => 29, 6 => 41, 7 => 18, 8 => 34];
+            $reviews_count = $mock_reviews[$p->id] ?? 15;
+        }
+        $hdr_products[$p->id] = [
+            'id' => (int)$p->id,
+            'title' => $p->title,
+            'meta' => $p->category_name,
+            'badge' => $p->badge,
+            'rating' => 5,
+            'reviews' => $reviews_count,
+            'image' => '/' . $p->image,
+            'description' => $p->description,
+            'variants' => $mapped_variants,
+            'origin' => $p->origin,
+            'nutrition' => $p->nutrition,
+            'storage' => $p->storage
+        ];
+    }
+@endphp
+<script>
+window.AlBarrProductsDb = {!! json_encode($hdr_products) !!};
+</script>
+
+<!-- Top Utility / Announcement Bar -->
+<div class="announcement-bar">
+    <div class="container announcement-container">
+        <div class="announcement-left">
+            <span class="location-widget">
+                <svg class="icon-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span class="location-pulse"></span>
+                <strong>Deliver to J&K</strong> <span class="loc-sep">•</span> <span class="loc-sub">Srinagar & Jammu Valleys</span>
+            </span>
+        </div>
+        <div class="announcement-center">
+            <div class="announcement-marquee-track">
+                <span class="announcement-promo">
+                    {{ $settings['announcement_text'] ?? '✨ FREE Express Delivery on Orders Above ₹999! | 🔒 FSSAI Verified | 📦 Cash on Delivery Available | ⭐ 500+ Happy Customers' }}
+                </span>
+                <span class="announcement-promo">
+                    {{ $settings['announcement_text'] ?? '✨ FREE Express Delivery on Orders Above ₹999! | 🔒 FSSAI Verified | 📦 Cash on Delivery Available | ⭐ 500+ Happy Customers' }}
+                </span>
+            </div>
+        </div>
+        <div class="announcement-right">
+            <a href="tel:{{ $settings['phone_number'] ?? '+919419000000' }}" class="announcement-link">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                Support: {{ $settings['phone_number'] ?? '+91-9419000000' }}
+            </a>
+            <a href="#footer-bank-details" class="announcement-link nav-bank-link">
+                💳 Direct Bank Details
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Main Sticky Header -->
+<header class="main-header">
+    <div class="container header-grid-container">
+        
+        <!-- Left Column: Menu Toggle, Location Selector, Search Bar -->
+        <div class="header-left-col">
+            <!-- Hamburger Menu Button (Mobile) -->
+            <button class="mobile-menu-toggle-btn" id="mobile-menu-toggle" aria-label="Open Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <!-- Desktop Location Quick-Selector -->
+            <div class="desktop-location-selector">
+                <svg class="loc-pin-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <div class="loc-info">
+                    <span class="loc-deliver">Deliver to Srinagar</span>
+                    <span class="loc-region">Jammu & Kashmir Valleys</span>
+                </div>
+            </div>
+
+            <!-- Search Bar (Desktop / Left-Center Hub) -->
+            <div class="search-wrapper">
+                <div class="search-form">
+                    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="header-search" class="search-input" placeholder="Search premium almonds, Mogra saffron, wild honey..." autocomplete="off">
+                    <span class="search-accent-pill">100% Organic</span>
+                </div>
+                
+                <!-- Autocomplete suggestions panel -->
+                <div class="search-results-panel" id="search-panel">
+                    <div class="results-grid">
+                        <div class="results-column suggestions-col">
+                            <div class="results-title">🔥 Trending Searches</div>
+                            <ul class="suggestions-list">
+                                @if (!empty($hdr_products))
+                                    @foreach (array_slice($hdr_products, 0, 3) as $p)
+                                        <li><a href="/product/{{ $p['id'] }}"><span style="color: var(--color-gold);">★</span> {{ $p['title'] }}</a></li>
+                                    @endforeach
+                                @else
+                                    <li><a href="/product/1"><span style="color: var(--color-gold);">★</span> Kashmiri Mamra Almonds</a></li>
+                                    <li><a href="/product/2"><span style="color: var(--color-gold);">★</span> Mogra Saffron</a></li>
+                                @endif
+                            </ul>
+                            <div class="results-title" style="margin-top: var(--spacing-md);">🛍️ Popular Categories</div>
+                            <ul class="suggestions-list">
+                                <li><a href="/#categories-section">Dry Fruits</a></li>
+                                <li><a href="/#categories-section">Spices & Saffron</a></li>
+                                <li><a href="/#categories-section">Honey & Seeds</a></li>
+                            </ul>
+                        </div>
+                        <div class="results-column products-col">
+                            <div class="results-title">📦 Matching Products</div>
+                            <div class="products-suggestions" id="search-suggestions-container">
+                                @if (!empty($hdr_products))
+                                    @foreach (array_slice($hdr_products, 0, 3) as $p)
+                                        @php
+                                            $first_weight = array_key_first($p['variants']);
+                                            $first_price = $p['variants'][$first_weight]['price'] ?? 0;
+                                        @endphp
+                                        <a href="/product/{{ $p['id'] }}" class="prod-suggest-item">
+                                            <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}" class="prod-suggest-thumb" @if ($p['id'] === 4) style="filter: hue-rotate(45deg);" @endif>
+                                            <div class="prod-suggest-info">
+                                                <span class="prod-suggest-title">{{ $p['title'] }}</span>
+                                                <span class="prod-suggest-price">₹{{ number_format($first_price, 2) }} - {{ $first_weight }}</span>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Brand Logo Area -->
+        <div class="logo-area">
+            <a href="/" class="logo-link">
+                <div class="logo-badge-container">
+                    <img src="/assets/img/logo.png" alt="Al barr logo" class="logo-image">
+                </div>
+                <div class="logo-text">
+                    <span class="brand-name">AL BARR</span>
+                    <span class="brand-tagline">Khalis Wa Shifaf</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Utilities / Actions -->
+        <div class="header-actions">
+            <!-- Mobile Search Icon Trigger -->
+            <button class="mobile-search-toggle-btn" id="mobile-search-toggle" aria-label="Toggle Search" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </button>
+
+            <!-- Support Action Badge -->
+            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['phone_number'] ?? '919419000000') }}?text=Hello%20Al%20barr%20Team" target="_blank" class="header-action-badge whatsapp-action">
+                <div class="badge-icon-circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                </div>
+                <div class="badge-texts">
+                    <span class="badge-lbl">Need Help?</span>
+                    <span class="badge-val">Chat Support</span>
+                </div>
+            </a>
+
+            <!-- User Account Mock Badge Dropdown -->
+            <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
+                <div class="header-action-badge user-action-badge" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
+                    <div class="badge-icon-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div class="badge-texts">
+                        <span class="badge-lbl">Welcome</span>
+                        <span class="badge-val" id="header-user-welcome-val" style="display: flex; align-items: center; gap: 4px;">Sign In <svg class="badge-arrow-down" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px; transition: transform var(--transition-fast);"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                    </div>
+                </div>
+                <div class="user-dropdown-menu" id="user-dropdown-menu">
+                    <div class="dropdown-header">
+                        <p class="dropdown-welcome" id="header-dropdown-welcome">Welcome to Al Barr</p>
+                        <p class="dropdown-subtext" id="header-dropdown-subtext">Access your account & orders</p>
+                        <div class="dropdown-actions-row" id="header-dropdown-actions">
+                            <a href="/signin" class="dropdown-btn btn-signin">Sign In</a>
+                            <a href="/signup" class="dropdown-btn btn-signup">Sign Up</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <ul class="dropdown-menu-list">
+                        <li>
+                            <a href="/profile" class="dropdown-menu-item">
+                                <span class="item-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                </span>
+                                <span class="item-label">My Profile</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/orders" class="dropdown-menu-item">
+                                <span class="item-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                </span>
+                                <span class="item-label">My Orders</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/wishlist" class="dropdown-menu-item">
+                                <span class="item-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                </span>
+                                <span class="item-label">Wishlist</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#footer-bank-details" class="dropdown-menu-item nav-bank-link">
+                                <span class="item-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                                </span>
+                                <span class="item-label">Bank Details</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['phone_number'] ?? '919419000000') }}?text=Hello%20Al%20barr%20Team" target="_blank" class="dropdown-menu-item">
+                                <span class="item-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                </span>
+                                <span class="item-label">Chat Support</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Luxury Cart Pill Button -->
+            <a href="#" class="header-cart-pill cart-trigger" id="header-cart-btn">
+                <div class="cart-pill-left">
+                    <div class="cart-pill-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span class="cart-badge" id="cart-global-badge">0</span>
+                    </div>
+                    <div class="cart-pill-details">
+                        <span class="cart-pill-title">My Cart</span>
+                    </div>
+                </div>
+                <div class="cart-pill-right">
+                    <span class="cart-pill-total" id="cart-global-total">₹0.00</span>
+                    <svg class="cart-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Mobile Integrated Search Bar -->
+    <div class="mobile-search-bar-wrapper active" id="mobile-search-bar">
+        <div class="container">
+            <div class="search-form">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="mobile-search-input" class="search-input" placeholder="Search almonds, saffron, honey, seeds..." autocomplete="off">
+            </div>
+            <!-- Mobile autocomplete suggestions panel -->
+            <div class="search-results-panel" id="mobile-search-panel">
+                <div class="results-section">
+                    <div class="results-title">🔥 Trending Searches</div>
+                    <ul class="suggestions-list">
+                        @if (!empty($hdr_products))
+                            @foreach (array_slice($hdr_products, 0, 3) as $p)
+                                <li><a href="/product/{{ $p['id'] }}">{{ $p['title'] }}</a></li>
+                            @endforeach
+                        @endif
+                    </ul>
+                </div>
+                <div class="results-section">
+                    <div class="results-title">📦 Products Found</div>
+                    <div class="products-suggestions" id="mobile-search-suggestions-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Category Navigation Bar (Desktop Only) -->
+    <nav class="header-nav-bar">
+        <div class="container nav-container">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/shop">Shop All</a></li>
+                <li><a href="/shop?category=dry-fruits">Dry Fruits</a></li>
+                <li><a href="/shop?category=spices">Spices</a></li>
+                <li><a href="/shop?category=saffron">Saffron</a></li>
+                <li><a href="/shop?category=pulses">Pulses</a></li>
+                <li><a href="/shop?category=honey">Honey</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/#offers-section" class="nav-highlight">Special Offers <span class="hot-badge">HOT</span></a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<!-- Mobile Navigation Drawer -->
+<div class="mobile-menu-drawer" id="mobile-menu-drawer">
+    <div class="drawer-overlay" id="mobile-drawer-overlay"></div>
+    <div class="drawer-content">
+        <div class="drawer-header">
+            <div class="drawer-logo">
+                <img src="/assets/img/logo.png" alt="Al barr logo" class="logo-image">
+                <div class="logo-text">
+                    <span class="brand-name">Al barr</span>
+                    <span class="brand-tagline">Khalis Wa Shifaf</span>
+                </div>
+            </div>
+            <button class="drawer-close-btn" id="mobile-drawer-close" aria-label="Close menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="drawer-body">
+            <!-- Mobile User Panel -->
+            <div class="drawer-user-panel">
+                <div class="drawer-user-info">
+                    <div class="drawer-user-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div class="drawer-user-texts">
+                        <span class="drawer-user-welcome" id="drawer-user-welcome">Welcome, Guest</span>
+                        <span class="drawer-user-sub" id="drawer-user-sub">Access account & orders</span>
+                    </div>
+                </div>
+                <div class="drawer-user-actions" id="drawer-user-actions">
+                    <a href="/signin" class="drawer-user-btn btn-signin">Sign In</a>
+                    <a href="/signup" class="drawer-user-btn btn-signup">Sign Up</a>
+                </div>
+            </div>
+            <div class="drawer-divider-line"></div>
+
+            <ul class="drawer-nav-links">
+                <li><a href="/"><span class="drawer-icon">🏠</span> Home</a></li>
+                <li><a href="/shop"><span class="drawer-icon">🛍️</span> Shop All</a></li>
+                <li><a href="/shop?category=dry-fruits"><span class="drawer-icon">🥜</span> Dry Fruits & Nuts</a></li>
+                <li><a href="/shop?category=spices"><span class="drawer-icon">🌸</span> Mogra Saffron</a></li>
+                <li><a href="/shop?category=honey"><span class="drawer-icon">🍯</span> Pure Honey</a></li>
+                <li><a href="/about"><span class="drawer-icon">🌿</span> About Us</a></li>
+                <li><a href="/contact"><span class="drawer-icon">📞</span> Contact Us</a></li>
+                <li><a href="/#offers-section" class="nav-highlight"><span class="drawer-icon">🎁</span> Special Offers</a></li>
+                <li class="drawer-user-only" style="display: none;"><a href="/profile"><span class="drawer-icon">👤</span> My Profile</a></li>
+                <li class="drawer-user-only" style="display: none;"><a href="/orders"><span class="drawer-icon">📦</span> My Orders</a></li>
+                <li class="drawer-user-only" style="display: none;"><a href="/wishlist"><span class="drawer-icon">❤️</span> Wishlist</a></li>
+                <li class="drawer-user-only" style="display: none;"><a href="/tickets"><span class="drawer-icon">🎟️</span> Support Tickets</a></li>
+            </ul>
+            
+            <div class="drawer-contact-info">
+                <h4>Customer Support</h4>
+                <a href="tel:{{ $settings['phone_number'] ?? '+919419000000' }}" class="drawer-contact-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    Call Support ({{ $settings['phone_number'] ?? '+91-9419000000' }})
+                </a>
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['phone_number'] ?? '919419000000') }}?text=Hello%20Al%20barr%20Team" class="drawer-contact-btn whatsapp-btn" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                    Chat on WhatsApp
+                </a>
+            </div>
+            
+            <div class="drawer-regulatory-badges">
+                <div class="reg-badge-mini">🛡️ FSSAI: {{ $settings['fssai_number'] ?? '11025430000232' }}</div>
+                <div class="reg-badge-mini">💼 GSTIN: {{ $settings['gstin_number'] ?? '01ACFFM4729H1ZF' }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Mobile Bottom Navigation Bar -->
+<nav class="mobile-bottom-nav">
+    <ul class="mobile-bottom-nav-list">
+        <li class="mobile-bottom-item">
+            <a href="/" class="mobile-bottom-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Home</span>
+            </a>
+        </li>
+        <li class="mobile-bottom-item">
+            <a href="/shop" class="mobile-bottom-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                <span>Shop</span>
+            </a>
+        </li>
+        <li class="mobile-bottom-item">
+            <a href="/track-order" class="mobile-bottom-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                <span>Track</span>
+            </a>
+        </li>
+        <li class="mobile-bottom-item">
+            <a href="#" class="mobile-bottom-link cart-trigger" id="mobile-cart-trigger-btn">
+                <div style="position: relative; display: inline-block;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span class="cart-badge" id="cart-mobile-badge">0</span>
+                </div>
+                <span>Cart</span>
+            </a>
+        </li>
+        <li class="mobile-bottom-item">
+            <a href="/signin" class="mobile-bottom-link" id="mobile-account-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Account</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<!-- Search Modal Overlay -->
+<div class="search-modal-overlay" id="search-modal">
+    <div class="search-modal-backdrop" id="search-modal-backdrop"></div>
+    <div class="search-modal-body">
+        <button class="search-modal-close" id="search-modal-close" aria-label="Close search">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <div class="search-modal-input-wrap">
+            <svg class="search-modal-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" class="search-modal-input" id="search-modal-input" placeholder="Search almonds, saffron, honey, spices..." autocomplete="off" autofocus>
+        </div>
+
+        <div class="search-modal-results" id="search-modal-results">
+            <div class="search-modal-grid">
+                <div class="search-modal-col">
+                    <div class="search-modal-section-title">🔥 Trending Searches</div>
+                    <ul class="search-modal-list" id="search-modal-trending">
+                        @if (!empty($hdr_products))
+                            @foreach (array_slice($hdr_products, 0, 4) as $p)
+                                <li><a href="/product/{{ $p['id'] }}" class="search-modal-link"><span class="search-modal-star">★</span> {{ $p['title'] }}</a></li>
+                            @endforeach
+                        @else
+                            <li><a href="/product/1" class="search-modal-link"><span class="search-modal-star">★</span> Kashmiri Mamra Almonds</a></li>
+                            <li><a href="/product/2" class="search-modal-link"><span class="search-modal-star">★</span> Mogra Saffron</a></li>
+                        @endif
+                    </ul>
+
+                    <div class="search-modal-section-title" style="margin-top: 20px;">🛍️ Popular Categories</div>
+                    <ul class="search-modal-list">
+                        <li><a href="/#categories-section" class="search-modal-link">Dry Fruits</a></li>
+                        <li><a href="/#categories-section" class="search-modal-link">Spices & Saffron</a></li>
+                        <li><a href="/#categories-section" class="search-modal-link">Honey & Seeds</a></li>
+                        <li><a href="/#categories-section" class="search-modal-link">Kashmiri Pulses</a></li>
+                    </ul>
+                </div>
+
+                <div class="search-modal-col">
+                    <div class="search-modal-section-title">📦 Products</div>
+                    <div class="search-modal-products" id="search-modal-products">
+                        @if (!empty($hdr_products))
+                            @foreach (array_slice($hdr_products, 0, 4) as $p)
+                                <a href="/product/{{ $p['id'] }}" class="search-modal-product-card">
+                                    <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}" class="search-modal-prod-img">
+                                    <div class="search-modal-prod-info">
+                                        <span class="search-modal-prod-name">{{ $p['title'] }}</span>
+                                        @php
+                                            $first_weight = array_key_first($p['variants']);
+                                            $first_price = $p['variants'][$first_weight]['price'] ?? 0;
+                                        @endphp
+                                        <span class="search-modal-prod-price">₹{{ number_format($first_price, 2) }}</span>
+                                    </div>
+                                </a>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Dynamic user state check
+    const userJson = localStorage.getItem('al_barr_user');
+    if (userJson) {
+        try {
+            const userData = JSON.parse(userJson);
+            if (userData && userData.loggedIn && userData.name) {
+                // Update Desktop Header Dropdown Badge
+                const headerWelcomeVal = document.getElementById('header-user-welcome-val');
+                if (headerWelcomeVal) {
+                    headerWelcomeVal.innerHTML = `${userData.name} <svg class="badge-arrow-down" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px; transition: transform var(--transition-fast);"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+                }
+                
+                // Update Desktop Dropdown Menu Content
+                const dropdownWelcome = document.getElementById('header-dropdown-welcome');
+                if (dropdownWelcome) dropdownWelcome.innerText = `Namaste, ${userData.name}!`;
+                
+                const dropdownSubtext = document.getElementById('header-dropdown-subtext');
+                if (dropdownSubtext) dropdownSubtext.innerText = userData.email || 'Verified Al Barr Customer';
+                
+                const dropdownActions = document.getElementById('header-dropdown-actions');
+                if (dropdownActions) {
+                    dropdownActions.innerHTML = `<button onclick="handleHeaderSignOut(event)" class="dropdown-btn btn-signin" style="width: 100%; border: 1px solid var(--color-border); background: none; color: var(--color-blue-dark); text-align: center; cursor: pointer;">Sign Out</button>`;
+                }
+
+                // Update Mobile Drawer
+                const drawerWelcome = document.getElementById('drawer-user-welcome');
+                if (drawerWelcome) drawerWelcome.innerText = `Welcome, ${userData.name}`;
+
+                const drawerSub = document.getElementById('drawer-user-sub');
+                if (drawerSub) drawerSub.innerText = userData.email || 'Verified Customer';
+
+                const drawerActions = document.getElementById('drawer-user-actions');
+                if (drawerActions) {
+                    drawerActions.innerHTML = `<button onclick="handleHeaderSignOut(event)" class="drawer-user-btn btn-signin" style="width: 100%; border: 1px solid var(--color-border); background: none; color: var(--color-blue-dark); text-align: center; cursor: pointer;">Sign Out</button>`;
+                }
+
+                // Update Mobile bottom nav link target if logged in
+                const mobileAccountLink = document.getElementById('mobile-account-link');
+                if (mobileAccountLink) {
+                    mobileAccountLink.setAttribute('href', '/profile');
+                    const span = mobileAccountLink.querySelector('span');
+                    if (span) span.innerText = 'Profile';
+                }
+
+                // Show authenticated user-only links in mobile drawer
+                document.querySelectorAll('.drawer-user-only').forEach(el => {
+                    el.style.display = 'block';
+                });
+            }
+        } catch (e) {
+            console.error("Failed to parse user details from local storage", e);
+        }
+    }
+
+    // Active class for mobile bottom navigation capsule
+    const currentPath = window.location.pathname.split('/').pop() || 'index.php';
+    const mobileBottomLinks = document.querySelectorAll('.mobile-bottom-link');
+    mobileBottomLinks.forEach(link => {
+        link.classList.remove('active');
+        const href = link.getAttribute('href');
+        if (href === currentPath || (currentPath === '' && href === '/')) {
+            link.classList.add('active');
+        } else if (href === '/signin' || href === '/profile') {
+            if (['/signin', '/signup', '/profile', '/orders', '/wishlist'].includes(window.location.pathname)) {
+                link.classList.add('active');
+            }
+        }
+    });
+});
+
+function handleHeaderSignOut(e) {
+    e.preventDefault();
+    localStorage.removeItem('al_barr_user');
+    
+    // Call backend signout route
+    fetch('/logout', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json'
+        }
+    }).then(() => {
+        if (typeof AlBarrCart !== 'undefined' && AlBarrCart.showToast) {
+            AlBarrCart.showToast("Signed out successfully!");
+        } else {
+            alert("Signed out successfully!");
+        }
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 800);
+    });
+}
+</script>

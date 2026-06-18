@@ -1,0 +1,22 @@
+{
+  "short_name": "Al barr",
+  "name": "Al barr E-Commerce - Pure Kashmiri Sourced",
+  "icons": [
+    {
+      "src": "assets/img/logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "assets/img/logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.php",
+  "background_color": "#F4F6F5",
+  "theme_color": "#042F1A",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "status_bar": "default"
+}
