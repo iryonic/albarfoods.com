@@ -78,7 +78,7 @@
         "sort-packages": true,
         "platform-check": false,
         "platform": {
-            "php": "8.2.0"
+            "php": "8.5.0"
         },
         "allow-plugins": {
             "pestphp/pest-plugin": true,
