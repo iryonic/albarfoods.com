@@ -95,7 +95,7 @@ class AdminController extends Controller
 
     public function products()
     {
-        $products = Product::with(['variants.inventoryLogs', 'category'])->get();
+        $products = Product::with(['variants.inventoryLogs', 'category', 'images'])->get();
         $categories = DB::table('categories')->get();
         return view('admin.products', compact('products', 'categories'));
     }
@@ -121,6 +121,59 @@ class AdminController extends Controller
         ));
     }
 
+    public function importInventoryCSV(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|file|mimes:csv,txt'
+        ]);
+
+        $file = $request->file('csv_file');
+        $path = $file->getRealPath();
+        
+        // Read file contents as CSV
+        $data = array_map('str_getcsv', file($path));
+
+        if (count($data) < 2) {
+            return back()->with('error', 'CSV file is empty.');
+        }
+
+        $header = array_shift($data);
+        $skuIndex = array_search('sku', array_map('strtolower', $header));
+        $stockChangeIndex = array_search('stock_change', array_map('strtolower', $header));
+        
+        if ($skuIndex === false || $stockChangeIndex === false) {
+            return back()->with('error', 'CSV must contain "sku" and "stock_change" columns.');
+        }
+
+        $updatedCount = 0;
+        try {
+            DB::beginTransaction();
+            foreach ($data as $row) {
+                if (count($row) <= max($skuIndex, $stockChangeIndex)) continue;
+                $sku = trim($row[$skuIndex]);
+                $change = (int)$row[$stockChangeIndex];
+
+                $variant = ProductVariant::where('sku', $sku)->first();
+                if ($variant) {
+                    $variant->increment('stock', $change);
+                    DB::table('inventory_logs')->insert([
+                        'product_variant_id' => $variant->id,
+                        'quantity_change' => $change,
+                        'type' => $change > 0 ? 'Stock In' : 'Stock Out',
+                        'log_message' => 'CSV Bulk Import update',
+                        'created_at' => now()
+                    ]);
+                    $updatedCount++;
+                }
+            }
+            DB::commit();
+            return back()->with('success', "Imported successfully! Updated stock for {$updatedCount} SKU(s).");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to import CSV: ' . $e->getMessage());
+        }
+    }
+
     public function customers()
     {
         $customers = User::where(function($q) {
@@ -128,6 +181,9 @@ class AdminController extends Controller
             })
             ->withCount('orders')
             ->withSum('orders', 'grand_total')
+            ->with(['orders' => function($q) {
+                $q->latest();
+            }])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -184,7 +240,9 @@ class AdminController extends Controller
     {
         $request->validate([
             'status' => 'required|string|in:Pending,Confirmed,Processing,Packed,Shipped,Delivered,Cancelled,Returned,Refunded',
-            'payment_status' => 'required|string|in:Pending,Completed,Failed,Refunded'
+            'payment_status' => 'required|string|in:Pending,Completed,Failed,Refunded',
+            'tracking_number' => 'nullable|string|max:100',
+            'carrier_name' => 'nullable|string|max:100'
         ]);
 
         $order = Order::with('items.variant')->findOrFail($id);
@@ -231,9 +289,26 @@ class AdminController extends Controller
                 }
             }
 
-            // Update Order
+            // Update Order status & payment
             $order->status = $newStatus;
             $order->payment_status = $request->payment_status;
+
+            // Update tracking info if provided
+            if ($request->filled('tracking_number')) {
+                $order->tracking_number = $request->tracking_number;
+            }
+            if ($request->filled('carrier_name')) {
+                $order->carrier_name = $request->carrier_name;
+            }
+
+            // Auto-set shipped_at/delivered_at timestamps
+            if (strtolower($newStatus) === 'shipped' && !$order->shipped_at) {
+                $order->shipped_at = now();
+            }
+            if (strtolower($newStatus) === 'delivered' && !$order->delivered_at) {
+                $order->delivered_at = now();
+            }
+
             $order->save();
 
             DB::commit();
@@ -243,6 +318,109 @@ class AdminController extends Controller
             DB::rollBack();
             return back()->with('error', "Failed to update order status: " . $e->getMessage());
         }
+    }
+
+    public function bulkUpdateStatus(Request $request)
+    {
+        $request->validate([
+            'order_ids' => 'required|array',
+            'order_ids.*' => 'exists:orders,id',
+            'status' => 'required|string|in:Pending,Confirmed,Processing,Packed,Shipped,Delivered,Cancelled,Returned,Refunded',
+            'payment_status' => 'required|string|in:Keep,Pending,Completed,Failed,Refunded'
+        ]);
+
+        $ids = $request->order_ids;
+        $status = $request->status;
+        $paymentStatus = $request->payment_status;
+
+        try {
+            DB::beginTransaction();
+            foreach ($ids as $id) {
+                $order = Order::findOrFail($id);
+                $oldStatus = $order->status;
+                $order->status = $status;
+                if ($paymentStatus !== 'Keep') {
+                    $order->payment_status = $paymentStatus;
+                }
+                $order->save();
+
+                $cancelledOrRefunded = ['cancelled', 'refunded'];
+                if (in_array(strtolower($status), $cancelledOrRefunded) && !in_array(strtolower($oldStatus), $cancelledOrRefunded)) {
+                    foreach ($order->items as $item) {
+                        $variant = $item->variant;
+                        if ($variant) {
+                            $variant->increment('stock', $item->quantity);
+                            DB::table('inventory_logs')->insert([
+                                'product_variant_id' => $variant->id,
+                                'quantity_change' => $item->quantity,
+                                'type' => 'Stock In',
+                                'log_message' => "Order #{$order->order_number} cancelled via bulk action",
+                                'created_at' => now()
+                            ]);
+                        }
+                    }
+                }
+            }
+            DB::commit();
+            return back()->with('success', 'Bulk updated ' . count($ids) . ' orders successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Bulk update failed: ' . $e->getMessage());
+        }
+    }
+
+    // ─── Tracking Management ───
+    public function updateTracking(Request $request, $id)
+    {
+        $request->validate([
+            'tracking_number' => 'nullable|string|max:100',
+            'carrier_name' => 'nullable|string|max:100'
+        ]);
+
+        $order = Order::findOrFail($id);
+        $order->tracking_number = $request->tracking_number;
+        $order->carrier_name = $request->carrier_name;
+        $order->save();
+
+        return back()->with('success', "Tracking info updated for order #{$order->order_number}.");
+    }
+
+    // ─── Invoice Generation ───
+    public function generateInvoice($id)
+    {
+        $order = Order::with('items', 'user')->findOrFail($id);
+        $settings = \App\Models\Setting::all()->pluck('value', 'key')->toArray();
+        return view('admin.invoice', ['orders' => collect([$order]), 'settings' => $settings]);
+    }
+
+    public function bulkInvoices(Request $request)
+    {
+        $request->validate([
+            'order_ids' => 'required|array',
+            'order_ids.*' => 'exists:orders,id'
+        ]);
+        $orders = Order::with('items', 'user')->whereIn('id', $request->order_ids)->orderBy('created_at', 'desc')->get();
+        $settings = \App\Models\Setting::all()->pluck('value', 'key')->toArray();
+        return view('admin.invoice', compact('orders', 'settings'));
+    }
+
+    // ─── Shipping Label Generation ───
+    public function generateLabel($id)
+    {
+        $order = Order::with('items')->findOrFail($id);
+        $settings = \App\Models\Setting::all()->pluck('value', 'key')->toArray();
+        return view('admin.label', ['orders' => collect([$order]), 'settings' => $settings]);
+    }
+
+    public function bulkLabels(Request $request)
+    {
+        $request->validate([
+            'order_ids' => 'required|array',
+            'order_ids.*' => 'exists:orders,id'
+        ]);
+        $orders = Order::with('items')->whereIn('id', $request->order_ids)->orderBy('created_at', 'desc')->get();
+        $settings = \App\Models\Setting::all()->pluck('value', 'key')->toArray();
+        return view('admin.label', compact('orders', 'settings'));
     }
 
     public function returns()
@@ -433,7 +611,9 @@ class AdminController extends Controller
             'variants.*.price' => 'required|numeric|min:0',
             'variants.*.orig_price' => 'required|numeric|min:0',
             'variants.*.sku' => 'required|string|unique:product_variants,sku',
-            'variants.*.stock' => 'required|integer|min:0'
+            'variants.*.stock' => 'required|integer|min:0',
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'required|string|max:255'
         ]);
 
         try {
@@ -481,6 +661,16 @@ class AdminController extends Controller
                 }
             }
 
+            if ($request->filled('gallery_images')) {
+                foreach ($request->gallery_images as $index => $path) {
+                    \App\Models\ProductImage::create([
+                        'product_id' => $product->id,
+                        'image_path' => $path,
+                        'sort_order' => $index
+                    ]);
+                }
+            }
+
             DB::commit();
             return back()->with('success', 'Product and variants created successfully!');
         } catch (\Exception $e) {
@@ -500,7 +690,9 @@ class AdminController extends Controller
             'nutrition' => 'nullable|string',
             'storage' => 'nullable|string',
             'image' => 'nullable|string|max:255',
-            'is_active' => 'required|boolean'
+            'is_active' => 'required|boolean',
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'required|string|max:255'
         ]);
 
         $product = Product::findOrFail($id);
@@ -528,6 +720,19 @@ class AdminController extends Controller
         $product->is_active = $request->is_active;
         $product->save();
 
+        if ($request->has('gallery_images')) {
+            \App\Models\ProductImage::where('product_id', $product->id)->delete();
+            if ($request->filled('gallery_images')) {
+                foreach ($request->gallery_images as $index => $path) {
+                    \App\Models\ProductImage::create([
+                        'product_id' => $product->id,
+                        'image_path' => $path,
+                        'sort_order' => $index
+                    ]);
+                }
+            }
+        }
+
         return back()->with('success', 'Product details updated successfully!');
     }
 
@@ -546,6 +751,28 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Failed to delete product: ' . $e->getMessage());
+        }
+    }
+
+    public function bulkUpdateProductsStatus(Request $request)
+    {
+        $request->validate([
+            'product_ids' => 'required|array',
+            'product_ids.*' => 'exists:products,id',
+            'is_active' => 'required|boolean'
+        ]);
+
+        $ids = $request->product_ids;
+        $isActive = $request->is_active;
+
+        try {
+            DB::beginTransaction();
+            Product::whereIn('id', $ids)->update(['is_active' => $isActive]);
+            DB::commit();
+            return back()->with('success', 'Bulk updated ' . count($ids) . ' products status successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Bulk update failed: ' . $e->getMessage());
         }
     }
 
@@ -622,4 +849,121 @@ class AdminController extends Controller
             return back()->with('error', 'Failed to delete variant: ' . $e->getMessage());
         }
     }
+
+    public function abandonedCarts()
+    {
+        $abandonedCarts = \App\Models\AbandonedCart::with('user')
+            ->where('status', 'active')
+            ->where('last_activity_at', '<=', now()->subMinutes(15))
+            ->orderBy('last_activity_at', 'desc')
+            ->get();
+
+        $totalAbandoned = $abandonedCarts->count();
+        $totalValue = 0;
+        $guestCount = 0;
+        $registeredCount = 0;
+
+        foreach ($abandonedCarts as $cart) {
+            $subtotal = 0;
+            if (is_array($cart->cart_data)) {
+                foreach ($cart->cart_data as $item) {
+                    $subtotal += ($item['price'] ?? 0) * ($item['qty'] ?? 0);
+                }
+            }
+            $totalValue += $subtotal;
+            if ($cart->user_id) {
+                $registeredCount++;
+            } else {
+                $guestCount++;
+            }
+            $cart->subtotal = $subtotal;
+        }
+
+        return view('admin.abandoned-carts', compact(
+            'abandonedCarts', 'totalAbandoned', 'totalValue', 'guestCount', 'registeredCount'
+        ));
+    }
+
+    public function deleteAbandonedCart($id)
+    {
+        $cart = \App\Models\AbandonedCart::findOrFail($id);
+        $cart->delete();
+        return back()->with('success', 'Abandoned cart log deleted successfully.');
+    }
+
+    public function bulkDeleteAbandonedCarts(\Illuminate\Http\Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'No items selected.'], 400);
+            }
+            return back()->with('error', 'No items selected.');
+        }
+
+        \App\Models\AbandonedCart::whereIn('id', $ids)->delete();
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Selected abandoned carts deleted successfully.']);
+        }
+        return back()->with('success', 'Selected abandoned carts deleted successfully.');
+    }
+
+    public function apiNotifications()
+    {
+        $pendingOrders = Order::where('status', 'Pending')->count();
+        $openTickets = \App\Models\SupportTicket::where('status', 'Open')->count();
+        $pendingReviews = \App\Models\Review::where('status', 'Pending')->count();
+        $lowStockCount = ProductVariant::where('stock', '<=', 10)->count();
+
+        $notifications = [];
+        if ($pendingOrders > 0) {
+            $notifications[] = [
+                'type' => 'order',
+                'title' => 'New Pending Orders',
+                'message' => "You have {$pendingOrders} new order(s) awaiting processing.",
+                'link' => route('admin.orders'),
+                'count' => $pendingOrders
+            ];
+        }
+        if ($openTickets > 0) {
+            $notifications[] = [
+                'type' => 'ticket',
+                'title' => 'Open Support Tickets',
+                'message' => "{$openTickets} support ticket(s) require admin attention.",
+                'link' => route('admin.tickets'),
+                'count' => $openTickets
+            ];
+        }
+        if ($pendingReviews > 0) {
+            $notifications[] = [
+                'type' => 'review',
+                'title' => 'Pending Reviews',
+                'message' => "You have {$pendingReviews} product review(s) to approve.",
+                'link' => route('admin.reviews'),
+                'count' => $pendingReviews
+            ];
+        }
+        if ($lowStockCount > 0) {
+            $notifications[] = [
+                'type' => 'stock',
+                'title' => 'Low Stock Alert',
+                'message' => "{$lowStockCount} item(s) are low or out of stock.",
+                'link' => route('admin.inventory'),
+                'count' => $lowStockCount
+            ];
+        }
+
+        return response()->json([
+            'counts' => [
+                'orders' => $pendingOrders,
+                'tickets' => $openTickets,
+                'reviews' => $pendingReviews,
+                'stock' => $lowStockCount,
+                'total' => $pendingOrders + $openTickets + $pendingReviews
+            ],
+            'notifications' => $notifications
+        ]);
+    }
 }
+

@@ -938,7 +938,8 @@
                     landmark: document.getElementById('ch-landmark').value,
                     payment_method: selectedPaymentMethod,
                     cart: cart,
-                    coupon_code: sessionStorage.getItem('al_barr_coupon_applied') === 'true' ? 'ALBARR10' : null
+                    coupon_code: sessionStorage.getItem('al_barr_coupon_applied') === 'true' ? 'ALBARR10' : null,
+                    session_token: (typeof AlBarrCart !== 'undefined') ? AlBarrCart.getSessionToken() : null
                 };
 
                 // Post to Laravel checkout
@@ -988,6 +989,23 @@
                     placeOrderBtn.innerText = 'Confirm & Place Order';
                     placeOrderBtn.disabled = false;
                 });
+            });
+
+            // Debounced Abandoned Carts input sync
+            const checkoutInputs = ['ch-name', 'ch-phone', 'ch-phone-alt', 'ch-pincode', 'ch-city', 'ch-address', 'ch-landmark'];
+            let syncTimeout;
+            checkoutInputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', () => {
+                        clearTimeout(syncTimeout);
+                        syncTimeout = setTimeout(() => {
+                            if (typeof AlBarrCart !== 'undefined' && AlBarrCart.syncWithServer) {
+                                AlBarrCart.syncWithServer(AlBarrCart.get());
+                            }
+                        }, 2000);
+                    });
+                }
             });
         });
     </script>

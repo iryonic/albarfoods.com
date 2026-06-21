@@ -198,6 +198,20 @@
         </button>
     </div>
 
+    <div class="filter-row" style="padding: 0 24px 18px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <input type="text" id="catSearch" class="admin-input" placeholder="🔍 Search category name, slug, description..." style="flex:1; max-width:360px;">
+        <select id="catHierarchyFilter" class="admin-select" style="max-width:200px;">
+            <option value="all">All Hierarchies</option>
+            <option value="root">Root Categories Only</option>
+            <option value="sub">Sub-categories Only</option>
+        </select>
+        <select id="catStatusFilter" class="admin-select" style="max-width:160px;">
+            <option value="all">All Statuses</option>
+            <option value="active">Active Only</option>
+            <option value="inactive">Inactive Only</option>
+        </select>
+    </div>
+
     @if($categories->isEmpty())
         <div class="empty-state">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -208,14 +222,25 @@
             <p style="font-size:0.85rem; margin:0;">Click "Add Category" to create your first one.</p>
         </div>
     @else
-        <div class="categories-grid">
+        <div class="categories-grid" style="padding: 0 24px 24px;">
             @foreach($categories as $cat)
-            <div class="cat-card">
-                <div class="cat-card-header">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#b4956d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-                        <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-                    </svg>
+            @php
+                $searchVal = strtolower($cat->name . ' ' . $cat->slug . ' ' . ($cat->description ?? ''));
+            @endphp
+            <div class="cat-card" 
+                 data-search="{{ $searchVal }}"
+                 data-hierarchy="{{ $cat->parent_id ? 'sub' : 'root' }}"
+                 data-status="{{ $cat->is_active ? 'active' : 'inactive' }}">
+                <div class="cat-card-header" style="height: 120px; overflow: hidden; background: #f8fafc; display: flex; align-items: center; justify-content: center; position: relative;">
+                    @if($cat->image)
+                        <img src="/{{ $cat->image }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @else
+                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, rgba(1, 136, 73, 0.08) 0%, rgba(197, 168, 128, 0.08) 100%); display: flex; align-items: center; justify-content: center;">
+                            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#018849" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.7;">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                    @endif
                     <span class="cat-card-status {{ $cat->is_active ? 'active' : 'inactive' }}">
                         {{ $cat->is_active ? 'Active' : 'Inactive' }}
                     </span>
@@ -243,7 +268,7 @@
                     </span>
                     <div style="margin-left:auto; display:flex; gap:6px;">
                         <button class="btn-action-outline"
-                            onclick="openEditModal({{ json_encode(['id'=>$cat->id,'name'=>$cat->name,'slug'=>$cat->slug,'description'=>$cat->description,'is_active'=>$cat->is_active,'parent_id'=>$cat->parent_id]) }})">
+                            onclick="openEditModal({{ json_encode(['id'=>$cat->id,'name'=>$cat->name,'slug'=>$cat->slug,'description'=>$cat->description,'image'=>$cat->image,'is_active'=>$cat->is_active,'parent_id'=>$cat->parent_id]) }})">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             Edit
                         </button>
@@ -260,7 +285,14 @@
                 </div>
             </div>
             @endforeach
-        </div>
+            {{-- Client-side empty state --}}
+            <div class="empty-state" id="catEmptyState" style="display:none; grid-column: 1 / -1; width: 100%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 52px; height: 52px; margin-bottom: 16px; opacity: 0.25;">
+                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                </svg>
+                <p style="font-size:1rem; font-weight:600; margin:0 0 6px;">No categories match your filters</p>
+                <p style="font-size:0.85rem; margin:0;">Try adjusting your search query or status filter.</p>
+            </div>
     @endif
 </div>
 
@@ -292,8 +324,11 @@
                     </select>
                 </div>
                 <div class="admin-form-group">
-                    <label for="addCatImage">Image Path</label>
-                    <input type="text" name="image" id="addCatImage" class="admin-input" placeholder="assets/img/category.png">
+                    <label for="addCatImage">Category Image</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" name="image" id="addCatImage" class="admin-input" placeholder="assets/img/category.png">
+                        <button type="button" class="btn-solid-gold" style="white-space: nowrap; padding: 10px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="openMediaChooser('addCatImage')">🖼️ Choose</button>
+                    </div>
                 </div>
                 <div class="admin-form-group">
                     <label for="addCatStatus">Status *</label>
@@ -339,8 +374,11 @@
                     </select>
                 </div>
                 <div class="admin-form-group">
-                    <label for="editCatImage">Image Path</label>
-                    <input type="text" name="image" id="editCatImage" class="admin-input">
+                    <label for="editCatImage">Category Image</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" name="image" id="editCatImage" class="admin-input">
+                        <button type="button" class="btn-solid-gold" style="white-space: nowrap; padding: 10px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="openMediaChooser('editCatImage')">🖼️ Choose</button>
+                    </div>
                 </div>
                 <div class="admin-form-group">
                     <label for="editCatStatus">Status *</label>
@@ -356,20 +394,202 @@
         </form>
     </div>
 </div>
-
+{{-- Media Library Chooser Modal Component --}}
+<div class="admin-modal-overlay" id="mediaChooserModal" style="z-index: 300;">
+    <div class="admin-modal-card" style="max-width: 800px; width: 90%;">
+        <div class="admin-modal-header">
+            <h3 class="admin-modal-title">Select Image from Media Library</h3>
+            <button type="button" class="admin-modal-close" onclick="closeModal('mediaChooserModal')">&times;</button>
+        </div>
+        <div class="admin-modal-body" style="padding: 20px;">
+            <div style="margin-bottom: 20px; padding: 15px; border: 2px dashed var(--color-admin-border); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; gap: 15px; background: var(--color-admin-border-light);">
+                <div>
+                    <h5 style="margin: 0 0 4px; font-family: var(--font-secondary); color: var(--color-admin-text-main);">Upload New File</h5>
+                    <p style="margin: 0; font-size: 0.75rem; color: var(--color-admin-text-muted);">Instantly upload and use an image.</p>
+                </div>
+                <div>
+                    <input type="file" id="chooserUploadInput" accept="image/*" style="display: none;" onchange="uploadChooserFile()">
+                    <button type="button" class="btn-solid-accent" style="padding: 8px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="document.getElementById('chooserUploadInput').click()">
+                        📤 Upload Image
+                    </button>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <input type="text" id="mediaChooserSearch" class="admin-input" placeholder="🔍 Search media library by name..." oninput="loadChooserMedia()">
+            </div>
+            
+            <div style="max-height: 380px; overflow-y: auto; padding-right: 5px;">
+                <div id="mediaChooserGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 14px;">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
 <script>
+    function filterCategories() {
+        const q = document.getElementById('catSearch').value.toLowerCase().trim();
+        const hierarchy = document.getElementById('catHierarchyFilter').value;
+        const status = document.getElementById('catStatusFilter').value;
+        
+        const cards = document.querySelectorAll('.categories-grid .cat-card');
+        let count = 0;
+        
+        cards.forEach(card => {
+            const searchVal = card.getAttribute('data-search') || '';
+            const hierarchyVal = card.getAttribute('data-hierarchy') || '';
+            const statusVal = card.getAttribute('data-status') || '';
+            
+            const matchesSearch = !q || searchVal.includes(q);
+            const matchesHierarchy = hierarchy === 'all' || hierarchyVal === hierarchy;
+            const matchesStatus = status === 'all' || statusVal === status;
+            
+            if (matchesSearch && matchesHierarchy && matchesStatus) {
+                card.style.display = '';
+                count++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        const emptyState = document.getElementById('catEmptyState');
+        if (emptyState) {
+            emptyState.style.display = (count === 0) ? '' : 'none';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('catSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', filterCategories);
+            document.getElementById('catHierarchyFilter').addEventListener('change', filterCategories);
+            document.getElementById('catStatusFilter').addEventListener('change', filterCategories);
+        }
+    });
+
     function openEditModal(cat) {
         const form = document.getElementById('editCatForm');
         form.action = `/admin/categories/${cat.id}`;
         document.getElementById('editCatName').value    = cat.name;
         document.getElementById('editCatDesc').value    = cat.description || '';
         document.getElementById('editCatParent').value  = cat.parent_id || '';
-        document.getElementById('editCatImage').value   = '';
+        document.getElementById('editCatImage').value   = cat.image || '';
         document.getElementById('editCatStatus').value  = cat.is_active ? '1' : '0';
         openModal('editCatModal');
+    }
+
+    let currentTargetInputId = '';
+
+    function openMediaChooser(targetInputId) {
+        currentTargetInputId = targetInputId;
+        openModal('mediaChooserModal');
+        loadChooserMedia();
+    }
+
+    function loadChooserMedia() {
+        const searchVal = document.getElementById('mediaChooserSearch').value;
+        const grid = document.getElementById('mediaChooserGrid');
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--color-admin-text-muted); padding: 40px;">Loading gallery...</div>';
+        
+        fetch(`/admin/api/media?search=${encodeURIComponent(searchVal)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length === 0) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--color-admin-text-muted); padding: 40px;">No media found.</div>';
+                    return;
+                }
+                grid.innerHTML = '';
+                data.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.style.border = '1px solid var(--color-admin-border)';
+                    itemDiv.style.borderRadius = '10px';
+                    itemDiv.style.overflow = 'hidden';
+                    itemDiv.style.cursor = 'pointer';
+                    itemDiv.style.backgroundColor = '#fff';
+                    itemDiv.style.transition = 'all 0.2s';
+                    
+                    itemDiv.onmouseover = () => {
+                        itemDiv.style.borderColor = 'var(--color-admin-accent)';
+                        itemDiv.style.transform = 'translateY(-2px)';
+                        itemDiv.style.boxShadow = 'var(--shadow-admin-md)';
+                    };
+                    itemDiv.onmouseout = () => {
+                        itemDiv.style.borderColor = 'var(--color-admin-border)';
+                        itemDiv.style.transform = 'none';
+                        itemDiv.style.boxShadow = 'none';
+                    };
+                    
+                    itemDiv.onclick = () => selectChooserMedia(item.file_path);
+                    
+                    itemDiv.innerHTML = `
+                        <div style="position: relative; padding-top: 90%; background: #f8fafc; border-bottom: 1px solid var(--color-admin-border-light);">
+                            <img src="/${item.file_path}" style="position: absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
+                        </div>
+                        <div style="padding: 6px 8px; font-size: 0.7rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-admin-text-main);" title="${item.file_name}">
+                            ${item.file_name}
+                        </div>
+                    `;
+                    grid.appendChild(itemDiv);
+                });
+            })
+            .catch(err => {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #ba3c1c; padding: 40px;">Failed to load media catalog.</div>';
+                console.error(err);
+            });
+    }
+
+    function selectChooserMedia(filePath) {
+        if (currentTargetInputId) {
+            document.getElementById(currentTargetInputId).value = filePath;
+        }
+        closeModal('mediaChooserModal');
+    }
+
+    function uploadChooserFile() {
+        const input = document.getElementById('chooserUploadInput');
+        if (input.files.length === 0) return;
+        
+        const file = input.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const uploadBtn = document.querySelector('#mediaChooserModal .btn-solid-accent');
+        const originalText = uploadBtn.innerHTML;
+        uploadBtn.innerHTML = '⏳ Uploading...';
+        uploadBtn.disabled = true;
+        
+        fetch('{{ route("admin.media.store") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            uploadBtn.innerHTML = originalText;
+            uploadBtn.disabled = false;
+            input.value = '';
+            
+            if (data.success) {
+                loadChooserMedia();
+                selectChooserMedia(data.media.file_path);
+            } else {
+                alert('Upload failed: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(err => {
+            uploadBtn.innerHTML = originalText;
+            uploadBtn.disabled = false;
+            input.value = '';
+            alert('Upload failed. Please check file formats and size.');
+            console.error(err);
+        });
     }
 </script>
 @endsection

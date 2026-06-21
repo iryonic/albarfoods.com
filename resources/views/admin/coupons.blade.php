@@ -5,45 +5,12 @@
 
 @section('styles')
 <style>
-    .coupon-stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        margin-bottom: 28px;
+    /* Coupon-specific badges - stat cards use global .stats-4-grid system */
+    .coupon-code-badge {
+        font-family: var(--font-mono); font-size: 0.88rem; font-weight: 700;
+        color: #1a56d6; background: #e4f0ff; padding: 4px 12px;
+        border-radius: 6px; letter-spacing: 1px; display: inline-block;
     }
-
-    @media(max-width: 900px) { .coupon-stats-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media(max-width: 540px) { .coupon-stats-grid { grid-template-columns: 1fr; } }
-
-    .coupon-stat-card {
-        background: #fff;
-        border: 1px solid var(--color-admin-border);
-        border-radius: var(--radius-admin-card);
-        padding: 20px 22px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        box-shadow: var(--shadow-admin-sm);
-    }
-
-    .coupon-stat-icon {
-        width: 46px;
-        height: 46px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .coupon-stat-icon svg { width: 22px; height: 22px; }
-    .coupon-stat-icon.blue   { background: #e4f0ff; color: #1a56d6; }
-    .coupon-stat-icon.green  { background: #e3fbeb; color: #018849; }
-    .coupon-stat-icon.red    { background: #fbeae5; color: #ba3c1c; }
-    .coupon-stat-icon.amber  { background: #fff8e1; color: #b56f00; }
-
-    .coupon-stat-val   { font-family: var(--font-secondary); font-size: 1.85rem; font-weight: 800; color: var(--color-admin-text-main); line-height: 1; }
-    .coupon-stat-label { font-size: 0.78rem; color: var(--color-admin-text-muted); font-weight: 600; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.4px; }
 
     /* Table */
     .coupon-table-wrap { overflow-x: auto; }
@@ -148,49 +115,49 @@
 @section('content')
 
 {{-- ─── Stats ─── --}}
-<div class="coupon-stats-grid">
-    <div class="coupon-stat-card">
-        <div class="coupon-stat-icon blue">
+<div class="stats-4-grid">
+    <div class="stat-kpi-card blue">
+        <div class="stat-kpi-icon blue">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
             </svg>
         </div>
-        <div>
-            <div class="coupon-stat-val">{{ $totalCoupons }}</div>
-            <div class="coupon-stat-label">Total Coupons</div>
+        <div class="stat-kpi-body">
+            <div class="stat-kpi-val">{{ $totalCoupons }}</div>
+            <div class="stat-kpi-label">Total Coupons</div>
         </div>
     </div>
-    <div class="coupon-stat-card">
-        <div class="coupon-stat-icon green">
+    <div class="stat-kpi-card green">
+        <div class="stat-kpi-icon green">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
             </svg>
         </div>
-        <div>
-            <div class="coupon-stat-val">{{ $activeCoupons }}</div>
-            <div class="coupon-stat-label">Active</div>
+        <div class="stat-kpi-body">
+            <div class="stat-kpi-val">{{ $activeCoupons }}</div>
+            <div class="stat-kpi-label">Active</div>
         </div>
     </div>
-    <div class="coupon-stat-card">
-        <div class="coupon-stat-icon red">
+    <div class="stat-kpi-card red">
+        <div class="stat-kpi-icon red">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
         </div>
-        <div>
-            <div class="coupon-stat-val">{{ $expiredCoupons }}</div>
-            <div class="coupon-stat-label">Expired</div>
+        <div class="stat-kpi-body">
+            <div class="stat-kpi-val">{{ $expiredCoupons }}</div>
+            <div class="stat-kpi-label">Expired</div>
         </div>
     </div>
-    <div class="coupon-stat-card">
-        <div class="coupon-stat-icon amber">
+    <div class="stat-kpi-card amber">
+        <div class="stat-kpi-icon amber">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/>
             </svg>
         </div>
-        <div>
-            <div class="coupon-stat-val">{{ number_format($totalRedemptions) }}</div>
-            <div class="coupon-stat-label">Total Redemptions</div>
+        <div class="stat-kpi-body">
+            <div class="stat-kpi-val">{{ number_format($totalRedemptions) }}</div>
+            <div class="stat-kpi-label">Total Redemptions</div>
         </div>
     </div>
 </div>
@@ -226,7 +193,14 @@
                     $usagePercent = $coupon->usage_limit ? min(100, ($coupon->used_count / $coupon->usage_limit) * 100) : 0;
                 @endphp
                 <tr>
-                    <td><span class="coupon-code-badge">{{ $coupon->code }}</span></td>
+                    <td>
+                        <div style="display:inline-flex; align-items:center; gap:8px;">
+                            <span class="coupon-code-badge">{{ $coupon->code }}</span>
+                            <button class="btn-action-outline" style="padding: 4px 6px; border-radius: 4px;" onclick="copyCouponCode('{{ $coupon->code }}')" title="Copy Coupon Code">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                            </button>
+                        </div>
+                    </td>
                     <td>
                         <span class="coupon-type-badge {{ $coupon->type }}">
                             {{ $coupon->type === 'percent' ? 'Percentage' : 'Flat Discount' }}
@@ -248,9 +222,24 @@
                             </span>
                         </div>
                     </td>
-                    <td style="font-size:0.82rem; color:{{ $isExpired ? '#ba3c1c' : 'var(--color-admin-text-muted)' }}; font-weight:{{ $isExpired ? '700' : 'normal' }};">
-                        {{ $coupon->expires_at ? \Carbon\Carbon::parse($coupon->expires_at)->format('d M Y') : 'Never' }}
-                        @if($isExpired) <span style="display:block; font-size:0.7rem;">(Expired)</span> @endif
+                    <td>
+                        <div style="font-size:0.85rem; font-weight: 600; color:var(--color-admin-text-main);">
+                            {{ $coupon->expires_at ? \Carbon\Carbon::parse($coupon->expires_at)->format('d M Y') : 'Never' }}
+                        </div>
+                        @if($isExpired)
+                            <span class="status-badge cancelled" style="display:inline-flex; font-size:0.68rem; padding: 2px 8px; margin-top:4px;">Expired</span>
+                        @elseif($coupon->expires_at)
+                            @php
+                                $daysLeft = \Carbon\Carbon::today()->diffInDays(\Carbon\Carbon::parse($coupon->expires_at), false);
+                            @endphp
+                            @if($daysLeft == 0)
+                                <span class="status-badge pending" style="display:inline-flex; font-size:0.68rem; padding: 2px 8px; margin-top:4px;">Expires Today</span>
+                            @elseif($daysLeft > 0)
+                                <span class="status-badge processing" style="display:inline-flex; font-size:0.68rem; padding: 2px 8px; margin-top:4px; background-color:rgba(26,86,214,0.06); color:#1a56d6;">{{ $daysLeft }} {{ Str::plural('day', $daysLeft) }} left</span>
+                            @endif
+                        @else
+                            <span class="status-badge delivered" style="display:inline-flex; font-size:0.68rem; padding: 2px 8px; margin-top:4px; background-color:rgba(1,136,73,0.06); color:#018849;">Infinite Validity</span>
+                        @endif
                     </td>
                     <td>
                         @if($isExpired)
@@ -267,6 +256,11 @@
                                 onclick="openEditCoupon({{ json_encode($coupon->only('id','code','type','value','min_order_amount','usage_limit','expires_at','is_active')) }})">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                 Edit
+                            </button>
+                            <button class="btn-action-outline"
+                                onclick="duplicateCoupon({{ json_encode($coupon->only('code','type','value','min_order_amount','usage_limit','expires_at','is_active')) }})">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                                Duplicate
                             </button>
                             <form action="{{ route('admin.coupons.toggle', $coupon->id) }}" method="POST" style="margin:0;">
                                 @csrf
@@ -429,6 +423,48 @@
         document.getElementById('editExpiry').value       = c.expires_at ? c.expires_at.substring(0, 10) : '';
         document.getElementById('editCouponStatus').value = c.is_active ? '1' : '0';
         openModal('editCouponModal');
+    }
+
+    function duplicateCoupon(c) {
+        document.getElementById('addCode').value = c.code + '_COPY';
+        document.getElementById('addType').value = c.type;
+        document.getElementById('addValue').value = c.value;
+        document.getElementById('addMinOrder').value = c.min_order_amount || '';
+        document.getElementById('addUsageLimit').value = c.usage_limit || '';
+        document.getElementById('addExpiry').value = c.expires_at ? c.expires_at.substring(0, 10) : '';
+        document.getElementById('addCouponStatus').value = c.is_active ? '1' : '0';
+        openModal('addCouponModal');
+        
+        // Focus the coupon code input so they can easily edit it
+        setTimeout(() => {
+            const input = document.getElementById('addCode');
+            input.focus();
+            input.setSelectionRange(input.value.length, input.value.length);
+        }, 150);
+    }
+
+    function copyCouponCode(code) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code).then(() => {
+                if (typeof showToast === 'function') {
+                    showToast(`Code "${code}" copied to clipboard!`, 'success');
+                } else {
+                    alert(`Code "${code}" copied to clipboard!`);
+                }
+            });
+        } else {
+            const el = document.createElement('textarea');
+            el.value = code;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            if (typeof showToast === 'function') {
+                showToast(`Code "${code}" copied to clipboard!`, 'success');
+            } else {
+                alert(`Code "${code}" copied to clipboard!`);
+            }
+        }
     }
 
     // Auto-uppercase coupon code input

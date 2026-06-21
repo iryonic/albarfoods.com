@@ -814,7 +814,7 @@
                                 <span class="grid-item-lbl">Estimated Delivery</span>
                                 <span class="grid-item-val">
                                     @if ($status === 'delivered')
-                                        Delivered
+                                        Delivered {{ $order->delivered_at ? $order->delivered_at->format('d M Y') : '' }}
                                     @elseif ($status === 'cancelled')
                                         N/A (Cancelled)
                                     @else
@@ -823,12 +823,36 @@
                                 </span>
                             </div>
                             <div class="summary-grid-item">
-                                <span class="grid-item-lbl">Shipping Method</span>
-                                <span class="grid-item-val">Al Barr Express Logistics</span>
+                                <span class="grid-item-lbl">Carrier / Shipping</span>
+                                <span class="grid-item-val">{{ $order->carrier_name ?? 'Al Barr Express Logistics' }}</span>
                             </div>
                             <div class="summary-grid-item">
-                                <span class="grid-item-lbl">Consignment Ref</span>
-                                <span class="grid-item-val" style="font-family: monospace;">ABE-{{ substr($order->order_number, 4) }}</span>
+                                <span class="grid-item-lbl">Tracking / AWB Number</span>
+                                @if($order->tracking_number)
+                                    @php
+                                        $trackUrl = null;
+                                        if ($order->carrier_name === 'India Post') {
+                                            $trackUrl = 'https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx?id=' . $order->tracking_number;
+                                        } elseif ($order->carrier_name === 'Delhivery') {
+                                            $trackUrl = 'https://www.delhivery.com/track/package/' . $order->tracking_number;
+                                        } elseif ($order->carrier_name === 'BlueDart') {
+                                            $trackUrl = 'https://www.bluedart.com/tracking/' . $order->tracking_number;
+                                        } elseif ($order->carrier_name === 'DTDC') {
+                                            $trackUrl = 'https://www.dtdc.in/tracking.asp?strCnno=' . $order->tracking_number;
+                                        }
+                                    @endphp
+                                    <span class="grid-item-val" style="font-family: monospace;">
+                                        @if($trackUrl)
+                                            <a href="{{ $trackUrl }}" target="_blank" style="color: var(--color-blue-medium); text-decoration: underline;">{{ $order->tracking_number }}</a>
+                                        @else
+                                            {{ $order->tracking_number }}
+                                        @endif
+                                    </span>
+                                @else
+                                    <span class="grid-item-val" style="font-family: monospace; color: var(--color-text-muted);">
+                                        Tracking not yet available
+                                    </span>
+                                @endif
                             </div>
                         </div>
                     </div>

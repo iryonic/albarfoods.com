@@ -344,7 +344,7 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th style="padding-left: 24px;">Backup File</th>
+                    <th style="padding-left: 24px; width: 45%;">Backup File</th>
                     <th>Size</th>
                     <th>Created At</th>
                     <th style="text-align: right; padding-right: 24px; min-width: 240px;">Actions</th>
@@ -359,13 +359,18 @@
                             : number_format($sizeKb, 2) . ' KB';
                     @endphp
                     <tr>
-                        <td style="padding-left: 24px;">
-                            <div class="backup-filename">
+                        <td style="padding-left: 24px; position: relative;">
+                            {{-- Vertical timeline line --}}
+                            <div style="position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--color-admin-border); opacity: 0.7;"></div>
+                            {{-- Timeline node dot --}}
+                            <div style="position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; border-radius: 50%; background: {{ $index === 0 ? 'var(--color-admin-accent)' : 'var(--color-admin-text-muted)' }}; border: 2px solid #fff; z-index: 2; box-shadow: {{ $index === 0 ? '0 0 0 3px rgba(1, 136, 73, 0.15)' : 'none' }};"></div>
+                            
+                            <div class="backup-filename" style="padding-left: 12px;">
                                 <span class="backup-filename-icon">💾</span>
                                 <div>
-                                    <div>{{ $backup['filename'] }}</div>
+                                    <div style="font-weight: 700; color:var(--color-admin-text-main);">{{ $backup['filename'] }}</div>
                                     @if($index === 0)
-                                        <span class="latest-badge">Latest</span>
+                                        <span class="latest-badge" style="background:#e3fbeb; color:#018849; font-size:0.65rem; padding: 1px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">Latest</span>
                                     @endif
                                 </div>
                             </div>
@@ -373,8 +378,13 @@
                         <td>
                             <span class="size-badge">{{ $sizeText }}</span>
                         </td>
-                        <td style="font-size: 0.88rem; color: var(--color-admin-text-muted);">
-                            {{ date('d M Y, h:i A', strtotime($backup['created_at'])) }}
+                        <td>
+                            <div style="font-size: 0.85rem; font-weight: 600; color: var(--color-admin-text-main);">
+                                {{ date('d M Y, h:i A', strtotime($backup['created_at'])) }}
+                            </div>
+                            <div style="font-size: 0.74rem; color: var(--color-admin-text-muted); margin-top: 2px; font-weight: 500;">
+                                {{ \Carbon\Carbon::parse($backup['created_at'])->diffForHumans() }}
+                            </div>
                         </td>
                         <td style="padding-right: 24px;">
                             <div class="backup-actions">
@@ -383,17 +393,14 @@
                                     ⬇️ Download
                                 </a>
 
-                                {{-- Restore --}}
-                                <form action="{{ route('admin.backups.restore') }}" method="POST"
-                                      onsubmit="return confirm('⚠️ WARNING: This will immediately overwrite ALL current database data with the backup: {{ $backup['filename'] }}\n\nThis cannot be undone. Are you absolutely sure?')">
-                                    @csrf
-                                    <input type="hidden" name="filename" value="{{ $backup['filename'] }}">
-                                    <button type="submit" class="btn-restore">🔄 Restore</button>
-                                </form>
+                                {{-- Restore Trigger --}}
+                                <button type="button" class="btn-restore" onclick="triggerRestore('{{ $backup['filename'] }}')">
+                                    🔄 Restore
+                                </button>
 
                                 {{-- Delete --}}
                                 <form action="{{ route('admin.backups.delete', $backup['filename']) }}" method="POST"
-                                      onsubmit="return confirm('Permanently delete this backup file? This cannot be undone.')">
+                                      onsubmit="return confirm('Permanently delete this backup file? This cannot be undone.')" style="margin:0;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn-delete">🗑️ Delete</button>
@@ -416,4 +423,50 @@
         </table>
     </div>
 </div>
+
+{{-- ─── Safety Restore Confirmation Modal ─── --}}
+<div class="admin-modal-overlay" id="confirmRestoreModal" style="z-index: 9999;">
+    <div class="admin-modal-card" style="max-width: 460px; border-top: 5px solid #ba3c1c;">
+        <div class="admin-modal-header" style="background:#fff; color:var(--color-admin-text-main); border-bottom:1px solid var(--color-admin-border); padding: 16px 20px;">
+            <h3 class="admin-modal-title" style="color:#ba3c1c; font-family:var(--font-secondary); font-weight:800;">⚠️ Critical Action</h3>
+            <button class="admin-modal-close" onclick="closeModal('confirmRestoreModal')" style="color:var(--color-admin-text-muted);">&times;</button>
+        </div>
+        <form action="{{ route('admin.backups.restore') }}" method="POST" id="restoreConfirmForm">
+            @csrf
+            <input type="hidden" name="filename" id="restoreFilenameInput">
+            <div class="admin-modal-body" style="padding: 20px;">
+                <p style="font-size: 0.88rem; color: var(--color-admin-text-main); line-height: 1.5; margin: 0 0 16px;">
+                    You are about to restore the database snapshot: <strong id="restoreFilenameDisplay" style="font-family: var(--font-mono); color: #ba3c1c; word-break: break-all;"></strong>.
+                </p>
+                <div style="background: #fdf2f0; border: 1px solid #f9d0c4; padding: 12px 14px; border-radius: 8px; font-size: 0.82rem; color: #ba3c1c; line-height: 1.45; margin-bottom: 20px;">
+                    <strong>Warning:</strong> This will completely overwrite all current database tables, orders, products, and configurations. <strong>This action cannot be undone.</strong>
+                </div>
+                <div class="admin-form-group">
+                    <label for="restoreConfirmCode" style="font-weight:700; font-size:0.75rem; text-transform:uppercase; color:var(--color-admin-text-muted);">Type <strong style="color:#ba3c1c;">RESTORE</strong> to confirm:</label>
+                    <input type="text" id="restoreConfirmCode" class="admin-input" placeholder="Type RESTORE here" required oninput="validateRestoreCode(this)" style="margin-top:6px;">
+                </div>
+                <button type="submit" class="btn-danger" id="restoreConfirmBtn" style="width: 100%; justify-content: center; padding: 12px; margin-top: 16px; border-radius:10px; display:inline-flex; align-items:center; gap:8px;" disabled>
+                    🔥 Overwrite Database &amp; Restore
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+    function triggerRestore(filename) {
+        document.getElementById('restoreFilenameInput').value = filename;
+        document.getElementById('restoreFilenameDisplay').innerText = filename;
+        document.getElementById('restoreConfirmCode').value = '';
+        document.getElementById('restoreConfirmBtn').disabled = true;
+        openModal('confirmRestoreModal');
+    }
+
+    function validateRestoreCode(input) {
+        const btn = document.getElementById('restoreConfirmBtn');
+        btn.disabled = (input.value.trim() !== 'RESTORE');
+    }
+</script>
 @endsection

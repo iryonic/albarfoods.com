@@ -16,6 +16,58 @@ const AlBarrCart = {
     save(cart) {
         localStorage.setItem('al_barr_cart', JSON.stringify(cart));
         this.syncUI();
+        this.syncWithServer(cart);
+    },
+
+    getSessionToken() {
+        let token = localStorage.getItem('al_barr_cart_session_token');
+        if (!token) {
+            token = 'session_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            localStorage.setItem('al_barr_cart_session_token', token);
+        }
+        return token;
+    },
+
+    syncWithServer(cart, details = {}) {
+        const token = this.getSessionToken();
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        
+        // Auto-extract checkout fields if they are on the page
+        const nameInput = document.getElementById('ch-name');
+        const phoneInput = document.getElementById('ch-phone');
+        const altPhoneInput = document.getElementById('ch-phone-alt');
+        const pincodeInput = document.getElementById('ch-pincode');
+        const cityInput = document.getElementById('ch-city');
+        const addressInput = document.getElementById('ch-address');
+        const landmarkInput = document.getElementById('ch-landmark');
+
+        const payload = {
+            session_token: token,
+            cart_data: cart,
+            name: details.name || nameInput?.value || null,
+            phone: details.phone || phoneInput?.value || null,
+            alt_phone: details.alt_phone || altPhoneInput?.value || null,
+            pincode: details.pincode || pincodeInput?.value || null,
+            city: details.city || cityInput?.value || null,
+            address: details.address || addressInput?.value || null,
+            landmark: details.landmark || landmarkInput?.value || null,
+        };
+
+        fetch('/cart/sync', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken || ''
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            // Synced successfully
+        })
+        .catch(err => {
+            console.error("Cart sync failed", err);
+        });
     },
 
     // Add item to cart

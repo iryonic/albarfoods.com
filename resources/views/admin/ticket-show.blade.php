@@ -431,20 +431,42 @@
             </div>
 
             {{-- ─── Message Thread ─── --}}
-            <div class="messages-container" id="messagesBox">
+            <div class="messages-container" id="messagesBox" style="display:flex; flex-direction:column; padding: 8px 4px;">
                 @forelse($ticket->replies as $reply)
                     @php
                         $isAgent = $reply->user && in_array($reply->user->role_id, [1, 2, 3, 4]);
                     @endphp
-                    <div class="msg-wrap {{ $isAgent ? 'agent' : 'customer' }}">
-                        <div class="msg-bubble">{{ $reply->message }}</div>
-                        <div class="msg-meta">
-                            @if($isAgent)
-                                <strong>{{ $reply->user->name }}</strong> (Support Agent)
-                            @else
-                                <strong style="color: var(--color-admin-text-main);">{{ $reply->user->name ?? 'Customer' }}</strong>
-                            @endif
-                            &bull; {{ $reply->created_at->format('d M, h:i A') }}
+                    <div class="msg-row" style="display:flex; gap:12px; margin-bottom:16px; align-self: {{ $isAgent ? 'flex-end' : 'flex-start' }}; flex-direction: {{ $isAgent ? 'row-reverse' : 'row' }}; max-width:75%;">
+                        @php
+                            $initials = '';
+                            if ($reply->user?->name) {
+                                $words = explode(' ', $reply->user->name);
+                                $initials = strtoupper(substr($words[0], 0, 1));
+                                if (count($words) > 1) {
+                                    $initials .= strtoupper(substr($words[1], 0, 1));
+                                }
+                            } else {
+                                $initials = $isAgent ? 'A' : 'C';
+                            }
+                            $avatarBg = $isAgent ? 'linear-gradient(135deg, var(--color-admin-sidebar) 0%, #1a2f4a 100%)' : 'linear-gradient(135deg, rgba(197, 168, 128, 0.15) 0%, rgba(197, 168, 128, 0.05) 100%)';
+                            $avatarColor = $isAgent ? '#f7dfbe' : 'var(--color-admin-gold)';
+                            $avatarBorder = $isAgent ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(197, 168, 128, 0.25)';
+                        @endphp
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: {{ $avatarBg }}; color: {{ $avatarColor }}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.76rem; font-family: var(--font-secondary); flex-shrink: 0; border: {{ $avatarBorder }}; margin-top:4px;">
+                            {{ $initials }}
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 4px; align-items: {{ $isAgent ? 'flex-end' : 'flex-start' }};">
+                            <div class="msg-bubble" style="padding: 12px 16px; border-radius: 16px; font-size: 0.91rem; line-height: 1.55; word-break: break-word; {{ $isAgent ? 'background: linear-gradient(135deg, var(--color-admin-sidebar) 0%, #1a2f4a 100%); color:#fff; border-bottom-right-radius:4px;' : 'background:#f5f6f8; color:var(--color-admin-text-main); border-bottom-left-radius:4px; border:1px solid var(--color-admin-border);' }}">
+                                {{ $reply->message }}
+                            </div>
+                            <div class="msg-meta" style="font-size: 0.72rem; color: var(--color-admin-text-muted); padding: 0 4px; text-align: {{ $isAgent ? 'right' : 'left' }};">
+                                @if($isAgent)
+                                    <strong>{{ $reply->user->name }}</strong> (Support Agent)
+                                @else
+                                    <strong style="color: var(--color-admin-text-main);">{{ $reply->user->name ?? 'Customer' }}</strong>
+                                @endif
+                                &bull; {{ $reply->created_at->format('d M, h:i A') }}
+                            </div>
                         </div>
                     </div>
                 @empty

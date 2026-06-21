@@ -5,34 +5,10 @@
 
 @section('styles')
 <style>
-    /* ─── Page Header Row ─── */
-    .orders-page-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 16px;
-        margin-bottom: var(--spacing-xl);
-    }
-
-    .orders-page-header h2 {
-        font-family: var(--font-secondary);
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--color-admin-text-main);
-        margin: 0;
-    }
-
-    .orders-page-header p {
-        font-size: 0.85rem;
-        color: var(--color-admin-text-muted);
-        margin: 4px 0 0;
-    }
-
     /* ─── KPI Stats Bar ─── */
     .orders-stats-bar {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        grid-template-columns: repeat(5, 1fr);
         gap: 16px;
         margin-bottom: var(--spacing-xl);
     }
@@ -46,7 +22,7 @@
         display: flex;
         flex-direction: column;
         gap: 4px;
-        transition: box-shadow 0.2s, transform 0.2s;
+        transition: all 0.2s ease;
         cursor: default;
     }
 
@@ -85,9 +61,10 @@
         align-items: center;
     }
 
-    .order-filters .admin-input {
+    .order-filters .admin-input,
+    .order-filters .admin-select {
         flex: 1;
-        min-width: 220px;
+        min-width: 180px;
     }
 
     /* ─── Status Tabs ─── */
@@ -143,39 +120,6 @@
         color: #fff;
     }
 
-    /* ─── Table ─── */
-    .orders-table-wrap {
-        overflow-x: auto;
-    }
-
-    .admin-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.88rem;
-    }
-
-    .admin-table thead th {
-        background: var(--color-admin-border-light);
-        padding: 12px 16px;
-        text-align: left;
-        font-size: 0.72rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--color-admin-text-muted);
-        border-bottom: 1px solid var(--color-admin-border);
-        white-space: nowrap;
-    }
-
-    .admin-table tbody tr {
-        border-bottom: 1px solid var(--color-admin-border);
-    }
-
-    .admin-table tbody tr td {
-        padding: 14px 16px;
-        vertical-align: middle;
-    }
-
     /* ─── Collapsible Row ─── */
     .order-collapsible-row {
         cursor: pointer;
@@ -187,7 +131,7 @@
     }
 
     .order-collapsible-row.expanded {
-        background: #f5f8ff;
+        background: #f5f8ff !important;
     }
 
     /* ─── Expanded Drawer ─── */
@@ -215,6 +159,10 @@
 
     @media (max-width: 900px) {
         .drawer-inner { grid-template-columns: 1fr; gap: 24px; }
+        .orders-stats-bar { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+        .orders-stats-bar { grid-template-columns: 1fr; }
     }
 
     /* Drawer sections */
@@ -419,43 +367,132 @@
         transform: rotate(180deg);
     }
 
-    /* ─── Print Styles ─── */
-    @media print {
-        body * { visibility: hidden; }
-        .print-invoice, .print-invoice * { visibility: visible; }
-        .print-invoice {
-            position: absolute;
-            left: 0; top: 0;
-            width: 100%;
-            padding: 40px;
-        }
-    }
-
-    /* ─── Invoice Print Button ─── */
-    .btn-print-invoice {
+    /* ─── Tracking Badge ─── */
+    .tracking-chip {
         display: inline-flex;
         align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+    }
+    .tracking-chip.has-tracking {
+        background: #e6f5ec;
+        color: #018849;
+    }
+    .tracking-chip.no-tracking {
+        background: #f1f5f9;
+        color: #94a3b8;
+    }
+
+    /* ─── Document Action Buttons ─── */
+    .doc-actions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 8px;
-        padding: 10px 16px;
+        margin-top: 8px;
+    }
+
+    .btn-doc-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 14px;
         background: #fff;
         border: 1px solid var(--color-admin-border);
         border-radius: var(--radius-admin-input);
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-weight: 700;
         color: var(--color-admin-text-main);
         cursor: pointer;
         transition: all 0.2s;
-        width: 100%;
-        justify-content: center;
-        margin-top: 4px;
+        text-decoration: none;
+        font-family: var(--font-sans);
     }
 
-    .btn-print-invoice:hover {
+    .btn-doc-action:hover {
         background: var(--color-admin-border-light);
         border-color: var(--color-admin-text-main);
+        transform: translateY(-1px);
     }
 
-    /* ─── Admin Form Group ─── */
+    .btn-doc-action.invoice-btn {
+        border-color: #0a4b99;
+        color: #0a4b99;
+    }
+    .btn-doc-action.invoice-btn:hover {
+        background: #cfe2ff;
+    }
+
+    .btn-doc-action.label-btn {
+        border-color: #018849;
+        color: #018849;
+    }
+    .btn-doc-action.label-btn:hover {
+        background: #e6f5ec;
+    }
+
+    /* ─── Tracking Form ─── */
+    .tracking-form-section {
+        background: var(--color-admin-border-light);
+        border-radius: 10px;
+        padding: 14px 16px;
+        border: 1px dashed var(--color-admin-border);
+    }
+
+    .tracking-form-section .form-title {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--color-admin-text-muted);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .tracking-form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .tracking-form-row .admin-input,
+    .tracking-form-row select {
+        padding: 8px 10px;
+        font-size: 0.82rem;
+        border: 1px solid var(--color-admin-border);
+        border-radius: 8px;
+        background: #fff;
+        font-family: inherit;
+        font-weight: 600;
+    }
+
+    .btn-save-tracking {
+        width: 100%;
+        padding: 8px 14px;
+        background: #018849;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+    }
+    .btn-save-tracking:hover {
+        background: #016a39;
+        transform: translateY(-1px);
+    }
+
     .admin-form-group {
         display: flex;
         flex-direction: column;
@@ -470,7 +507,6 @@
         letter-spacing: 0.4px;
     }
 
-    /* ─── Btn Gold ─── */
     .btn-gold {
         display: inline-flex;
         align-items: center;
@@ -495,7 +531,6 @@
         box-shadow: 0 4px 12px rgba(197, 168, 128, 0.35);
     }
 
-    /* ─── Empty State ─── */
     .empty-state {
         display: flex;
         flex-direction: column;
@@ -540,14 +575,6 @@
     $cancelledCount = $orders->whereIn('status', ['Cancelled', 'Returned', 'Refunded'])->count();
 @endphp
 
-{{-- ─── Page Header ─── --}}
-<div class="orders-page-header">
-    <div>
-        <h2>Order Registry</h2>
-        <p>{{ $orders->count() }} total orders · Manage fulfilment, payments and statuses</p>
-    </div>
-</div>
-
 {{-- ─── KPI Stats Bar ─── --}}
 <div class="orders-stats-bar">
     <div class="orders-stat-card">
@@ -583,14 +610,27 @@
     {{-- Filter Bar --}}
     <div style="padding: 20px 24px 0;">
         <div class="order-filters">
-            <input type="text" id="orderSearch" class="admin-input" placeholder="🔍 Search by order number or customer name…" style="max-width: 360px;">
-            <select id="paymentFilter" class="admin-input" style="max-width: 200px;">
+            <input type="text" id="orderSearch" class="admin-input" placeholder="🔍 Search by order number or customer name…">
+            
+            <select id="paymentFilter" class="admin-select" style="max-width: 180px;">
                 <option value="all">All Payments</option>
                 <option value="pending">Pending</option>
                 <option value="completed">Completed</option>
                 <option value="failed">Failed</option>
                 <option value="refunded">Refunded</option>
             </select>
+
+            <select id="dateFilter" class="admin-select" style="max-width: 180px;">
+                <option value="all">All Dates</option>
+                <option value="today">Today</option>
+                <option value="7days">Last 7 Days</option>
+                <option value="30days">Last 30 Days</option>
+            </select>
+
+            <button class="btn-action-outline" onclick="exportFilteredOrdersToCSV()" style="margin-left: auto; height: 42px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export CSV
+            </button>
         </div>
 
         {{-- Status Tabs --}}
@@ -614,7 +654,10 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th style="padding-left: 24px; width: 150px;">Order ID</th>
+                    <th style="padding-left: 24px; width: 40px;">
+                        <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll(this)">
+                    </th>
+                    <th style="width: 140px;">Order ID</th>
                     <th>Customer</th>
                     <th>Method</th>
                     <th>Total</th>
@@ -633,12 +676,22 @@
                         data-number="{{ strtolower($order->order_number) }}"
                         data-name="{{ strtolower($order->shipping_name) }}"
                         data-status="{{ strtolower($order->status) }}"
-                        data-payment="{{ strtolower($order->payment_status) }}">
+                        data-payment="{{ strtolower($order->payment_status) }}"
+                        data-created-date="{{ $order->created_at->format('Y-m-d') }}"
+                        data-timestamp="{{ $order->created_at->timestamp }}">
 
-                        <td style="padding-left: 24px;">
+                        <td style="padding-left: 24px;" onclick="event.stopPropagation()">
+                            <input type="checkbox" class="order-select-checkbox" value="{{ $order->id }}" onclick="updateBulkBar()">
+                        </td>
+                        <td>
                             <span style="font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; color: var(--color-admin-accent);">
                                 {{ $order->order_number }}
                             </span>
+                            @if($order->tracking_number)
+                                <div style="margin-top: 3px;">
+                                    <span class="tracking-chip has-tracking">📦 {{ $order->tracking_number }}</span>
+                                </div>
+                            @endif
                         </td>
                         <td>
                             <div style="font-weight: 700; color: var(--color-admin-text-main);">{{ $order->shipping_name }}</div>
@@ -667,11 +720,59 @@
 
                     {{-- ─── Drawer ─── --}}
                     <tr class="order-details-drawer" id="orderDrawer-{{ $order->id }}" onclick="event.stopPropagation()">
-                        <td colspan="8">
+                        <td colspan="9">
                             <div class="drawer-inner print-invoice" id="printInvoice-{{ $order->id }}">
 
                                 {{-- Left: Info + Items --}}
                                 <div>
+                                    {{-- Visual Fulfilment Timeline --}}
+                                    <div class="drawer-section-title">
+                                        📌 Fulfilment Timeline
+                                    </div>
+                                    <div class="visual-timeline" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; position: relative; padding: 10px 0;">
+                                        @php
+                                            $stages = ['Pending', 'Confirmed', 'Processing', 'Packed', 'Shipped', 'Delivered'];
+                                            $currentStageIndex = array_search($order->status, $stages);
+                                            if ($currentStageIndex === false) {
+                                                $stages = ['Pending', $order->status];
+                                                $currentStageIndex = 1;
+                                            }
+                                        @endphp
+                                        <div style="position: absolute; top: 18px; left: 0; right: 0; height: 3px; background: var(--color-admin-border); z-index: 1;"></div>
+                                        <div style="position: absolute; top: 18px; left: 0; width: {{ count($stages) > 1 ? ($currentStageIndex / (count($stages) - 1)) * 100 : 0 }}%; height: 3px; background: var(--color-admin-accent); z-index: 2; transition: width 0.3s ease;"></div>
+                                        
+                                        @foreach($stages as $index => $stage)
+                                            @php
+                                                $isCompleted = $index <= $currentStageIndex;
+                                                $isActive = $index === $currentStageIndex;
+                                                
+                                                $color = 'var(--color-admin-text-muted)';
+                                                $borderColor = 'var(--color-admin-border)';
+                                                $bgColor = '#fff';
+                                                
+                                                if ($isCompleted) {
+                                                    $color = 'var(--color-admin-text-main)';
+                                                    $borderColor = 'var(--color-admin-accent)';
+                                                    $bgColor = 'var(--color-admin-accent)';
+                                                }
+                                                if ($order->status === 'Cancelled' || $order->status === 'Returned' || $order->status === 'Refunded') {
+                                                    if ($isCompleted) {
+                                                        $borderColor = '#ba3c1c';
+                                                        $bgColor = '#ba3c1c';
+                                                    }
+                                                }
+                                            @endphp
+                                            <div style="display: flex; flex-direction: column; align-items: center; position: relative; z-index: 3; flex: 1;">
+                                                <div style="width: 18px; height: 18px; border-radius: 50%; border: 3px solid {{ $borderColor }}; background: {{ $isActive ? '#fff' : $bgColor }}; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-admin-sm); transition: all 0.3s;">
+                                                    @if($isCompleted && !$isActive)
+                                                        <span style="color: #fff; font-size: 9px; font-weight: bold;">✓</span>
+                                                    @endif
+                                                </div>
+                                                <span style="font-size: 0.68rem; font-weight: 700; margin-top: 6px; color: {{ $color }};">{{ $stage }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
                                     <div class="drawer-section-title">
                                         🚚 Shipping &amp; Customer Information
                                     </div>
@@ -777,9 +878,39 @@
                                         </button>
                                     </form>
 
-                                    <button class="btn-print-invoice" onclick="printInvoice({{ $order->id }})">
-                                        🖨️ Print Packing Slip / Invoice
-                                    </button>
+                                    {{-- Tracking Management Section --}}
+                                    <div class="tracking-form-section">
+                                        <div class="form-title">📦 Tracking / Shipment Info</div>
+                                        <form action="{{ route('admin.orders.tracking', $order->id) }}" method="POST">
+                                            @csrf
+                                            <div class="tracking-form-row">
+                                                <input type="text" name="tracking_number" class="admin-input" placeholder="AWB / Tracking #" value="{{ $order->tracking_number }}">
+                                                <select name="carrier_name">
+                                                    <option value="">Select Carrier</option>
+                                                    @foreach(['India Post', 'Delhivery', 'BlueDart', 'DTDC', 'Ecom Express', 'Shadowfax', 'Xpressbees', 'Professional Couriers', 'Other'] as $carrier)
+                                                        <option value="{{ $carrier }}" @selected($order->carrier_name === $carrier)>{{ $carrier }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn-save-tracking">💾 Save Tracking</button>
+                                        </form>
+                                        @if($order->shipped_at)
+                                            <div style="margin-top: 8px; font-size: 0.75rem; color: var(--color-admin-text-muted);">
+                                                Shipped: {{ $order->shipped_at->format('d M Y, h:i A') }}
+                                                @if($order->delivered_at) · Delivered: {{ $order->delivered_at->format('d M Y, h:i A') }}@endif
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    {{-- Document Actions: Invoice & Label --}}
+                                    <div class="doc-actions-grid">
+                                        <a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank" class="btn-doc-action invoice-btn">
+                                            📄 Invoice
+                                        </a>
+                                        <a href="{{ route('admin.orders.label', $order->id) }}" target="_blank" class="btn-doc-action label-btn">
+                                            🏷️ Label
+                                        </a>
+                                    </div>
 
                                     {{-- Quick Info Panel --}}
                                     <div style="background: var(--color-admin-border-light); border-radius: 8px; padding: 14px 16px; margin-top: 8px;">
@@ -797,6 +928,12 @@
                                                 <span style="color: var(--color-admin-text-muted);">Items Count</span>
                                                 <span style="font-weight: 700;">{{ $order->items->sum('quantity') }} items</span>
                                             </div>
+                                            @if($order->carrier_name)
+                                            <div style="display: flex; justify-content: space-between;">
+                                                <span style="color: var(--color-admin-text-muted);">Carrier</span>
+                                                <span style="font-weight: 700;">{{ $order->carrier_name }}</span>
+                                            </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -806,7 +943,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8">
+                        <td colspan="9">
                             <div class="empty-state">
                                 <div class="empty-state-icon">📦</div>
                                 <h3>No Orders Found</h3>
@@ -819,6 +956,72 @@
         </table>
     </div>
 </div>
+
+<!-- Bulk Actions Floating Bar -->
+<div id="bulkActionsBar" style="display: none; position: fixed; bottom: 24px; left: calc(var(--admin-sidebar-width) + 24px); right: 24px; background: rgba(10, 15, 30, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; box-shadow: var(--shadow-admin-lg); z-index: 150; padding: 16px 24px; color: #fff; animation: slideInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+    
+    {{-- Top Row: Count + Document Buttons --}}
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="background: var(--color-admin-accent); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; font-weight: bold;" id="selectedCountBadge">0</span>
+            <span style="font-size: 0.85rem; font-weight: 600;">Orders selected</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <button type="button" onclick="bulkGenerateInvoices()" style="padding: 7px 14px; background: rgba(10, 75, 153, 0.2); border: 1px solid rgba(10, 75, 153, 0.4); color: #7bb8ff; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit;" onmouseover="this.style.background='rgba(10,75,153,0.35)'" onmouseout="this.style.background='rgba(10,75,153,0.2)'">
+                📄 Bulk Invoices
+            </button>
+            <button type="button" onclick="bulkGenerateLabels()" style="padding: 7px 14px; background: rgba(1, 136, 73, 0.2); border: 1px solid rgba(1, 136, 73, 0.4); color: #6ee7a8; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit;" onmouseover="this.style.background='rgba(1,136,73,0.35)'" onmouseout="this.style.background='rgba(1,136,73,0.2)'">
+                🏷️ Bulk Labels
+            </button>
+        </div>
+    </div>
+
+    {{-- Bottom Row: Status Update Form --}}
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <form action="{{ route('admin.orders.bulk-status') }}" method="POST" style="margin: 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1;" onsubmit="return confirm('Are you sure you want to update all selected orders?');">
+            @csrf
+            <div id="bulkFormIdsContainer"></div>
+            
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8;">Order Status:</label>
+                <select name="status" class="admin-select" style="padding: 8px 12px; font-size: 0.8rem; background: #182235; color: #fff; border-color: rgba(255,255,255,0.15); width: auto; font-weight: bold; border-radius: 8px;">
+                    @foreach(['Pending','Confirmed','Processing','Packed','Shipped','Delivered','Cancelled','Returned','Refunded'] as $status)
+                        <option value="{{ $status }}">{{ $status }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8;">Payment Status:</label>
+                <select name="payment_status" class="admin-select" style="padding: 8px 12px; font-size: 0.8rem; background: #182235; color: #fff; border-color: rgba(255,255,255,0.15); width: auto; font-weight: bold; border-radius: 8px;">
+                    <option value="Keep">Keep Current</option>
+                    @foreach(['Pending','Completed','Failed','Refunded'] as $ps)
+                        <option value="{{ $ps }}">{{ $ps }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <button type="submit" class="btn-solid-gold" style="padding: 8px 16px; font-size: 0.82rem; border-radius: 8px; border: none;">
+                ⚡ Apply Changes
+            </button>
+        </form>
+        <button type="button" onclick="cancelBulkSelection()" style="background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); font-size: 0.82rem; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff';" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.7)';">
+            Cancel
+        </button>
+    </div>
+</div>
+
+{{-- Hidden forms for bulk invoice/label generation --}}
+<form id="bulkInvoiceForm" action="{{ route('admin.orders.bulk-invoices') }}" method="POST" target="_blank" style="display: none;">
+    @csrf
+    <div id="bulkInvoiceIdsContainer"></div>
+</form>
+<form id="bulkLabelForm" action="{{ route('admin.orders.bulk-labels') }}" method="POST" target="_blank" style="display: none;">
+    @csrf
+    <div id="bulkLabelIdsContainer"></div>
+</form>
+
+
 @endsection
 
 @section('scripts')
@@ -841,20 +1044,7 @@
         }
     }
 
-    /* ── Print Invoice ── */
-    function printInvoice(id) {
-        // Hide everything except the target invoice box
-        document.querySelectorAll('.print-invoice').forEach(el => {
-            el.style.display = 'none';
-        });
-        const inv = document.getElementById(`printInvoice-${id}`);
-        if (inv) inv.style.display = 'grid';
-        window.print();
-        // Restore
-        document.querySelectorAll('.print-invoice').forEach(el => {
-            el.style.display = '';
-        });
-    }
+
 
     /* ── Status Tab Filter ── */
     let activeStatus = 'all';
@@ -865,13 +1055,16 @@
         applyFilters();
     }
 
-    /* ── Search & Payment Filter ── */
+    /* ── Search, Date, and Payment Filters ── */
     const searchInput   = document.getElementById('orderSearch');
     const paymentSelect = document.getElementById('paymentFilter');
+    const dateSelect    = document.getElementById('dateFilter');
 
     function applyFilters() {
         const query   = searchInput.value.toLowerCase().trim();
         const payment = paymentSelect.value;
+        const dateVal = dateSelect.value;
+        const now = Date.now();
 
         document.querySelectorAll('.order-collapsible-row').forEach(row => {
             const id      = row.id.replace('orderRow-', '');
@@ -880,12 +1073,25 @@
             const name    = row.dataset.name;
             const status  = row.dataset.status;
             const pmt     = row.dataset.payment;
+            
+            const rowDateStr = row.dataset.createdDate;
+            const rowTimestamp = parseInt(row.dataset.timestamp) * 1000;
 
             const matchSearch  = !query  || num.includes(query) || name.includes(query);
             const matchStatus  = activeStatus === 'all' || status === activeStatus;
             const matchPayment = payment === 'all' || pmt === payment;
 
-            if (matchSearch && matchStatus && matchPayment) {
+            let matchDate = true;
+            if (dateVal === 'today') {
+                const todayStr = new Date().toISOString().slice(0,10);
+                matchDate = rowDateStr === todayStr;
+            } else if (dateVal === '7days') {
+                matchDate = (now - rowTimestamp) <= (7 * 24 * 60 * 60 * 1000);
+            } else if (dateVal === '30days') {
+                matchDate = (now - rowTimestamp) <= (30 * 24 * 60 * 60 * 1000);
+            }
+
+            if (matchSearch && matchStatus && matchPayment && matchDate) {
                 row.style.display = 'table-row';
             } else {
                 row.style.display = 'none';
@@ -893,9 +1099,132 @@
                 drawer.classList.remove('active');
             }
         });
+        updateBulkBar();
     }
 
     searchInput.addEventListener('input', applyFilters);
     paymentSelect.addEventListener('change', applyFilters);
+    dateSelect.addEventListener('change', applyFilters);
+
+    /* ─── Bulk Select Logic ─── */
+    function toggleSelectAll(masterCheckbox) {
+        const checkboxes = document.querySelectorAll('.order-select-checkbox');
+        checkboxes.forEach(cb => {
+            const row = cb.closest('tr');
+            // Only select visible rows
+            if (row && row.style.display !== 'none') {
+                cb.checked = masterCheckbox.checked;
+            } else {
+                cb.checked = false;
+            }
+        });
+        updateBulkBar();
+    }
+
+    function updateBulkBar() {
+        const checkboxes = document.querySelectorAll('.order-select-checkbox:checked');
+        const bar = document.getElementById('bulkActionsBar');
+        const badge = document.getElementById('selectedCountBadge');
+        const container = document.getElementById('bulkFormIdsContainer');
+
+        if (checkboxes.length > 0) {
+            badge.innerText = checkboxes.length;
+            bar.style.display = 'flex';
+            
+            // Populate form ids inputs
+            container.innerHTML = '';
+            checkboxes.forEach(cb => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'order_ids[]';
+                input.value = cb.value;
+                container.appendChild(input);
+            });
+        } else {
+            bar.style.display = 'none';
+            container.innerHTML = '';
+            document.getElementById('selectAllCheckbox').checked = false;
+        }
+    }
+
+    function cancelBulkSelection() {
+        document.querySelectorAll('.order-select-checkbox').forEach(cb => cb.checked = false);
+        document.getElementById('selectAllCheckbox').checked = false;
+        updateBulkBar();
+    }
+
+    /* ─── CSV Export Function ─── */
+    function exportFilteredOrdersToCSV() {
+        const rows = document.querySelectorAll('.order-collapsible-row');
+        let csv = ['Order ID,Customer Name,Phone,Method,Total,Payment Status,Order Status,Date'].join(',') + '\n';
+        
+        let count = 0;
+        rows.forEach(row => {
+            if (row.style.display !== 'none') {
+                const num = row.querySelector('td:nth-child(2) span').innerText.trim();
+                const name = row.querySelector('td:nth-child(3) div:nth-child(1)').innerText.trim();
+                const phone = row.querySelector('td:nth-child(3) div:nth-child(2)').innerText.trim();
+                const method = row.querySelector('td:nth-child(4)').innerText.trim();
+                const total = row.querySelector('td:nth-child(5)').innerText.trim().replace('₹', '').replace(/,/g, '');
+                const payment = row.querySelector('td:nth-child(6) span').innerText.trim();
+                const status = row.querySelector('td:nth-child(7) span').innerText.trim();
+                const date = row.querySelector('td:nth-child(8)').innerText.trim().replace(/\n/g, ' ');
+                
+                csv += `"${num}","${name}","${phone}","${method}","${total}","${payment}","${status}","${date}"\n`;
+                count++;
+            }
+        });
+        
+        if (count === 0) {
+            showToast("No orders available to export.", "error");
+            return;
+        }
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `orders_export_${new Date().toISOString().slice(0,10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast(`Exported ${count} orders successfully!`, "success");
+    }
+
+    /* ─── Replaced printInvoice function ─── */
+
+    /* ─── Bulk Invoice / Label Generation ─── */
+    function getSelectedOrderIds() {
+        return Array.from(document.querySelectorAll('.order-select-checkbox:checked')).map(cb => cb.value);
+    }
+
+    function populateHiddenIds(containerId, ids) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        ids.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'order_ids[]';
+            input.value = id;
+            container.appendChild(input);
+        });
+    }
+
+    function bulkGenerateInvoices() {
+        const ids = getSelectedOrderIds();
+        if (ids.length === 0) { showToast('No orders selected.', 'error'); return; }
+        populateHiddenIds('bulkInvoiceIdsContainer', ids);
+        document.getElementById('bulkInvoiceForm').submit();
+        showToast(`Generating ${ids.length} invoice(s)...`, 'success');
+    }
+
+    function bulkGenerateLabels() {
+        const ids = getSelectedOrderIds();
+        if (ids.length === 0) { showToast('No orders selected.', 'error'); return; }
+        populateHiddenIds('bulkLabelIdsContainer', ids);
+        document.getElementById('bulkLabelForm').submit();
+        showToast(`Generating ${ids.length} label(s)...`, 'success');
+    }
+
 </script>
 @endsection

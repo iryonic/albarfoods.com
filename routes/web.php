@@ -27,6 +27,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'placeOrder']);
 Route::get('/order-success', [CheckoutController::class, 'success'])->name('order-success');
+Route::post('/cart/sync', [\App\Http\Controllers\CartController::class, 'sync']);
 
 // 5. Customer Profile & Orders
 Route::get('/orders', [OrderController::class, 'index'])->name('orders');
@@ -54,21 +55,35 @@ Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/offline', [PageController::class, 'offline'])->name('offline');
 
 // 7. Admin Panel Routes (Phase 4 / Dashboard & Product Management)
+ 
+Route::get('/admin', function () {
+    return redirect('/admin/dashboard');
+})->name('admin');
+
 Route::group(['prefix' => 'admin', 'middleware' => 'admin', 'as' => 'admin.'], function() {
     Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/products', [App\Http\Controllers\AdminController::class, 'products'])->name('products');
     Route::post('/products', [App\Http\Controllers\AdminController::class, 'storeProduct'])->name('products.store');
     Route::put('/products/{id}', [App\Http\Controllers\AdminController::class, 'updateProduct'])->name('products.update');
     Route::delete('/products/{id}', [App\Http\Controllers\AdminController::class, 'deleteProduct'])->name('products.delete');
+    Route::post('/products/bulk-status', [App\Http\Controllers\AdminController::class, 'bulkUpdateProductsStatus'])->name('products.bulk-status');
     Route::post('/products/{productId}/variants', [App\Http\Controllers\AdminController::class, 'storeVariant'])->name('variants.store');
     Route::put('/products/variants/{id}', [App\Http\Controllers\AdminController::class, 'updateVariant'])->name('variants.update');
     Route::delete('/products/variants/{id}', [App\Http\Controllers\AdminController::class, 'deleteVariant'])->name('variants.delete');
     Route::get('/orders', [App\Http\Controllers\AdminController::class, 'orders'])->name('orders');
     Route::post('/orders/{id}/status', [App\Http\Controllers\AdminController::class, 'updateStatus'])->name('orders.status');
+    Route::post('/orders/bulk-status', [App\Http\Controllers\AdminController::class, 'bulkUpdateStatus'])->name('orders.bulk-status');
+    Route::post('/orders/{id}/tracking', [App\Http\Controllers\AdminController::class, 'updateTracking'])->name('orders.tracking');
+    Route::get('/orders/{id}/invoice', [App\Http\Controllers\AdminController::class, 'generateInvoice'])->name('orders.invoice');
+    Route::post('/orders/bulk-invoices', [App\Http\Controllers\AdminController::class, 'bulkInvoices'])->name('orders.bulk-invoices');
+    Route::get('/orders/{id}/label', [App\Http\Controllers\AdminController::class, 'generateLabel'])->name('orders.label');
+    Route::post('/orders/bulk-labels', [App\Http\Controllers\AdminController::class, 'bulkLabels'])->name('orders.bulk-labels');
+
     Route::post('/products/stock', [App\Http\Controllers\AdminController::class, 'updateStock'])->name('products.stock');
 
     // ─── Inventory Management ───
     Route::get('/inventory', [App\Http\Controllers\AdminController::class, 'inventory'])->name('inventory');
+    Route::post('/inventory/import-csv', [App\Http\Controllers\AdminController::class, 'importInventoryCSV'])->name('inventory.import-csv');
 
     // ─── Customer Management ───
     Route::get('/customers', [App\Http\Controllers\AdminController::class, 'customers'])->name('customers');
@@ -104,6 +119,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin', 'as' => 'admin.'], f
 
     Route::get('/settings', [App\Http\Controllers\AdminController::class, 'settings'])->name('settings');
     Route::post('/settings', [App\Http\Controllers\AdminController::class, 'updateSettings'])->name('settings.update');
+
+    // ─── Abandoned Carts Management ───
+    Route::get('/abandoned-carts', [App\Http\Controllers\AdminController::class, 'abandonedCarts'])->name('abandoned-carts');
+    Route::delete('/abandoned-carts/{id}', [App\Http\Controllers\AdminController::class, 'deleteAbandonedCart'])->name('abandoned-carts.delete');
+    Route::post('/abandoned-carts/bulk-delete', [App\Http\Controllers\AdminController::class, 'bulkDeleteAbandonedCarts'])->name('abandoned-carts.bulk-delete');
+
+    // ─── Media Library Management ───
+    Route::get('/media', [App\Http\Controllers\Admin\MediaLibraryController::class, 'index'])->name('media');
+    Route::post('/media', [App\Http\Controllers\Admin\MediaLibraryController::class, 'store'])->name('media.store');
+    Route::post('/media/bulk-delete', [App\Http\Controllers\Admin\MediaLibraryController::class, 'bulkDestroy'])->name('media.bulk-delete');
+    Route::delete('/media/{id}', [App\Http\Controllers\Admin\MediaLibraryController::class, 'destroy'])->name('media.delete');
+    Route::get('/api/media', [App\Http\Controllers\Admin\MediaLibraryController::class, 'apiIndex'])->name('media.api');
+    Route::get('/api/notifications', [App\Http\Controllers\AdminController::class, 'apiNotifications'])->name('notifications.api');
 
     Route::get('/backups', [App\Http\Controllers\BackupController::class, 'index'])->name('backups');
     Route::post('/backups/create', [App\Http\Controllers\BackupController::class, 'create'])->name('backups.create');

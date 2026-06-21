@@ -280,39 +280,87 @@
 @endphp
 
 {{-- Page Hero --}}
-<div class="page-hero">
+<div class="page-hero" style="margin-bottom: 24px;">
     <div>
-        <h2>Return Requests</h2>
-        <p>{{ $total }} total return requests · Review evidence and process refunds</p>
+        <h2 style="font-family: var(--font-secondary); font-size: 1.4rem; font-weight: 800; margin: 0;">Return Requests</h2>
+        <p style="font-size: 0.84rem; color: var(--color-admin-text-muted); margin: 4px 0 0;">{{ $total }} total return requests · Review evidence and process refunds</p>
     </div>
 </div>
 
 {{-- Stats --}}
-<div class="returns-stats">
-    <div class="returns-stat">
-        <div class="rs-label">Total Returns</div>
-        <div class="rs-value">{{ $total }}</div>
+<div class="stats-4-grid">
+    <div class="stat-kpi-card blue">
+        <div class="stat-kpi-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+        </div>
+        <div class="stat-kpi-body">
+            <div class="stat-kpi-val">{{ $total }}</div>
+            <div class="stat-kpi-label">Total Returns</div>
+        </div>
     </div>
-    <div class="returns-stat">
-        <div class="rs-label">Pending Review</div>
-        <div class="rs-value" style="color: #7a5f00;">{{ $requested }}</div>
+    <div class="stat-kpi-card amber">
+        <div class="stat-kpi-icon amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+        </div>
+        <div class="stat-kpi-body">
+            <div class="stat-kpi-val">{{ $requested }}</div>
+            <div class="stat-kpi-label">Pending Review</div>
+        </div>
     </div>
-    <div class="returns-stat">
-        <div class="rs-label">Approved</div>
-        <div class="rs-value" style="color: var(--color-admin-accent);">{{ $approved }}</div>
+    <div class="stat-kpi-card green">
+        <div class="stat-kpi-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        </div>
+        <div class="stat-kpi-body">
+            <div class="stat-kpi-val">{{ $approved }}</div>
+            <div class="stat-kpi-label">Approved</div>
+        </div>
     </div>
-    <div class="returns-stat">
-        <div class="rs-label">Rejected</div>
-        <div class="rs-value" style="color: #842029;">{{ $rejected }}</div>
-    </div>
-    <div class="returns-stat">
-        <div class="rs-label">Refunded</div>
-        <div class="rs-value" style="color: var(--color-admin-text-muted);">{{ $refunded }}</div>
+    <div class="stat-kpi-card purple">
+        <div class="stat-kpi-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+            </svg>
+        </div>
+        <div class="stat-kpi-body">
+            <div class="stat-kpi-val">{{ $refunded }}</div>
+            <div class="stat-kpi-label">Refunded</div>
+        </div>
     </div>
 </div>
 
 {{-- Returns Table --}}
 <div class="admin-card" style="padding: 0;">
+    {{-- Tabs filter --}}
+    <div style="border-bottom:1px solid var(--color-admin-border); padding: 12px 20px; background:#fafbfc; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <button class="btn-action-outline active" onclick="filterByTab('all', this)" style="border-radius: 20px; padding: 6px 16px;">All ({{ $total }})</button>
+        <button class="btn-action-outline" onclick="filterByTab('requested', this)" style="border-radius: 20px; padding: 6px 16px;">Pending Review ({{ $requested }})</button>
+        <button class="btn-action-outline" onclick="filterByTab('approved', this)" style="border-radius: 20px; padding: 6px 16px;">Approved ({{ $approved }})</button>
+        <button class="btn-action-outline" onclick="filterByTab('rejected', this)" style="border-radius: 20px; padding: 6px 16px;">Rejected ({{ $rejected }})</button>
+        <button class="btn-action-outline" onclick="filterByTab('refunded', this)" style="border-radius: 20px; padding: 6px 16px;">Refunded ({{ $refunded }})</button>
+    </div>
+
+    {{-- Search + Date filter row --}}
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding:16px 24px; border-bottom:1px solid var(--color-admin-border); background:#fff;">
+        <input type="text" id="returnSearch" class="admin-input" placeholder="🔍 Search Return ID, Customer, Order..." style="flex:1; min-width:240px; max-width:360px;">
+        
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-left:auto;">
+            <label style="font-size:0.75rem; font-weight:700; color:var(--color-admin-text-muted); text-transform:uppercase;">From:</label>
+            <input type="date" id="startDate" class="admin-input" style="max-width:140px; padding:8px 12px; font-size:0.82rem;">
+            
+            <label style="font-size:0.75rem; font-weight:700; color:var(--color-admin-text-muted); text-transform:uppercase;">To:</label>
+            <input type="date" id="endDate" class="admin-input" style="max-width:140px; padding:8px 12px; font-size:0.82rem;">
+            
+            <button class="btn-action-outline" onclick="clearDateFilter()" style="padding:8px 12px;">Clear Dates</button>
+        </div>
+    </div>
+
     <div style="overflow-x: auto;">
         <table class="admin-table">
             <thead>
@@ -321,14 +369,22 @@
                     <th>Order Info</th>
                     <th>Customer</th>
                     <th>Reason &amp; Evidence</th>
+                    <th>Requested</th>
                     <th>Status</th>
                     <th>Refund</th>
-                    <th style="text-align: right; padding-right: 24px; min-width: 220px;">Actions</th>
+                    <th style="text-align: right; padding-right: 24px; min-width: 180px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($returns as $return)
-                    <tr>
+                    @php
+                        $isCompletedRefund = $return->refund && $return->refund->status === 'Completed';
+                        $searchTags = strtolower('RT-' . $return->id . ' ' . ($return->user->name ?? 'Guest User') . ' ' . $return->order->order_number);
+                    @endphp
+                    <tr data-status="{{ strtolower($return->status) }}" 
+                        data-refunded="{{ $isCompletedRefund ? 'true' : 'false' }}"
+                        data-search="{{ $searchTags }}"
+                        data-date="{{ $return->created_at->format('Y-m-d') }}">
                         <td style="padding-left: 24px;">
                             <span style="font-family: var(--font-mono); font-weight: 700; font-size: 0.88rem; color: var(--color-admin-text-main);">#RT-{{ $return->id }}</span>
                         </td>
@@ -345,18 +401,26 @@
                             @endif
                         </td>
                         <td>
-                            <div class="reason-box">{{ $return->reason }}</div>
+                            <div class="reason-box" style="padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; line-height: 1.4; color: var(--color-admin-text-main); background: #f8fafc; border: 1px solid var(--color-admin-border);">
+                                {{ $return->reason }}
+                            </div>
                             @if(!empty($return->evidence_images))
-                                <div class="evidence-gallery">
+                                <div class="evidence-gallery" style="display:flex; gap:8px; margin-top:10px;">
                                     @foreach($return->evidence_images as $path)
-                                        <a href="/{{ $path }}" target="_blank">
-                                            <img src="/{{ $path }}" class="evidence-thumb" alt="Evidence">
-                                        </a>
+                                        <img src="/{{ $path }}" class="evidence-thumb" style="width:52px; height:52px; border-radius:8px; object-fit:cover; border: 1px solid var(--color-admin-border); cursor:pointer; transition:transform 0.2s;" alt="Evidence" onclick="openLightbox('/{{ $path }}')">
                                     @endforeach
                                 </div>
                             @else
-                                <div style="font-size: 0.76rem; color: var(--color-admin-text-muted); margin-top: 4px; font-style: italic;">No evidence uploaded</div>
+                                <div style="font-size: 0.76rem; color: var(--color-admin-text-muted); margin-top: 6px; font-style: italic;">No evidence uploaded</div>
                             @endif
+                        </td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--color-admin-text-main);">
+                                {{ $return->created_at->format('d M Y') }}
+                            </div>
+                            <div style="font-size: 0.76rem; color: var(--color-admin-text-muted); margin-top: 2px;">
+                                {{ $return->created_at->diffForHumans() }}
+                            </div>
                         </td>
                         <td>
                             @php
@@ -385,29 +449,23 @@
                             @endif
                         </td>
                         <td style="text-align: right; padding-right: 24px;">
-                            <div class="action-row">
+                            <div class="action-row" style="display:flex; gap:8px; justify-content:flex-end; align-items:center;">
                                 @if($return->status === 'Requested')
                                     <form action="{{ route('admin.returns.approve', $return->id) }}" method="POST"
                                           onsubmit="return confirm('Approve this return request?')">
                                         @csrf
-                                        <button type="submit" class="btn-approve">✓ Approve</button>
+                                        <button type="submit" class="btn-approve" style="background:var(--color-admin-accent); color:#fff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer;">✓ Approve</button>
                                     </form>
                                     <form action="{{ route('admin.returns.reject', $return->id) }}" method="POST"
                                           onsubmit="return confirm('Reject this return request?')">
                                         @csrf
-                                        <button type="submit" class="btn-reject">✕ Reject</button>
+                                        <button type="submit" class="btn-reject" style="background:#ba3c1c; color:#fff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer;">✕ Reject</button>
                                     </form>
 
                                 @elseif($return->status === 'Approved' && $return->refund && $return->refund->status === 'Pending')
-                                    <div class="refund-box">
-                                        <div class="refund-box-title">Record Refund Settlement</div>
-                                        <form action="{{ route('admin.returns.refund', $return->id) }}" method="POST">
-                                            @csrf
-                                            <input type="text" name="transaction_reference" class="refund-input"
-                                                placeholder="Bank txn ref or UPI ID" required>
-                                            <button type="submit" class="btn-refund">✓ Mark as Refunded</button>
-                                        </form>
-                                    </div>
+                                    <button class="btn-solid-gold" style="padding:8px 14px; font-size:0.8rem;" onclick="openRefundModal({{ $return->id }}, '{{ $return->order->order_number }}', {{ $return->refund->amount }})">
+                                        💸 Record Refund
+                                    </button>
 
                                 @else
                                     <span style="font-size: 0.8rem; color: var(--color-admin-text-muted); font-style: italic;">No action needed</span>
@@ -416,8 +474,8 @@
                         </td>
                     </tr>
                 @empty
-                    <tr>
-                        <td colspan="7">
+                    <tr class="empty-row">
+                        <td colspan="8">
                             <div class="empty-state">
                                 <div class="empty-state-icon">🔄</div>
                                 <h3>No Return Requests</h3>
@@ -426,8 +484,145 @@
                         </td>
                     </tr>
                 @endforelse
+                {{-- Client-side empty row --}}
+                <tr class="empty-row" style="display:none;">
+                    <td colspan="8">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔄</div>
+                            <h3>No Matching Returns</h3>
+                            <p>No return requests match this status filter.</p>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+{{-- ─── Record Refund Modal ─── --}}
+<div class="admin-modal-overlay" id="recordRefundModal">
+    <div class="admin-modal-card" style="max-width: 450px;">
+        <div class="admin-modal-header">
+            <h3 class="admin-modal-title">Record Refund Settlement</h3>
+            <button class="admin-modal-close" onclick="closeModal('recordRefundModal')">&times;</button>
+        </div>
+        <form id="recordRefundForm" method="POST">
+            @csrf
+            <div class="admin-modal-body">
+                <div style="background: var(--color-admin-border-light); padding: 14px; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--color-admin-border);">
+                    <div style="font-size: 0.82rem; color: var(--color-admin-text-muted); font-weight:600;">Refund Amount for Order <strong id="refundOrderNumber" style="color:var(--color-admin-text-main);"></strong>:</div>
+                    <div style="font-size: 1.6rem; font-weight: 800; color: #ba3c1c; margin-top: 6px; font-family:var(--font-secondary);" id="refundAmountText"></div>
+                </div>
+                <div class="admin-form-group">
+                    <label for="refundTxnRef">Transaction Reference *</label>
+                    <input type="text" name="transaction_reference" id="refundTxnRef" class="admin-input" placeholder="Bank txn ref, UPI ID, or IMPS ID" required>
+                </div>
+                <button type="submit" class="btn-solid-accent" style="width: 100%; justify-content: center; padding: 12px;">
+                    Confirm Refund &amp; Complete Return
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- Lightbox Modal --}}
+<div class="admin-modal-overlay" id="lightboxModal" style="background-color: rgba(0,0,0,0.85); z-index: 9999;">
+    <div style="position: relative; max-width: 90%; max-height: 90%; display:flex; align-items:center; justify-content:center;">
+        <button class="admin-modal-close" onclick="closeModal('lightboxModal')" style="position: absolute; top: -45px; right: 0; font-size: 2.2rem; color: #fff; background:none; border:none; cursor:pointer;">&times;</button>
+        <img id="lightboxImage" src="" style="max-width: 100%; max-height: 80vh; border-radius: 8px; border: 2px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+    function openLightbox(src) {
+        document.getElementById('lightboxImage').src = src;
+        openModal('lightboxModal');
+    }
+
+    function openRefundModal(returnId, orderNumber, amount) {
+        const form = document.getElementById('recordRefundForm');
+        form.action = `/admin/returns/${returnId}/refund`;
+        document.getElementById('refundOrderNumber').innerText = orderNumber;
+        document.getElementById('refundAmountText').innerText = '₹' + parseFloat(amount).toFixed(2);
+        document.getElementById('refundTxnRef').value = '';
+        openModal('recordRefundModal');
+    }
+
+    let currentTab = 'all';
+
+    function filterByTab(status, btn) {
+        currentTab = status;
+        const container = btn.parentElement;
+        container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterReturns();
+    }
+
+    function clearDateFilter() {
+        document.getElementById('startDate').value = '';
+        document.getElementById('endDate').value = '';
+        filterReturns();
+    }
+
+    function filterReturns() {
+        const q = document.getElementById('returnSearch').value.toLowerCase().trim();
+        const startVal = document.getElementById('startDate').value;
+        const endVal = document.getElementById('endDate').value;
+        
+        const rows = document.querySelectorAll('.admin-table tbody tr:not(.empty-row)');
+        let count = 0;
+        
+        rows.forEach(row => {
+            const rowStatus = row.getAttribute('data-status');
+            const isRefunded = row.getAttribute('data-refunded') === 'true';
+            const searchVal = row.getAttribute('data-search') || '';
+            const dateVal = row.getAttribute('data-date') || '';
+            
+            // 1. Tab Filter
+            let matchesTab = false;
+            if (currentTab === 'all') {
+                matchesTab = true;
+            } else if (currentTab === 'refunded') {
+                matchesTab = isRefunded;
+            } else {
+                matchesTab = (rowStatus === currentTab);
+            }
+            
+            // 2. Search Filter
+            const matchesSearch = !q || searchVal.includes(q);
+            
+            // 3. Date Filter
+            let matchesDate = true;
+            if (startVal && dateVal < startVal) matchesDate = false;
+            if (endVal && dateVal > endVal) matchesDate = false;
+            
+            if (matchesTab && matchesSearch && matchesDate) {
+                row.style.display = '';
+                count++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        // Update empty states
+        const emptyRows = document.querySelectorAll('.empty-row');
+        if (emptyRows.length > 0) {
+            if (count === 0) {
+                emptyRows[0].style.display = 'none'; // hide main empty row
+                emptyRows[1].style.display = '';     // show filter empty row
+            } else {
+                emptyRows[0].style.display = 'none';
+                emptyRows[1].style.display = 'none';
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('returnSearch').addEventListener('input', filterReturns);
+        document.getElementById('startDate').addEventListener('change', filterReturns);
+        document.getElementById('endDate').addEventListener('change', filterReturns);
+    });
+</script>
 @endsection

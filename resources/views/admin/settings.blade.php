@@ -434,18 +434,27 @@
                         </div>
                         <div class="admin-form-group">
                             <label for="whatsapp_link">WhatsApp API Link *</label>
-                            <input type="text" id="whatsapp_link" name="whatsapp_link" class="admin-input"
-                                value="{{ getVal('whatsapp_link', 'https://wa.me/919419000000') }}" required>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="whatsapp_link" name="whatsapp_link" class="admin-input"
+                                    value="{{ getVal('whatsapp_link', 'https://wa.me/919419000000') }}" required>
+                                <button type="button" class="btn-action-outline" style="padding: 10px 14px; border-radius: 8px; white-space: nowrap;" onclick="previewSocialLink('whatsapp_link')" title="Test / Preview WhatsApp Link">🔗 Test</button>
+                            </div>
                         </div>
                         <div class="admin-form-group">
                             <label for="instagram_link">Instagram Profile URL</label>
-                            <input type="text" id="instagram_link" name="instagram_link" class="admin-input"
-                                value="{{ getVal('instagram_link', '#') }}">
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="instagram_link" name="instagram_link" class="admin-input"
+                                    value="{{ getVal('instagram_link', '#') }}">
+                                <button type="button" class="btn-action-outline" style="padding: 10px 14px; border-radius: 8px; white-space: nowrap;" onclick="previewSocialLink('instagram_link')" title="Test / Preview Instagram Link">🔗 Test</button>
+                            </div>
                         </div>
                         <div class="admin-form-group">
                             <label for="facebook_link">Facebook Page URL</label>
-                            <input type="text" id="facebook_link" name="facebook_link" class="admin-input"
-                                value="{{ getVal('facebook_link', '#') }}">
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="facebook_link" name="facebook_link" class="admin-input"
+                                    value="{{ getVal('facebook_link', '#') }}">
+                                <button type="button" class="btn-action-outline" style="padding: 10px 14px; border-radius: 8px; white-space: nowrap;" onclick="previewSocialLink('facebook_link')" title="Test / Preview Facebook Link">🔗 Test</button>
+                            </div>
                         </div>
                     </div>
                     <div class="settings-save-footer">
@@ -550,6 +559,27 @@
 
 @section('scripts')
 <script>
+    let isFormDirty = false;
+    const settingsForm = document.getElementById('settings-form');
+    
+    if (settingsForm) {
+        settingsForm.addEventListener('change', () => {
+            isFormDirty = true;
+        });
+        
+        settingsForm.addEventListener('submit', () => {
+            isFormDirty = false;
+        });
+    }
+
+    window.addEventListener('beforeunload', (e) => {
+        if (isFormDirty) {
+            e.preventDefault();
+            e.returnValue = 'You have unsaved settings changes. Are you sure you want to leave?';
+            return e.returnValue;
+        }
+    });
+
     function switchTab(btn, tabId) {
         document.querySelectorAll('.settings-nav-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.settings-tab-pane').forEach(p => p.classList.remove('active'));
@@ -566,6 +596,15 @@
         } else {
             input.type = 'password';
             btn.textContent = '👁️ Show';
+        }
+    }
+
+    function previewSocialLink(inputId) {
+        const val = document.getElementById(inputId).value;
+        if (val && val !== '#' && val.trim() !== '') {
+            window.open(val, '_blank');
+        } else {
+            alert('Please configure a valid URL to test.');
         }
     }
 </script>

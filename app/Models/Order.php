@@ -11,8 +11,15 @@ class Order extends Model
         'delivery_charge', 'grand_total', 'payment_method', 'payment_status', 
         'shipping_name', 'shipping_phone', 'shipping_alt_phone', 
         'shipping_address', 'shipping_pincode', 'shipping_city', 
-        'shipping_landmark', 'order_notes'
+        'shipping_landmark', 'order_notes',
+        'tracking_number', 'carrier_name', 'shipped_at', 'delivered_at'
     ];
+
+    protected $casts = [
+        'shipped_at' => 'datetime',
+        'delivered_at' => 'datetime',
+    ];
+
 
     public function user()
     {

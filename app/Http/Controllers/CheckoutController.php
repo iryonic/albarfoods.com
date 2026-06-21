@@ -33,7 +33,8 @@ class CheckoutController extends Controller
             'cart.*.id' => 'required|integer',
             'cart.*.qty' => 'required|integer|min:1',
             'cart.*.weight' => 'required|string',
-            'coupon_code' => 'nullable|string'
+            'coupon_code' => 'nullable|string',
+            'session_token' => 'nullable|string'
         ]);
 
         try {
@@ -161,6 +162,13 @@ class CheckoutController extends Controller
                 ]);
             }
 
+            // Mark abandoned cart as completed
+            if ($request->filled('session_token')) {
+                \App\Models\AbandonedCart::where('session_token', $request->input('session_token'))
+                    ->where('status', 'active')
+                    ->update(['status' => 'completed']);
+            }
+ 
             DB::commit();
 
             // Save order data in session to render in success view
