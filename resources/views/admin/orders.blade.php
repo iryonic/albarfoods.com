@@ -158,11 +158,19 @@
     }
 
     @media (max-width: 900px) {
-        .drawer-inner { grid-template-columns: 1fr; gap: 24px; }
+        .drawer-inner { grid-template-columns: 1fr; gap: 24px; padding: 16px 20px !important; }
         .orders-stats-bar { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 480px) {
-        .orders-stats-bar { grid-template-columns: 1fr; }
+       
+        .detail-grid,
+        .tracking-form-row,
+        .doc-actions-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .detail-grid > div {
+            grid-column: span 1 !important;
+        }
     }
 
     /* Drawer sections */
@@ -610,7 +618,7 @@
     {{-- Filter Bar --}}
     <div style="padding: 20px 24px 0;">
         <div class="order-filters">
-            <input type="text" id="orderSearch" class="admin-input" placeholder="🔍 Search by order number or customer name…">
+            <input type="text" id="orderSearch" class="admin-input" placeholder="Search by order number or customer name…">
             
             <select id="paymentFilter" class="admin-select" style="max-width: 180px;">
                 <option value="all">All Payments</option>
@@ -689,7 +697,7 @@
                             </span>
                             @if($order->tracking_number)
                                 <div style="margin-top: 3px;">
-                                    <span class="tracking-chip has-tracking">📦 {{ $order->tracking_number }}</span>
+                                    <span class="tracking-chip has-tracking"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><polygon points="12 22.08 12 12 3 6.92 3 16.24 12 22.08"></polygon><polygon points="12 12 21 6.92 21 16.24 12 22.08"></polygon><polygon points="12 2 3 6.92 12 12 21 6.92 12 2"></polygon><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>{{ $order->tracking_number }}</span>
                                 </div>
                             @endif
                         </td>
@@ -727,7 +735,7 @@
                                 <div>
                                     {{-- Visual Fulfilment Timeline --}}
                                     <div class="drawer-section-title">
-                                        📌 Fulfilment Timeline
+                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px; display: inline-block; vertical-align: middle;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Fulfilment Timeline
                                     </div>
                                     <div class="visual-timeline" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; position: relative; padding: 10px 0;">
                                         @php
@@ -774,7 +782,7 @@
                                     </div>
 
                                     <div class="drawer-section-title">
-                                        🚚 Shipping &amp; Customer Information
+                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px; display: inline-block; vertical-align: middle;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg> Shipping &amp; Customer Information
                                     </div>
 
                                     <div class="detail-grid">
@@ -807,12 +815,12 @@
 
                                     @if($order->order_notes)
                                         <div class="order-notes-box">
-                                            📝 Customer Note: "{{ $order->order_notes }}"
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px; display:inline-block; vertical-align:middle;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Customer Note: "{{ $order->order_notes }}"
                                         </div>
                                     @endif
 
                                     <div class="drawer-section-title" style="margin-top: 20px;">
-                                        🛒 Items Ordered
+                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px; display: inline-block; vertical-align: middle;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg> Items Ordered
                                     </div>
                                     <div class="order-items-list">
                                         @foreach($order->items as $item)
@@ -850,7 +858,7 @@
 
                                 {{-- Right: Status Update --}}
                                 <div class="order-update-panel">
-                                    <div class="drawer-section-title">⚙️ Process &amp; Update Order</div>
+                                    <div class="drawer-section-title"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px; display: inline-block; vertical-align: middle;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Process &amp; Update Order</div>
 
                                     <form action="{{ route('admin.orders.status', $order->id) }}" method="POST">
                                         @csrf
@@ -874,13 +882,13 @@
                                         </div>
 
                                         <button type="submit" class="btn-gold" style="width: 100%; border-radius: 8px;">
-                                            💾 Save Changes
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Save Changes
                                         </button>
                                     </form>
 
                                     {{-- Tracking Management Section --}}
                                     <div class="tracking-form-section">
-                                        <div class="form-title">📦 Tracking / Shipment Info</div>
+                                        <div class="form-title"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><polygon points="12 22.08 12 12 3 6.92 3 16.24 12 22.08"></polygon><polygon points="12 12 21 6.92 21 16.24 12 22.08"></polygon><polygon points="12 2 3 6.92 12 12 21 6.92 12 2"></polygon><line x1="12" y1="22.08" x2="12" y2="12"></line></svg> Tracking / Shipment Info</div>
                                         <form action="{{ route('admin.orders.tracking', $order->id) }}" method="POST">
                                             @csrf
                                             <div class="tracking-form-row">
@@ -892,7 +900,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <button type="submit" class="btn-save-tracking">💾 Save Tracking</button>
+                                            <button type="submit" class="btn-save-tracking"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Save Tracking</button>
                                         </form>
                                         @if($order->shipped_at)
                                             <div style="margin-top: 8px; font-size: 0.75rem; color: var(--color-admin-text-muted);">
@@ -905,10 +913,10 @@
                                     {{-- Document Actions: Invoice & Label --}}
                                     <div class="doc-actions-grid">
                                         <a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank" class="btn-doc-action invoice-btn">
-                                            📄 Invoice
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> Invoice
                                         </a>
                                         <a href="{{ route('admin.orders.label', $order->id) }}" target="_blank" class="btn-doc-action label-btn">
-                                            🏷️ Label
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg> Label
                                         </a>
                                     </div>
 
@@ -945,7 +953,7 @@
                     <tr>
                         <td colspan="9">
                             <div class="empty-state">
-                                <div class="empty-state-icon">📦</div>
+                                 <div class="empty-state-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4;"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><polygon points="12 22.08 12 12 3 6.92 3 16.24 12 22.08"></polygon><polygon points="12 12 21 6.92 21 16.24 12 22.08"></polygon><polygon points="12 2 3 6.92 12 12 21 6.92 12 2"></polygon><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></div>
                                 <h3>No Orders Found</h3>
                                 <p>Orders from your storefront will appear here once customers start placing them.</p>
                             </div>
@@ -967,11 +975,11 @@
             <span style="font-size: 0.85rem; font-weight: 600;">Orders selected</span>
         </div>
         <div style="display: flex; gap: 8px;">
-            <button type="button" onclick="bulkGenerateInvoices()" style="padding: 7px 14px; background: rgba(10, 75, 153, 0.2); border: 1px solid rgba(10, 75, 153, 0.4); color: #7bb8ff; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit;" onmouseover="this.style.background='rgba(10,75,153,0.35)'" onmouseout="this.style.background='rgba(10,75,153,0.2)'">
-                📄 Bulk Invoices
+            <button type="button" onclick="bulkGenerateInvoices()" style="padding: 7px 14px; background: rgba(10, 75, 153, 0.2); border: 1px solid rgba(10, 75, 153, 0.4); color: #7bb8ff; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center;" onmouseover="this.style.background='rgba(10,75,153,0.35)'" onmouseout="this.style.background='rgba(10,75,153,0.2)'">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> Bulk Invoices
             </button>
-            <button type="button" onclick="bulkGenerateLabels()" style="padding: 7px 14px; background: rgba(1, 136, 73, 0.2); border: 1px solid rgba(1, 136, 73, 0.4); color: #6ee7a8; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit;" onmouseover="this.style.background='rgba(1,136,73,0.35)'" onmouseout="this.style.background='rgba(1,136,73,0.2)'">
-                🏷️ Bulk Labels
+            <button type="button" onclick="bulkGenerateLabels()" style="padding: 7px 14px; background: rgba(1, 136, 73, 0.2); border: 1px solid rgba(1, 136, 73, 0.4); color: #6ee7a8; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center;" onmouseover="this.style.background='rgba(1,136,73,0.35)'" onmouseout="this.style.background='rgba(1,136,73,0.2)'">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg> Bulk Labels
             </button>
         </div>
     </div>
@@ -1001,8 +1009,8 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn-solid-gold" style="padding: 8px 16px; font-size: 0.82rem; border-radius: 8px; border: none;">
-                ⚡ Apply Changes
+            <button type="submit" class="btn-solid-gold" style="padding: 8px 16px; font-size: 0.82rem; border-radius: 8px; border: none; display: inline-flex; align-items: center;">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Apply Changes
             </button>
         </form>
         <button type="button" onclick="cancelBulkSelection()" style="background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); font-size: 0.82rem; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff';" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.7)';">

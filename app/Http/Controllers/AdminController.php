@@ -582,6 +582,8 @@ class AdminController extends Controller
                 elseif (str_starts_with($key, 'bank_')) { $group = 'bank'; }
                 elseif (str_ends_with($key, '_link')) { $group = 'social'; }
                 elseif (str_starts_with($key, 'meta_') || str_starts_with($key, 'seo_')) { $group = 'seo'; }
+                elseif (str_starts_with($key, 'payment_')) { $group = 'payment'; }
+                elseif (str_starts_with($key, 'shipping_')) { $group = 'shipping'; }
                 
                 \App\Models\Setting::create([
                     'group' => $group,

@@ -267,6 +267,47 @@
     .empty-state-icon { font-size: 3.5rem; margin-bottom: 14px; opacity: 0.4; }
     .empty-state h3   { font-family: var(--font-secondary); font-size: 1.15rem; font-weight: 700; color: var(--color-admin-text-main); margin: 0 0 6px; }
     .empty-state p    { font-size: 0.87rem; margin: 0; }
+
+    /* Mobile app responsiveness overrides */
+    @media (max-width: 768px) {
+        .status-tabs {
+            margin-bottom: 0 !important;
+            border-bottom: none !important;
+            padding: 12px 16px !important;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .date-filter-container {
+            width: 100% !important;
+            margin-left: 0 !important;
+            display: grid !important;
+            grid-template-columns: auto 1fr auto 1fr !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+        .date-filter-container .btn-action-outline {
+            grid-column: span 4 !important;
+            width: 100% !important;
+            margin-top: 4px !important;
+        }
+        .date-filter-container input {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .date-filter-container {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+        .date-filter-container label {
+            margin-top: 4px;
+            margin-bottom: 2px !important;
+        }
+    }
 </style>
 @endsection
 
@@ -338,19 +379,19 @@
 {{-- Returns Table --}}
 <div class="admin-card" style="padding: 0;">
     {{-- Tabs filter --}}
-    <div style="border-bottom:1px solid var(--color-admin-border); padding: 12px 20px; background:#fafbfc; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-        <button class="btn-action-outline active" onclick="filterByTab('all', this)" style="border-radius: 20px; padding: 6px 16px;">All ({{ $total }})</button>
-        <button class="btn-action-outline" onclick="filterByTab('requested', this)" style="border-radius: 20px; padding: 6px 16px;">Pending Review ({{ $requested }})</button>
-        <button class="btn-action-outline" onclick="filterByTab('approved', this)" style="border-radius: 20px; padding: 6px 16px;">Approved ({{ $approved }})</button>
-        <button class="btn-action-outline" onclick="filterByTab('rejected', this)" style="border-radius: 20px; padding: 6px 16px;">Rejected ({{ $rejected }})</button>
-        <button class="btn-action-outline" onclick="filterByTab('refunded', this)" style="border-radius: 20px; padding: 6px 16px;">Refunded ({{ $refunded }})</button>
+    <div class="status-tabs" style="border-bottom:1px solid var(--color-admin-border); padding: 12px 20px; background:#fafbfc; display:flex; gap:8px; align-items:center; margin-bottom: 0;">
+        <button class="btn-action-outline status-tab-btn active" onclick="filterByTab('all', this)" style="border-radius: 20px; padding: 6px 16px;">All ({{ $total }})</button>
+        <button class="btn-action-outline status-tab-btn" onclick="filterByTab('requested', this)" style="border-radius: 20px; padding: 6px 16px;">Pending Review ({{ $requested }})</button>
+        <button class="btn-action-outline status-tab-btn" onclick="filterByTab('approved', this)" style="border-radius: 20px; padding: 6px 16px;">Approved ({{ $approved }})</button>
+        <button class="btn-action-outline status-tab-btn" onclick="filterByTab('rejected', this)" style="border-radius: 20px; padding: 6px 16px;">Rejected ({{ $rejected }})</button>
+        <button class="btn-action-outline status-tab-btn" onclick="filterByTab('refunded', this)" style="border-radius: 20px; padding: 6px 16px;">Refunded ({{ $refunded }})</button>
     </div>
 
     {{-- Search + Date filter row --}}
-    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding:16px 24px; border-bottom:1px solid var(--color-admin-border); background:#fff;">
-        <input type="text" id="returnSearch" class="admin-input" placeholder="🔍 Search Return ID, Customer, Order..." style="flex:1; min-width:240px; max-width:360px;">
+    <div class="filter-row" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding:16px 24px; border-bottom:1px solid var(--color-admin-border); background:#fff;">
+        <input type="text" id="returnSearch" class="admin-input" placeholder="Search Return ID, Customer, Order..." style="flex:1; min-width:240px; max-width:360px;">
         
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-left:auto;">
+        <div class="date-filter-container" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-left:auto;">
             <label style="font-size:0.75rem; font-weight:700; color:var(--color-admin-text-muted); text-transform:uppercase;">From:</label>
             <input type="date" id="startDate" class="admin-input" style="max-width:140px; padding:8px 12px; font-size:0.82rem;">
             
@@ -361,7 +402,7 @@
         </div>
     </div>
 
-    <div style="overflow-x: auto;">
+    <div class="table-wrap">
         <table class="admin-table">
             <thead>
                 <tr>
@@ -463,8 +504,8 @@
                                     </form>
 
                                 @elseif($return->status === 'Approved' && $return->refund && $return->refund->status === 'Pending')
-                                    <button class="btn-solid-gold" style="padding:8px 14px; font-size:0.8rem;" onclick="openRefundModal({{ $return->id }}, '{{ $return->order->order_number }}', {{ $return->refund->amount }})">
-                                        💸 Record Refund
+                                    <button class="btn-solid-gold" style="padding:8px 14px; font-size:0.8rem; display: inline-flex; align-items: center;" onclick="openRefundModal({{ $return->id }}, '{{ $return->order->order_number }}', {{ $return->refund->amount }})">
+                                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> Record Refund
                                     </button>
 
                                 @else
@@ -476,8 +517,8 @@
                 @empty
                     <tr class="empty-row">
                         <td colspan="8">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">🔄</div>
+                             <div class="empty-state">
+                                 <div class="empty-state-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4;"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></div>
                                 <h3>No Return Requests</h3>
                                 <p>Customer return requests will appear here when submitted.</p>
                             </div>
@@ -487,8 +528,8 @@
                 {{-- Client-side empty row --}}
                 <tr class="empty-row" style="display:none;">
                     <td colspan="8">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">🔄</div>
+                         <div class="empty-state">
+                             <div class="empty-state-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4;"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></div>
                             <h3>No Matching Returns</h3>
                             <p>No return requests match this status filter.</p>
                         </div>

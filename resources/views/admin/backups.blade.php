@@ -78,12 +78,16 @@
     }
 
     .create-backup-card::before {
-        content: '💾';
+        content: '';
         position: absolute;
         right: 24px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 6rem;
+        width: 96px;
+        height: 96px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/%3E%3Cpolyline points='17 21 17 13 7 13 7 21'/%3E%3Cpolyline points='7 3 7 8 15 8'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-size: contain;
         opacity: 0.06;
         pointer-events: none;
     }
@@ -299,6 +303,13 @@
         letter-spacing: 0.4px;
         margin-left: 8px;
     }
+
+    @media (max-width: 600px) {
+        .backup-warning-banner {
+            flex-direction: column !important;
+            gap: 10px !important;
+        }
+    }
 </style>
 @endsection
 
@@ -313,7 +324,7 @@
 
 {{-- Warning Banner --}}
 <div class="backup-warning-banner">
-    <div class="backup-warning-icon">⚠️</div>
+    <div class="backup-warning-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
     <div>
         <div class="backup-warning-title">Important: Read Before Restoring</div>
         <div class="backup-warning-text">
@@ -332,8 +343,13 @@
     </div>
     <form action="{{ route('admin.backups.create') }}" method="POST" style="margin: 0;">
         @csrf
-        <button type="submit" class="btn-create-backup">
-            ⚡ Trigger New Backup
+        <button type="submit" class="btn-create-backup" style="display: inline-flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+            Trigger New Backup
         </button>
     </form>
 </div>
@@ -366,7 +382,7 @@
                             <div style="position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; border-radius: 50%; background: {{ $index === 0 ? 'var(--color-admin-accent)' : 'var(--color-admin-text-muted)' }}; border: 2px solid #fff; z-index: 2; box-shadow: {{ $index === 0 ? '0 0 0 3px rgba(1, 136, 73, 0.15)' : 'none' }};"></div>
                             
                             <div class="backup-filename" style="padding-left: 12px;">
-                                <span class="backup-filename-icon">💾</span>
+                                <span class="backup-filename-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg></span>
                                 <div>
                                     <div style="font-weight: 700; color:var(--color-admin-text-main);">{{ $backup['filename'] }}</div>
                                     @if($index === 0)
@@ -389,13 +405,13 @@
                         <td style="padding-right: 24px;">
                             <div class="backup-actions">
                                 {{-- Download --}}
-                                <a href="{{ route('admin.backups.download', $backup['filename']) }}" class="btn-download">
-                                    ⬇️ Download
+                                <a href="{{ route('admin.backups.download', $backup['filename']) }}" class="btn-download" style="display: inline-flex; align-items: center;">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Download
                                 </a>
 
                                 {{-- Restore Trigger --}}
-                                <button type="button" class="btn-restore" onclick="triggerRestore('{{ $backup['filename'] }}')">
-                                    🔄 Restore
+                                <button type="button" class="btn-restore" style="display: inline-flex; align-items: center;" onclick="triggerRestore('{{ $backup['filename'] }}')">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg> Restore
                                 </button>
 
                                 {{-- Delete --}}
@@ -403,7 +419,7 @@
                                       onsubmit="return confirm('Permanently delete this backup file? This cannot be undone.')" style="margin:0;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-delete">🗑️ Delete</button>
+                                    <button type="submit" class="btn-delete" style="display: inline-flex; align-items: center;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Delete</button>
                                 </form>
                             </div>
                         </td>
@@ -412,7 +428,7 @@
                     <tr>
                         <td colspan="4">
                             <div class="empty-state">
-                                <div class="empty-state-icon">💾</div>
+                                <div class="empty-state-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg></div>
                                 <h3>No Backups Yet</h3>
                                 <p>Click "Trigger New Backup" above to create your first database snapshot.</p>
                             </div>
@@ -428,7 +444,7 @@
 <div class="admin-modal-overlay" id="confirmRestoreModal" style="z-index: 9999;">
     <div class="admin-modal-card" style="max-width: 460px; border-top: 5px solid #ba3c1c;">
         <div class="admin-modal-header" style="background:#fff; color:var(--color-admin-text-main); border-bottom:1px solid var(--color-admin-border); padding: 16px 20px;">
-            <h3 class="admin-modal-title" style="color:#ba3c1c; font-family:var(--font-secondary); font-weight:800;">⚠️ Critical Action</h3>
+            <h3 class="admin-modal-title" style="color:#ba3c1c; font-family:var(--font-secondary); font-weight:800; display: flex; align-items: center; gap: 6px;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Critical Action</h3>
             <button class="admin-modal-close" onclick="closeModal('confirmRestoreModal')" style="color:var(--color-admin-text-muted);">&times;</button>
         </div>
         <form action="{{ route('admin.backups.restore') }}" method="POST" id="restoreConfirmForm">
@@ -446,7 +462,7 @@
                     <input type="text" id="restoreConfirmCode" class="admin-input" placeholder="Type RESTORE here" required oninput="validateRestoreCode(this)" style="margin-top:6px;">
                 </div>
                 <button type="submit" class="btn-danger" id="restoreConfirmBtn" style="width: 100%; justify-content: center; padding: 12px; margin-top: 16px; border-radius:10px; display:inline-flex; align-items:center; gap:8px;" disabled>
-                    🔥 Overwrite Database &amp; Restore
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Overwrite Database &amp; Restore
                 </button>
             </div>
         </form>

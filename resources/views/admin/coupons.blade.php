@@ -282,7 +282,7 @@
                 @empty
                 <tr>
                     <td colspan="8" style="text-align:center; padding:50px; color:var(--color-admin-text-muted);">
-                        <div style="font-size:2rem; margin-bottom:12px; opacity:0.3;">🏷️</div>
+                        <div style="margin-bottom:12px; opacity:0.3; display: flex; justify-content: center;"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
                         No coupons created yet. Click "Create Coupon" to add your first one.
                     </td>
                 </tr>

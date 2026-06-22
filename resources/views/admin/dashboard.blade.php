@@ -148,7 +148,7 @@
         .dashboard-details-grid { grid-template-columns: 1fr; }
     }
 
-    @media (max-width: 580px) {
+    @media (max-width: 350px) {
         .kpi-grid { grid-template-columns: 1fr; }
     }
 </style>
@@ -174,7 +174,13 @@
     <div class="kpi-card orders-card">
         <div class="kpi-card-top">
             <span class="kpi-label">Orders placed</span>
-            <div class="kpi-icon orders">🛒</div>
+            <div class="kpi-icon orders">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+            </div>
         </div>
         <span class="kpi-val">{{ $totalOrders }}</span>
         <div class="kpi-trend up">
@@ -187,7 +193,12 @@
     <div class="kpi-card aov-card">
         <div class="kpi-card-top">
             <span class="kpi-label">Avg Order Value</span>
-            <div class="kpi-icon aov">📈</div>
+            <div class="kpi-icon aov">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                    <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+            </div>
         </div>
         <span class="kpi-val">₹{{ number_format($averageOrderValue, 2) }}</span>
         <div class="kpi-trend up" style="color: var(--color-admin-accent);">
@@ -200,7 +211,14 @@
     <div class="kpi-card customers-card">
         <div class="kpi-card-top">
             <span class="kpi-label">Customers</span>
-            <div class="kpi-icon customers">👥</div>
+            <div class="kpi-icon customers">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </div>
         </div>
         <span class="kpi-val">{{ $totalCustomers }}</span>
         <div class="kpi-trend up">
@@ -215,8 +233,14 @@
     <!-- Left Chart: Revenue Trends / Sales -->
     <div class="chart-card">
         <div class="admin-card-title">
-            <span>📈 Sales Revenue Trends</span>
-            <select id="chartPeriodSelect" class="admin-select" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; width: auto; font-weight: 700; border-color: var(--color-admin-border);">
+            <span style="display: inline-flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-admin-gold);">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                    <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+                <span>Sales Revenue Trends</span>
+            </span>
+            <select id="chartPeriodSelect" class="admin-select" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; width: 100%; font-weight: 700; border-color: var(--color-admin-border);">
                 <option value="daily">Daily Sales (Last 7 Days)</option>
                 <option value="monthly">Monthly Sales (Current Year)</option>
             </select>
@@ -228,7 +252,13 @@
 
     <!-- Right Chart: Category Breakdown -->
     <div class="chart-card">
-        <h2 class="admin-card-title">🌾 Category Sourcing Share</h2>
+        <h2 class="admin-card-title" style="display: inline-flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-admin-gold);">
+                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+            </svg>
+            <span>Category Sourcing Share</span>
+        </h2>
         <div class="chart-container">
             <canvas id="categoryChart"></canvas>
         </div>
@@ -240,8 +270,15 @@
     
     <!-- Recent Orders List -->
     <div class="admin-card">
-        <h2 class="admin-card-title">
-            <span>🛒 Recent Orders Registry</span>
+        <h2 class="admin-card-title" style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="display: inline-flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-admin-gold);">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span>Recent Orders Registry</span>
+            </span>
             <a href="{{ route('admin.orders') }}" class="btn-action-outline">View All →</a>
         </h2>
         <div class="details-table-wrap">
@@ -296,8 +333,12 @@
                         <span class="stock-qty-badge">{{ $variant->stock }} left</span>
                     </div>
                 @empty
-                    <div style="text-align: center; padding: 30px; color: var(--color-admin-accent); font-weight: 700; border: 1px dashed rgba(1, 136, 73, 0.2); border-radius:12px;">
-                        🎉 All catalog variants are fully stocked!
+                    <div style="text-align: center; padding: 30px; color: var(--color-admin-accent); font-weight: 700; border: 1px dashed rgba(1, 136, 73, 0.2); border-radius:12px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <span>All catalog variants are fully stocked!</span>
                     </div>
                 @endforelse
             </div>
@@ -305,7 +346,17 @@
 
         <!-- Recent activities timeline -->
         <div class="admin-card" style="margin-bottom: 0;">
-            <h2 class="admin-card-title">🪵 Recent Inventory Log</h2>
+            <h2 class="admin-card-title" style="display: flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-admin-gold);">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <span>Recent Inventory Log</span>
+            </h2>
             <div class="timeline-container">
                 @forelse($recentActivities as $log)
                     <div class="timeline-item">

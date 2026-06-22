@@ -300,6 +300,7 @@
 
     @media (max-width: 600px) {
         .reply-bottom-row { grid-template-columns: 1fr; }
+        .messages-container .msg-row { max-width: 90% !important; }
     }
 
     /* ─── Ticket Number Header Pill ─── */
@@ -332,7 +333,7 @@
     <div class="ticket-info-panel">
         <div class="admin-card">
             <div class="ticket-number-pill">
-                🎟️ {{ $ticket->ticket_number }}
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9zM9 7v10M15 7v10"></path></svg> {{ $ticket->ticket_number }}
             </div>
             <div class="admin-card-title" style="margin-top: 12px;">
                 Ticket Information
@@ -344,10 +345,10 @@
                     <div class="detail-row-val">{{ $ticket->user->name ?? 'Guest Patron' }}</div>
                     <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 4px;">
                         @if($ticket->user?->phone)
-                            <span style="font-size: 0.8rem; color: var(--color-admin-text-muted);">📞 {{ $ticket->user->phone }}</span>
+                            <span style="font-size: 0.8rem; color: var(--color-admin-text-muted);"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> {{ $ticket->user->phone }}</span>
                         @endif
                         @if($ticket->user?->email)
-                            <span style="font-size: 0.8rem; color: var(--color-admin-text-muted);">✉️ {{ $ticket->user->email }}</span>
+                            <span style="font-size: 0.8rem; color: var(--color-admin-text-muted);"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> {{ $ticket->user->email }}</span>
                         @endif
                     </div>
                 </div>
@@ -394,13 +395,13 @@
                 <div class="detail-row-item">
                     <div class="detail-row-label">Assigned Support Agent</div>
                     @if($ticket->assignedAgent)
-                        <div class="detail-row-val">👤 {{ $ticket->assignedAgent->name }}</div>
+                        <div class="detail-row-val"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> {{ $ticket->assignedAgent->name }}</div>
                     @else
                         <div style="font-size: 0.85rem; color: var(--color-admin-text-muted); font-style: italic; margin-bottom: 8px;">Unassigned</div>
                         <form action="{{ route('admin.tickets.assign', $ticket->id) }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn-gold" style="margin-bottom: 0;">
-                                🙋 Assign to Me
+                            <button type="submit" class="btn-gold" style="margin-bottom: 0; display: inline-flex; align-items: center;">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="17" y1="11" x2="23" y2="11"></line></svg> Assign to Me
                             </button>
                         </form>
                     @endif
@@ -411,8 +412,8 @@
                     <form action="{{ route('admin.tickets.close', $ticket->id) }}" method="POST"
                           onsubmit="return confirm('Close this support ticket permanently?')">
                         @csrf
-                        <button type="submit" class="btn-danger">
-                            🔒 Close Support Ticket
+                        <button type="submit" class="btn-danger" style="display: inline-flex; align-items: center;">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Close Support Ticket
                         </button>
                     </form>
                 @endif
@@ -424,7 +425,7 @@
     <div>
         <div class="admin-card">
             <div class="admin-card-title">
-                💬 Communication Thread
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Communication Thread
                 <span style="font-size: 0.78rem; font-weight: 600; color: var(--color-admin-text-muted);">
                     {{ $ticket->replies->count() }} messages
                 </span>
@@ -471,7 +472,7 @@
                     </div>
                 @empty
                     <div style="text-align: center; padding: 40px 20px; color: var(--color-admin-text-muted); font-size: 0.88rem;">
-                        <div style="font-size: 2.5rem; margin-bottom: 10px; opacity: 0.4;">💬</div>
+                        <div style="margin-bottom: 10px; opacity: 0.4; display: flex; justify-content: center;"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
                         No messages in this thread yet. Start the conversation below.
                     </div>
                 @endforelse
@@ -502,15 +503,15 @@
                                     <option value="Open"        @selected($ticket->status === 'Open')>Set to Open</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn-gold" style="width: auto; padding: 10px 24px;">
-                                ✉️ Send Reply
+                            <button type="submit" class="btn-gold" style="width: auto; padding: 10px 24px; display: inline-flex; align-items: center;">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> Send Reply
                             </button>
                         </div>
                     </form>
                 </div>
             @else
-                <div style="text-align: center; padding: 24px; background: var(--color-admin-border-light); border-radius: 10px; color: var(--color-admin-text-muted); font-size: 0.88rem;">
-                    🔒 This ticket has been <strong>closed</strong>. No further replies can be submitted.
+                <div style="text-align: center; padding: 24px; background: var(--color-admin-border-light); border-radius: 10px; color: var(--color-admin-text-muted); font-size: 0.88rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> This ticket has been <strong>closed</strong>. No further replies can be submitted.
                 </div>
             @endif
         </div>

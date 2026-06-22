@@ -199,7 +199,7 @@
     </div>
 
     <div class="filter-row" style="padding: 0 24px 18px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-        <input type="text" id="catSearch" class="admin-input" placeholder="🔍 Search category name, slug, description..." style="flex:1; max-width:360px;">
+        <input type="text" id="catSearch" class="admin-input" placeholder="Search category name, slug, description..." style="flex:1; max-width:360px;">
         <select id="catHierarchyFilter" class="admin-select" style="max-width:200px;">
             <option value="all">All Hierarchies</option>
             <option value="root">Root Categories Only</option>
@@ -327,7 +327,7 @@
                     <label for="addCatImage">Category Image</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="text" name="image" id="addCatImage" class="admin-input" placeholder="assets/img/category.png">
-                        <button type="button" class="btn-solid-gold" style="white-space: nowrap; padding: 10px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="openMediaChooser('addCatImage')">🖼️ Choose</button>
+                        <button type="button" class="btn-solid-gold" style="white-space: nowrap; padding: 10px 14px; font-size: 0.8rem; border-radius: 8px; display: inline-flex; align-items: center;" onclick="openMediaChooser('addCatImage')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Choose</button>
                     </div>
                 </div>
                 <div class="admin-form-group">
@@ -377,7 +377,7 @@
                     <label for="editCatImage">Category Image</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="text" name="image" id="editCatImage" class="admin-input">
-                        <button type="button" class="btn-solid-gold" style="white-space: nowrap; padding: 10px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="openMediaChooser('editCatImage')">🖼️ Choose</button>
+                        <button type="button" class="btn-solid-gold" style="white-space: nowrap; padding: 10px 14px; font-size: 0.8rem; border-radius: 8px; display: inline-flex; align-items: center;" onclick="openMediaChooser('editCatImage')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Choose</button>
                     </div>
                 </div>
                 <div class="admin-form-group">
@@ -409,14 +409,14 @@
                 </div>
                 <div>
                     <input type="file" id="chooserUploadInput" accept="image/*" style="display: none;" onchange="uploadChooserFile()">
-                    <button type="button" class="btn-solid-accent" style="padding: 8px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="document.getElementById('chooserUploadInput').click()">
-                        📤 Upload Image
+                    <button type="button" class="btn-solid-accent" style="padding: 8px 14px; font-size: 0.8rem; border-radius: 8px; display: inline-flex; align-items: center;" onclick="document.getElementById('chooserUploadInput').click()">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Upload Image
                     </button>
                 </div>
             </div>
             
             <div style="margin-bottom: 15px; display: flex; gap: 10px;">
-                <input type="text" id="mediaChooserSearch" class="admin-input" placeholder="🔍 Search media library by name..." oninput="loadChooserMedia()">
+                <input type="text" id="mediaChooserSearch" class="admin-input" placeholder="Search media library by name..." oninput="loadChooserMedia()">
             </div>
             
             <div style="max-height: 380px; overflow-y: auto; padding-right: 5px;">
@@ -559,7 +559,7 @@
         
         const uploadBtn = document.querySelector('#mediaChooserModal .btn-solid-accent');
         const originalText = uploadBtn.innerHTML;
-        uploadBtn.innerHTML = '⏳ Uploading...';
+        uploadBtn.innerHTML = '<svg class="spinner-svg" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none" style="animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 6px;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="16"></circle></svg> Uploading...';
         uploadBtn.disabled = true;
         
         fetch('{{ route("admin.media.store") }}', {

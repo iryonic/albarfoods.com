@@ -747,22 +747,226 @@
 
         .admin-modal-body { padding: 24px; }
 
-        /* ─── Responsive ─── */
+        /* ─── Responsive & Mobile App Enhancements ─── */
         @media (max-width: 1024px) {
             .admin-toggle-sidebar { display: flex; }
             .admin-sidebar { transform: translateX(-100%); }
             .admin-sidebar.active { transform: translateX(0); }
             .admin-main { margin-left: 0; }
+            
+            /* Reposition Bulk Action Floating Bars */
+            #productBulkActionsBar,
+            #bulkActionsBar,
+            .ticket-bulk-bar,
+            .review-bulk-bar,
+            .cart-bulk-bar,
+            #mediaBulkBar {
+                left: 16px !important;
+                right: 16px !important;
+                width: auto !important;
+            }
         }
 
         @media (max-width: 768px) {
-            .admin-header { padding: 0 18px; }
-            .admin-content { padding: 20px 16px; }
-            .admin-header-title { font-size: 1.1rem; }
+            .admin-header { padding: 0 16px; gap: 12px; }
+            .admin-content { padding: 16px 12px !important; }
+            .admin-header-title { font-size: 1.15rem; }
+            .admin-header-left { gap: 10px; }
+            .admin-header-right { gap: 10px; }
+
+            /* Ensure all tables are horizontally scrollable without squishing columns */
+            .details-table-wrap,
+            .prod-variants-table-wrap,
+            .table-wrap,
+            .orders-table-wrap,
+            .coupon-table-wrap,
+            .table-responsive {
+                overflow-x: auto !important;
+                width: 100% !important;
+                -webkit-overflow-scrolling: touch;
+            }
+            .admin-table,
+            .prod-variants-table,
+            .inv-table,
+            .cust-table,
+            .coupon-table,
+            .cart-tbl,
+            .inv-items-table {
+                display: table !important;
+                min-width: 650px !important;
+            }
+
+            /* Make Inputs touch-friendly and prevent iOS zoom */
+            .admin-input, .admin-select, .admin-textarea {
+                font-size: 16px !important;
+                padding: 10px 14px !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            /* Profile Badge reduction */
+            .admin-profile-badge {
+                padding: 0 !important;
+                border: none !important;
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+            .admin-header-right a, 
+            .admin-header-right button,
+            .admin-header-right form button {
+                padding: 8px !important;
+                gap: 0 !important;
+            }
+
+            /* Force grid columns to collapse to vertical stack */
+            .text-grid,
+            .admin-modal-body div[style*="grid-template-columns"],
+            div[style*="grid-template-columns"]:not(#mediaChooserGrid):not(.media-grid) {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            /* Enable flex wrap on action headers/filters to prevent horizontal overflow */
+            .catalog-header-actions,
+            .prod-header-actions-group,
+            .actions-bar-btns,
+            .bar-actions,
+            .admin-card-title,
+            div[style*="display: flex"][style*="justify-content: space-between"]:not(.kpi-card-top),
+            div[style*="display:flex"][style*="justify-content:space-between"]:not(.kpi-card-top) {
+                flex-wrap: wrap !important;
+                gap: 10px !important;
+            }
+
+            /* Floating bulk actions mobile stack sheet */
+            #productBulkActionsBar,
+            #bulkActionsBar,
+            .ticket-bulk-bar,
+            .review-bulk-bar,
+            .cart-bulk-bar,
+            #mediaBulkBar {
+                bottom: 16px !important;
+                padding: 12px 16px !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+                border-radius: 12px !important;
+                left: 16px !important;
+                right: 16px !important;
+                transform: none !important;
+            }
+            #productBulkActionsBar form,
+            #bulkActionsBar form,
+            .ticket-bulk-bar form,
+            .review-bulk-bar form,
+            .cart-bulk-bar div {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 8px !important;
+                width: 100% !important;
+            }
+            #productBulkActionsBar form > *,
+            #bulkActionsBar form > * {
+                width: 100% !important;
+            }
+            #mediaBulkBar > * {
+                width: 100% !important;
+                text-align: center !important;
+                justify-content: center !important;
+            }
+
+            /* Make filter row inputs stretch on mobile */
+            .filter-row, .order-filters {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 10px !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            .filter-row > *, .order-filters > * {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+            }
         }
 
         @media (max-width: 480px) {
-            .admin-content { padding: 16px 12px; }
+            .admin-header { padding: 0 12px; gap: 8px; }
+            .admin-content { padding: 10px 8px !important; }
+            .admin-header-left { gap: 8px; }
+            .admin-header-right { gap: 6px; }
+            .admin-header-title { font-size: 1rem; }
+            
+            /* Hide Storefront shortcut link (available in sidebar) */
+            .admin-header-right a[title="View Storefront"] {
+                display: none !important;
+            }
+
+            /* Compact Cards for mobile app feel */
+            .admin-card {
+                padding: 16px 12px !important;
+                margin-bottom: 16px !important;
+                border-radius: 10px !important;
+            }
+            .admin-card-title {
+                font-size: 1.1rem !important;
+                margin-bottom: 12px !important;
+            }
+
+            /* Make actions button containers full width */
+            .catalog-header-actions > *,
+            .catalog-header-actions > div > *,
+            .prod-header-actions-group > * {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+            
+            /* KPI dashboard widgets stacking */
+            .kpi-grid,
+            .orders-stats-bar,
+            .stats-4-grid,
+            .media-stats-grid {
+                gap: 12px !important;
+                margin-bottom: 16px !important;
+            }
+        }
+
+        @media (max-width: 380px) {
+            /* Hide search on extremely narrow screens to avoid wrapping */
+            .admin-header-right button[title*="Search"] {
+                display: none !important;
+            }
+        }
+
+        /* Swipeable scroll tabs for mobile */
+        @media (max-width: 768px) {
+            .status-tabs,
+            .nav-tabs,
+            .category-tabs,
+            .media-tabs {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 6px !important;
+                margin-bottom: 16px !important;
+                border-bottom: 1px solid var(--color-admin-border) !important;
+                gap: 8px !important;
+            }
+            .status-tab-btn,
+            .nav-tab-btn,
+            .tab-btn {
+                flex: 0 0 auto !important;
+                white-space: nowrap !important;
+                margin-bottom: 0 !important;
+                padding: 10px 14px !important;
+            }
+            /* Adjust table wrappers styling as fallback */
+            .table-responsive {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
         }
 
         /* ─── Premium Global Table System ─── */
@@ -907,6 +1111,10 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* ─── Page Section Header ─── */
         .page-section-header {
             display: flex;
@@ -964,7 +1172,7 @@
         }
 
         @media (max-width: 1024px) { .stats-4-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 480px)  { .stats-4-grid { grid-template-columns: 1fr; } }
+       
 
         .stat-kpi-card {
             background: #fff;
@@ -1186,7 +1394,7 @@
                     
                     <div style="display: flex; flex-direction: column;">
                         {{-- Breadcrumbs --}}
-                        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 700; color: var(--color-admin-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
+                        <div class="hide-mobile" style="display: flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 700; color: var(--color-admin-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
                             <a href="{{ route('admin.dashboard') }}" style="color: inherit; text-decoration: none; transition: color 0.15s;">Admin</a>
                             @php
                                 $segments = request()->segments();

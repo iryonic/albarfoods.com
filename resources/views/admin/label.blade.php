@@ -339,6 +339,38 @@
                 -webkit-print-color-adjust: exact;
             }
         }
+
+        @media (max-width: 680px) {
+            .actions-bar {
+                padding: 12px 16px;
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            .actions-bar-title {
+                text-align: center;
+                font-size: 0.9rem;
+            }
+            .actions-bar-btns {
+                justify-content: center;
+            }
+            .btn-action {
+                flex: 1;
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            .labels-grid {
+                margin: 95px 12px 24px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .label-card {
+                width: 100% !important;
+                min-height: auto !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -346,10 +378,10 @@
 <!-- Screen Actions Bar -->
 <div class="actions-bar">
     <div class="actions-bar-title">
-        🏷️ {{ $orders->count() > 1 ? $orders->count() . ' Shipping Labels' : 'Label — ' . $orders->first()->order_number }}
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg> {{ $orders->count() > 1 ? $orders->count() . ' Shipping Labels' : 'Label — ' . $orders->first()->order_number }}
     </div>
     <div class="actions-bar-btns">
-        <button class="btn-action btn-print" onclick="window.print()">🖨️ Print{{ $orders->count() > 1 ? ' All' : '' }}</button>
+        <button class="btn-action btn-print" style="display: inline-flex; align-items: center;" onclick="window.print()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Print{{ $orders->count() > 1 ? ' All' : '' }}</button>
         <a href="{{ route('admin.orders') }}" class="btn-action btn-back">← Back to Orders</a>
     </div>
 </div>
@@ -360,7 +392,7 @@
 
         <!-- Header -->
         <div class="label-header">
-            <span class="label-brand">🌿 {{ $settings['site_name'] ?? 'Al Barr Foods' }}</span>
+            <span class="label-brand"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M2 22c0-5.5 4.5-10 10-10H22M22 2c-5.5 0-10 4.5-10 10V22"></path></svg> {{ $settings['site_name'] ?? 'Al Barr Foods' }}</span>
             <span class="label-type-badge">Shipping Label</span>
         </div>
 
@@ -370,7 +402,7 @@
             <div class="label-name">{{ $settings['site_name'] ?? 'Al Barr Foods' }}</div>
             <div class="label-address">{{ $settings['site_address'] ?? 'Srinagar, J&K, India' }}</div>
             @if(!empty($settings['site_phone']))
-                <div class="label-phone">📞 {{ $settings['site_phone'] }}</div>
+                <div class="label-phone"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> {{ $settings['site_phone'] }}</div>
             @endif
         </div>
 
@@ -384,10 +416,10 @@
                 @if($order->shipping_landmark), {{ $order->shipping_landmark }}@endif
             </div>
             <div class="label-phone">
-                📞 {{ $order->shipping_phone }}
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> {{ $order->shipping_phone }}
                 @if($order->shipping_alt_phone) / {{ $order->shipping_alt_phone }}@endif
             </div>
-            <div class="label-pincode">📍 {{ $order->shipping_pincode }}</div>
+            <div class="label-pincode"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> {{ $order->shipping_pincode }}</div>
         </div>
 
         <!-- Order Info -->
@@ -432,7 +464,7 @@
         <!-- COD Badge -->
         @if(strtolower($order->payment_method) === 'cod')
         <div class="label-cod-badge">
-            💰 CASH ON DELIVERY — COLLECT
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> CASH ON DELIVERY — COLLECT
             <span class="label-cod-amount">₹{{ number_format($order->grand_total, 0) }}</span>
         </div>
         @endif

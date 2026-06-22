@@ -371,6 +371,29 @@
         }
 
         @media (max-width: 680px) {
+            .actions-bar {
+                padding: 12px 16px;
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            .actions-bar-title {
+                text-align: center;
+                font-size: 0.9rem;
+            }
+            .actions-bar-btns {
+                justify-content: center;
+            }
+            .btn-action {
+                flex: 1;
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            .invoice-page {
+                margin: 95px 12px 24px;
+                border-radius: 12px;
+            }
             .inv-header { flex-direction: column; gap: 16px; padding: 24px; }
             .inv-title-block { text-align: left; }
             .inv-body { padding: 24px; }
@@ -378,6 +401,16 @@
             .inv-meta-grid { grid-template-columns: 1fr 1fr; }
             .inv-footer { flex-direction: column; padding: 20px 24px; }
             .inv-totals-box { width: 100%; }
+            .inv-table-wrap {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                width: 100%;
+                margin-bottom: 28px;
+            }
+            .inv-items-table {
+                min-width: 580px;
+                margin-bottom: 0;
+            }
         }
     </style>
 </head>
@@ -385,11 +418,25 @@
 
 <!-- Screen Actions Bar -->
 <div class="actions-bar">
-    <div class="actions-bar-title">
-        📄 {{ $orders->count() > 1 ? $orders->count() . ' Invoices' : 'Invoice #INV-' . $orders->first()->order_number }}
+    <div class="actions-bar-title" style="display: inline-flex; align-items: center; gap: 8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span>{{ $orders->count() > 1 ? $orders->count() . ' Invoices' : 'Invoice #INV-' . $orders->first()->order_number }}</span>
     </div>
     <div class="actions-bar-btns">
-        <button class="btn-action btn-print" onclick="window.print()">🖨️ Print{{ $orders->count() > 1 ? ' All' : '' }}</button>
+        <button class="btn-action btn-print" onclick="window.print()" style="display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            <span>Print{{ $orders->count() > 1 ? ' All' : '' }}</span>
+        </button>
         <a href="{{ route('admin.orders') }}" class="btn-action btn-back">← Back to Orders</a>
     </div>
 </div>
@@ -400,7 +447,12 @@
     <!-- Header -->
     <div class="inv-header">
         <div class="inv-brand">
-            <div class="inv-brand-name">🌿 {{ $settings['site_name'] ?? 'Al Barr Foods' }}</div>
+            <div class="inv-brand-name" style="display: inline-flex; align-items: center; gap: 6px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#018849" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.58-1 8a7 7 0 0 1-7 10z"></path>
+                </svg>
+                <span>{{ $settings['site_name'] ?? 'Al Barr Foods' }}</span>
+            </div>
             <div class="inv-brand-tagline">{{ $settings['site_tagline'] ?? 'Kashmiri Organic Staples · Premium Dry Fruits' }}</div>
         </div>
         <div class="inv-title-block">
@@ -460,31 +512,33 @@
         </div>
 
         <!-- Items Table -->
-        <table class="inv-items-table">
-            <thead>
-                <tr>
-                    <th style="width: 5%;">#</th>
-                    <th>Item Description</th>
-                    <th>Qty</th>
-                    <th>Unit Price</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($order->items as $i => $item)
-                <tr>
-                    <td>{{ $i + 1 }}</td>
-                    <td>
-                        <div class="item-name">{{ $item->title }}</div>
-                        <div class="item-weight">{{ $item->weight }}</div>
-                    </td>
-                    <td>{{ $item->quantity }}</td>
-                    <td>₹{{ number_format($item->price, 2) }}</td>
-                    <td style="font-weight: 700;">₹{{ number_format($item->price * $item->quantity, 2) }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="inv-table-wrap">
+            <table class="inv-items-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">#</th>
+                        <th>Item Description</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($order->items as $i => $item)
+                    <tr>
+                        <td>{{ $i + 1 }}</td>
+                        <td>
+                            <div class="item-name">{{ $item->title }}</div>
+                            <div class="item-weight">{{ $item->weight }}</div>
+                        </td>
+                        <td>{{ $item->quantity }}</td>
+                        <td>₹{{ number_format($item->price, 2) }}</td>
+                        <td style="font-weight: 700;">₹{{ number_format($item->price * $item->quantity, 2) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         <!-- Totals -->
         <div class="inv-totals">

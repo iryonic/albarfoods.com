@@ -311,13 +311,37 @@
     .gallery-item button:hover {
         background-color: #ba3c1c !important;
     }
+
+    @media (max-width: 580px) {
+        .prod-row-header {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            padding: 14px 16px !important;
+        }
+        .prod-header-info {
+            width: 100% !important;
+        }
+        .prod-meta-badges {
+            flex-wrap: wrap !important;
+            margin-top: 4px !important;
+        }
+        .prod-header-actions-group {
+            width: 100% !important;
+            justify-content: flex-start !important;
+            margin-top: 8px !important;
+        }
+        .prod-header-actions-group > * {
+            flex: 1 !important;
+            text-align: center !important;
+        }
+    }
 </style>
 @endsection
 
 @section('content')
 <!-- Search & Filter bar -->
 <div class="catalog-header-actions">
-    <input type="text" id="productSearch" class="admin-input" placeholder="🔍 Search catalog by title or SKU..." style="flex: 1; min-width: 250px;">
+    <input type="text" id="productSearch" class="admin-input" placeholder="Search catalog by title or SKU..." style="flex: 1; min-width: 250px;">
     
     <div style="display:flex; gap:10px; align-items: center;">
         {{-- List/Grid layout switcher --}}
@@ -389,17 +413,17 @@
                     </span>
                 </div>
                 <div class="prod-header-actions-group">
-                    <button class="btn-action-outline" onclick="openEditProductModal({{ json_encode(array_merge($product->only('id', 'category_id', 'title', 'badge', 'description', 'origin', 'nutrition', 'storage', 'image', 'is_active'), ['gallery' => $product->images->pluck('image_path')->toArray()])) }})">
-                        ✏️ Edit Details
+                    <button class="btn-action-outline" style="display: inline-flex; align-items: center;" onclick="openEditProductModal({{ json_encode(array_merge($product->only('id', 'category_id', 'title', 'badge', 'description', 'origin', 'nutrition', 'storage', 'image', 'is_active'), ['gallery' => $product->images->pluck('image_path')->toArray()])) }})">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Edit Details
                     </button>
-                    <button class="btn-action-outline" onclick="openAddVariantModal({{ $product->id }}, '{{ $product->title }}')">
-                        ➕ Add Variant
+                    <button class="btn-action-outline" style="display: inline-flex; align-items: center;" onclick="openAddVariantModal({{ $product->id }}, '{{ $product->title }}')">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Variant
                     </button>
                     <form action="{{ route('admin.products.delete', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this product and all its variants?');" style="margin: 0;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn-action-outline danger">
-                            🗑️ Delete
+                        <button type="submit" class="btn-action-outline danger" style="display: inline-flex; align-items: center;">
+                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> Delete
                         </button>
                     </form>
                 </div>
@@ -453,7 +477,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn-action-outline danger" style="padding: 6px 8px;">
-                                            🗑️
+                                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                                         </button>
                                     </form>
                                 </td>
@@ -488,8 +512,11 @@
             </select>
         </div>
 
-        <button type="submit" class="btn-solid-gold" style="padding: 8px 16px; font-size: 0.82rem; border-radius: 8px; border: none;">
-            ⚡ Apply Changes
+        <button type="submit" class="btn-solid-gold" style="padding: 8px 16px; font-size: 0.82rem; border-radius: 8px; border: none; display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Apply Changes
         </button>
         <button type="button" onclick="cancelProductBulkSelection()" style="background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); font-size: 0.82rem; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff';" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.7)';">
             Cancel
@@ -548,7 +575,7 @@
                     <label for="addImage">Product Cover Image</label>
                     <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                         <input type="text" name="image" id="addImage" class="admin-input" placeholder="assets/img/walnuts.png">
-                        <button type="button" class="btn-solid-gold" style="white-space: nowrap; padding: 10px 14px; font-size: 0.8rem; border-radius: 8px; border: none;" onclick="openMediaChooser('addImage')">🖼️ Choose</button>
+                        <button type="button" class="btn-solid-gold" style="white-space: nowrap; padding: 10px 14px; font-size: 0.8rem; border-radius: 8px; border: none; display: inline-flex; align-items: center;" onclick="openMediaChooser('addImage')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Choose</button>
                     </div>
                 </div>
                 <div class="admin-form-group">
@@ -556,8 +583,8 @@
                     <div id="addGalleryContainer" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
                         <!-- Gallery thumbnails -->
                     </div>
-                    <button type="button" class="btn-action-outline" style="align-self: flex-start;" onclick="openMediaChooserForGallery('addGalleryContainer')">
-                        🖼️ Add / Manage Gallery Images
+                    <button type="button" class="btn-action-outline" style="align-self: flex-start; display: inline-flex; align-items: center;" onclick="openMediaChooserForGallery('addGalleryContainer')">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Add / Manage Gallery Images
                     </button>
                 </div>
                 <div class="admin-form-group">
@@ -569,7 +596,7 @@
                 </div>
 
                 <hr style="border: 0; border-top: 1px solid var(--color-admin-border); margin: 20px 0;">
-                <h4 style="font-family: var(--font-secondary); margin-bottom: 12px; color: var(--color-admin-text-main)">➕ Add Initial Variant</h4>
+                <h4 style="font-family: var(--font-secondary); margin-bottom: 12px; color: var(--color-admin-text-main)">Add Initial Variant</h4>
                 <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 10px; margin-bottom: 10px;">
                     <div>
                         <label style="font-size: 0.75rem; font-weight: bold;">Weight Label *</label>
@@ -652,7 +679,7 @@
                     <label for="editImage">Product Cover Image</label>
                     <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                         <input type="text" name="image" id="editImage" class="admin-input">
-                        <button type="button" class="btn-solid-gold" style="white-space: nowrap; padding: 10px 14px; font-size: 0.8rem; border-radius: 8px; border: none;" onclick="openMediaChooser('editImage')">🖼️ Choose</button>
+                        <button type="button" class="btn-solid-gold" style="white-space: nowrap; padding: 10px 14px; font-size: 0.8rem; border-radius: 8px; border: none; display: inline-flex; align-items: center;" onclick="openMediaChooser('editImage')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Choose</button>
                     </div>
                 </div>
                 <div class="admin-form-group">
@@ -660,8 +687,8 @@
                     <div id="editGalleryContainer" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
                         <!-- Gallery thumbnails -->
                     </div>
-                    <button type="button" class="btn-action-outline" style="align-self: flex-start;" onclick="openMediaChooserForGallery('editGalleryContainer')">
-                        🖼️ Add / Manage Gallery Images
+                    <button type="button" class="btn-action-outline" style="align-self: flex-start; display: inline-flex; align-items: center;" onclick="openMediaChooserForGallery('editGalleryContainer')">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Add / Manage Gallery Images
                     </button>
                 </div>
                 <div class="admin-form-group">
@@ -780,14 +807,14 @@
                 </div>
                 <div>
                     <input type="file" id="chooserUploadInput" accept="image/*" style="display: none;" onchange="uploadChooserFile()">
-                    <button type="button" class="btn-solid-accent" style="padding: 8px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="document.getElementById('chooserUploadInput').click()">
-                        📤 Upload Image
+                    <button type="button" class="btn-solid-accent" style="padding: 8px 14px; font-size: 0.8rem; border-radius: 8px; display: inline-flex; align-items: center;" onclick="document.getElementById('chooserUploadInput').click()">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Upload Image
                     </button>
                 </div>
             </div>
             
             <div style="margin-bottom: 15px; display: flex; gap: 10px;">
-                <input type="text" id="mediaChooserSearch" class="admin-input" placeholder="🔍 Search media library by name..." oninput="loadChooserMedia()">
+                <input type="text" id="mediaChooserSearch" class="admin-input" placeholder="Search media library by name..." oninput="loadChooserMedia()">
             </div>
             
             <div style="max-height: 380px; overflow-y: auto; padding-right: 5px;">
@@ -1078,7 +1105,7 @@
         
         const uploadBtn = document.querySelector('#mediaChooserModal .btn-solid-accent');
         const originalText = uploadBtn.innerHTML;
-        uploadBtn.innerHTML = '⏳ Uploading...';
+        uploadBtn.innerHTML = '<svg class="spinner-svg" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none" style="animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 6px;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="16"></circle></svg> Uploading...';
         uploadBtn.disabled = true;
         
         fetch('{{ route("admin.media.store") }}', {

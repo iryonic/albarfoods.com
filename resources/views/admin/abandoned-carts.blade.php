@@ -226,6 +226,21 @@
             left: 24px;
         }
     }
+
+    @media (max-width: 640px) {
+        .date-filter-group {
+            width: 100% !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            margin-left: 0 !important;
+            gap: 10px !important;
+        }
+        .date-filter-group input,
+        .date-filter-group button {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+    }
 </style>
 @endsection
 
@@ -281,10 +296,10 @@
 </div>
 
 {{-- ─── Filter Row ─── --}}
-<div class="admin-card" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 20px 24px; margin-bottom: 24px;">
-    <input type="text" id="cartSearch" class="admin-input" placeholder="🔍 Search customer name, phone, email or item..." style="flex: 1; min-width: 240px; max-width: 360px;">
+<div class="admin-card filter-row" style="padding: 20px 24px; margin-bottom: 24px;">
+    <input type="text" id="cartSearch" class="admin-input" placeholder="Search customer name, phone, email or item..." style="flex: 1; min-width: 240px; max-width: 360px;">
     
-    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-left: auto;">
+    <div class="date-filter-group" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-left: auto;">
         <label style="font-size: 0.75rem; font-weight: 700; color: var(--color-admin-text-muted); text-transform: uppercase;">Activity Date:</label>
         <input type="date" id="startDate" class="admin-input" style="max-width: 140px; padding: 8px 12px; font-size: 0.82rem;">
         
@@ -480,8 +495,8 @@
                     <circle cx="19" cy="21" r="1"/>
                     <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
                 </svg>
-                <div class="sparkle sparkle-1">✨</div>
-                <div class="sparkle sparkle-2">✨</div>
+                <div class="sparkle sparkle-1"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9 12 2"></polygon></svg></div>
+                <div class="sparkle sparkle-2"><svg viewBox="0 0 24 24" width="8" height="8" fill="currentColor" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9 12 2"></polygon></svg></div>
             </div>
             <h3>No Abandoned Carts Found</h3>
             <p>All customers are completing their checkouts smoothly. No active recovery actions required!</p>
@@ -494,7 +509,7 @@
     <span class="bar-count" id="cartSelectionCountText">0 carts selected</span>
     <div style="display:flex; gap:10px; align-items:center;">
         <button class="btn-solid-gold" style="background:#ba3c1c; border-color:#ba3c1c; box-shadow:none; cursor: pointer; border-radius: 8px; font-weight: 700; color: #fff; padding: 8px 16px; font-size: 0.8rem; display:inline-flex; align-items:center; gap:6px;" onclick="bulkDeleteCarts()">
-            🗑️ Delete Selected
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Delete Selected
         </button>
         <button class="btn-action-outline" style="padding: 8px 16px; font-size: 0.8rem; color: #fff; border-color: rgba(255,255,255,0.2); background: transparent; cursor: pointer; border-radius: 8px;" onclick="clearCartSelection()">
             Cancel

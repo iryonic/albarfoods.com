@@ -1,5 +1,22 @@
 @extends('layouts.app')
 
+@php
+    $activeMethod = null;
+    if (!isset($settings['payment_cod_status']) || $settings['payment_cod_status'] === 'enabled') {
+        $activeMethod = 'cod';
+    } elseif (isset($settings['payment_razorpay_status']) && $settings['payment_razorpay_status'] === 'enabled') {
+        $activeMethod = 'razorpay';
+    } elseif (isset($settings['payment_cashfree_status']) && $settings['payment_cashfree_status'] === 'enabled') {
+        $activeMethod = 'cashfree';
+    } elseif (isset($settings['payment_paytm_status']) && $settings['payment_paytm_status'] === 'enabled') {
+        $activeMethod = 'paytm';
+    } elseif (isset($settings['payment_paypal_status']) && $settings['payment_paypal_status'] === 'enabled') {
+        $activeMethod = 'paypal';
+    } elseif (!isset($settings['payment_bank_status']) || $settings['payment_bank_status'] === 'enabled') {
+        $activeMethod = 'bank';
+    }
+@endphp
+
 @section('title', 'Secure Checkout - Al Barr | Kashmiri Organic Staples')
 
 @section('styles')
@@ -615,21 +632,79 @@
                             <span>Choose Payment Method</span>
                         </h2>
 
+                        <!-- Redirect errors notification -->
+                        <div id="payment-error-alert" style="display: none; background-color: #fde8e8; border: 1px solid #f8b4b4; color: #9b1c1c; font-size: 0.84rem; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; font-weight: 600;"></div>
+
                         <!-- Option 1: COD -->
-                        <div class="payment-option-card active" id="payment-card-cod" onclick="selectPayment('cod')">
+                        @if(!isset($settings['payment_cod_status']) || $settings['payment_cod_status'] === 'enabled')
+                        <div class="payment-option-card {{ $activeMethod === 'cod' ? 'active' : '' }}" id="payment-card-cod" onclick="selectPayment('cod')">
                             <div class="payment-option-header">
-                                <input type="radio" name="payment_method" value="cod" class="payment-radio" checked id="radio-cod">
+                                <input type="radio" name="payment_method" value="cod" class="payment-radio" {{ $activeMethod === 'cod' ? 'checked' : '' }} id="radio-cod">
                                 <span>Cash on Delivery (COD)</span>
                             </div>
                             <div class="payment-option-body">
                                 Pay with cash or local UPI QR scanner upon physical delivery at your doorstep. Safe &amp; convenient.
                             </div>
                         </div>
+                        @endif
 
-                        <!-- Option 2: Bank Transfer -->
-                        <div class="payment-option-card" id="payment-card-bank" onclick="selectPayment('bank')">
+                        <!-- Option 2: Razorpay -->
+                        @if(isset($settings['payment_razorpay_status']) && $settings['payment_razorpay_status'] === 'enabled')
+                        <div class="payment-option-card {{ $activeMethod === 'razorpay' ? 'active' : '' }}" id="payment-card-razorpay" onclick="selectPayment('razorpay')">
                             <div class="payment-option-header">
-                                <input type="radio" name="payment_method" value="bank" class="payment-radio" id="radio-bank">
+                                <input type="radio" name="payment_method" value="razorpay" class="payment-radio" {{ $activeMethod === 'razorpay' ? 'checked' : '' }} id="radio-razorpay">
+                                <span>Razorpay Online (UPI, Cards, NetBanking)</span>
+                            </div>
+                            <div class="payment-option-body">
+                                Pay securely using UPI, Credit/Debit Cards, Net Banking, or popular Wallets via Razorpay checkout.
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Option 3: Cashfree -->
+                        @if(isset($settings['payment_cashfree_status']) && $settings['payment_cashfree_status'] === 'enabled')
+                        <div class="payment-option-card {{ $activeMethod === 'cashfree' ? 'active' : '' }}" id="payment-card-cashfree" onclick="selectPayment('cashfree')">
+                            <div class="payment-option-header">
+                                <input type="radio" name="payment_method" value="cashfree" class="payment-radio" {{ $activeMethod === 'cashfree' ? 'checked' : '' }} id="radio-cashfree">
+                                <span>Cashfree Payments (Sandbox)</span>
+                            </div>
+                            <div class="payment-option-body">
+                                Pay securely using Cashfree checkout gateway services.
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Option 4: Paytm -->
+                        @if(isset($settings['payment_paytm_status']) && $settings['payment_paytm_status'] === 'enabled')
+                        <div class="payment-option-card {{ $activeMethod === 'paytm' ? 'active' : '' }}" id="payment-card-paytm" onclick="selectPayment('paytm')">
+                            <div class="payment-option-header">
+                                <input type="radio" name="payment_method" value="paytm" class="payment-radio" {{ $activeMethod === 'paytm' ? 'checked' : '' }} id="radio-paytm">
+                                <span>Paytm Wallet &amp; UPI</span>
+                            </div>
+                            <div class="payment-option-body">
+                                Pay instantly via your Paytm Wallet or UPI.
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Option 5: PayPal -->
+                        @if(isset($settings['payment_paypal_status']) && $settings['payment_paypal_status'] === 'enabled')
+                        <div class="payment-option-card {{ $activeMethod === 'paypal' ? 'active' : '' }}" id="payment-card-paypal" onclick="selectPayment('paypal')">
+                            <div class="payment-option-header">
+                                <input type="radio" name="payment_method" value="paypal" class="payment-radio" {{ $activeMethod === 'paypal' ? 'checked' : '' }} id="radio-paypal">
+                                <span>PayPal Service (International)</span>
+                            </div>
+                            <div class="payment-option-body">
+                                Pay using your international PayPal account or credit card.
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Option 6: Bank Transfer -->
+                        @if(!isset($settings['payment_bank_status']) || $settings['payment_bank_status'] === 'enabled')
+                        <div class="payment-option-card {{ $activeMethod === 'bank' ? 'active' : '' }}" id="payment-card-bank" onclick="selectPayment('bank')">
+                            <div class="payment-option-header">
+                                <input type="radio" name="payment_method" value="bank" class="payment-radio" {{ $activeMethod === 'bank' ? 'checked' : '' }} id="radio-bank">
                                 <span>Direct Bank Transfer (Advance)</span>
                             </div>
                             <div class="payment-option-body">
@@ -661,6 +736,13 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
+
+                        @if(!$activeMethod)
+                            <div style="background-color: #fde8e8; border: 1px solid #f8b4b4; color: #9b1c1c; font-size: 0.84rem; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; font-weight: 600;">
+                                No payment methods are currently enabled. Please contact support to complete your order.
+                            </div>
+                        @endif
 
                     </div>
 
@@ -721,14 +803,17 @@
 
 @section('scripts')
     <script>
-        let selectedPaymentMethod = 'cod';
+        let selectedPaymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || '';
 
         function selectPayment(method) {
             selectedPaymentMethod = method;
             document.querySelectorAll('.payment-option-card').forEach(card => card.classList.remove('active'));
-            document.getElementById(`radio-cod`).checked = (method === 'cod');
-            document.getElementById(`radio-bank`).checked = (method === 'bank');
-            document.getElementById(`payment-card-${method}`).classList.add('active');
+            
+            const radio = document.getElementById(`radio-${method}`);
+            if (radio) radio.checked = true;
+            
+            const card = document.getElementById(`payment-card-${method}`);
+            if (card) card.classList.add('active');
         }
 
         function copyTextLocal(text, buttonEl) {
@@ -759,6 +844,19 @@
             const totalText = document.getElementById('ch-total');
             const placeOrderBtn = document.getElementById('btn-submit-order');
             const addressForm = document.getElementById('checkout-address-form');
+
+            // Check for checkout error from previous simulated redirection
+            const checkoutError = sessionStorage.getItem('al_barr_checkout_error');
+            if (checkoutError) {
+                const alertDiv = document.getElementById('payment-error-alert');
+                if (alertDiv) {
+                    alertDiv.innerText = checkoutError;
+                    alertDiv.style.display = 'block';
+                    // Scroll to error alert
+                    alertDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                sessionStorage.removeItem('al_barr_checkout_error');
+            }
 
             // 1. Fetch Cart from LocalStorage
             const cart = (typeof AlBarrCart !== 'undefined') ? AlBarrCart.get() : [];
@@ -923,6 +1021,13 @@
                     return;
                 }
 
+                if (!selectedPaymentMethod) {
+                    alert('Please select a payment method to proceed.');
+                    placeOrderBtn.innerText = 'Confirm & Place Order';
+                    placeOrderBtn.disabled = false;
+                    return;
+                }
+
                 // Add loading indicator
                 placeOrderBtn.innerText = 'Processing Order...';
                 placeOrderBtn.disabled = true;
@@ -954,7 +1059,6 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        // Save address locally
                         const addressDataToSave = {
                             name: payload.name,
                             phone: payload.phone,
@@ -964,18 +1068,30 @@
                             address: payload.address,
                             landmark: payload.landmark
                         };
-                        localStorage.setItem('al_barr_saved_address', JSON.stringify(addressDataToSave));
 
-                        // Clear coupon and Cart on success
-                        sessionStorage.removeItem('al_barr_coupon_applied');
-                        if (typeof AlBarrCart !== 'undefined') {
-                            AlBarrCart.clear();
+                        if (data.payment_required) {
+                            if (data.payment_method === 'razorpay') {
+                                startRazorpayCheckout(data, addressDataToSave);
+                            } else if (data.payment_method === 'simulate') {
+                                // Save address locally
+                                localStorage.setItem('al_barr_saved_address', JSON.stringify(addressDataToSave));
+                                window.location.href = data.redirect_url;
+                            }
                         } else {
-                            localStorage.removeItem('al_barr_cart');
-                        }
+                            // Save address locally
+                            localStorage.setItem('al_barr_saved_address', JSON.stringify(addressDataToSave));
 
-                        // Redirect to success route
-                        window.location.href = data.redirect_url;
+                            // Clear coupon and Cart on success
+                            sessionStorage.removeItem('al_barr_coupon_applied');
+                            if (typeof AlBarrCart !== 'undefined') {
+                                AlBarrCart.clear();
+                            } else {
+                                localStorage.removeItem('al_barr_cart');
+                            }
+
+                            // Redirect to success route
+                            window.location.href = data.redirect_url;
+                        }
                     } else {
                         // Display error
                         alert(data.error || 'Failed to place order. Please check item stocks.');
@@ -990,6 +1106,97 @@
                     placeOrderBtn.disabled = false;
                 });
             });
+
+            function startRazorpayCheckout(paymentData, payloadAddress) {
+                if (typeof Razorpay === 'undefined') {
+                    placeOrderBtn.innerText = 'Loading Gateway...';
+                    const script = document.createElement('script');
+                    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+                    script.onload = () => {
+                        placeOrderBtn.innerText = 'Opening Secure Gateway...';
+                        openRazorpayModal(paymentData, payloadAddress);
+                    };
+                    script.onerror = () => {
+                        alert('Failed to load Razorpay SDK. Please check your internet connection.');
+                        placeOrderBtn.innerText = 'Confirm & Place Order';
+                        placeOrderBtn.disabled = false;
+                    };
+                    document.body.appendChild(script);
+                } else {
+                    openRazorpayModal(paymentData, payloadAddress);
+                }
+            }
+
+            function openRazorpayModal(paymentData, payloadAddress) {
+                const options = {
+                    "key": paymentData.key_id,
+                    "amount": paymentData.amount,
+                    "currency": "INR",
+                    "name": "Al Barr Foods",
+                    "description": "Order #" + paymentData.order_number,
+                    "order_id": paymentData.razorpay_order_id,
+                    "handler": function (response) {
+                        placeOrderBtn.innerText = 'Verifying Transaction...';
+                        
+                        const verifyPayload = {
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_signature: response.razorpay_signature,
+                            order_number: paymentData.order_number
+                        };
+
+                        fetch('/checkout/payment/verify', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify(verifyPayload)
+                        })
+                        .then(res => res.json())
+                        .then(resData => {
+                            if (resData.success) {
+                                localStorage.setItem('al_barr_saved_address', JSON.stringify(payloadAddress));
+                                sessionStorage.removeItem('al_barr_coupon_applied');
+                                if (typeof AlBarrCart !== 'undefined') {
+                                    AlBarrCart.clear();
+                                } else {
+                                    localStorage.removeItem('al_barr_cart');
+                                }
+                                window.location.href = '/order-success';
+                            } else {
+                                alert(resData.error || 'Payment verification failed.');
+                                placeOrderBtn.innerText = 'Confirm & Place Order';
+                                placeOrderBtn.disabled = false;
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Verification error:', err);
+                            alert('An error occurred during payment verification.');
+                            placeOrderBtn.innerText = 'Confirm & Place Order';
+                            placeOrderBtn.disabled = false;
+                        });
+                    },
+                    "prefill": {
+                        "name": paymentData.name,
+                        "email": paymentData.email || "",
+                        "contact": paymentData.phone
+                    },
+                    "theme": {
+                        "color": "#018849"
+                    },
+                    "modal": {
+                        "ondismiss": function() {
+                            alert('Payment cancelled. You can retry paying by selecting Razorpay or Cash on Delivery.');
+                            placeOrderBtn.innerText = 'Confirm & Place Order';
+                            placeOrderBtn.disabled = false;
+                        }
+                    }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.open();
+            }
 
             // Debounced Abandoned Carts input sync
             const checkoutInputs = ['ch-name', 'ch-phone', 'ch-phone-alt', 'ch-pincode', 'ch-city', 'ch-address', 'ch-landmark'];

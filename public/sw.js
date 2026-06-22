@@ -1,7 +1,7 @@
 /* Service Worker — Network-First for dev, Cache fallback for offline */
 
-const CACHE_NAME = 'albarr-cache-v7';
-const OFFLINE_URL = './offline.php';
+const CACHE_NAME = 'albarr-cache-v8';
+const OFFLINE_URL = '/offline';
 
 // Minimal shell to pre-cache for offline fallback only
 const PRECACHE = [

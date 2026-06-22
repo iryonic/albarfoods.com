@@ -461,7 +461,7 @@
     <div class="admin-card" style="padding: 0;">
         {{-- Filter --}}
         <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 20px 24px; border-bottom: 1px solid var(--color-admin-border);">
-            <input type="text" id="reviewSearch" class="admin-input" placeholder="🔍 Search product or customer…" style="flex: 1; min-width: 180px; max-width: 320px;">
+            <input type="text" id="reviewSearch" class="admin-input" placeholder="Search product or customer…" style="flex: 1; min-width: 180px; max-width: 320px;">
             <select id="statusFilter" class="admin-input" style="max-width: 160px; min-width: 130px;">
                 <option value="all">All Statuses</option>
                 <option value="pending">Pending</option>
@@ -638,7 +638,7 @@
             @csrf
             <input type="hidden" name="action" value="delete">
             <input type="hidden" name="review_ids" id="bulkDeleteIds">
-            <button type="submit" class="bar-btn delete">🗑 Delete</button>
+            <button type="submit" class="bar-btn delete" style="display: inline-flex; align-items: center;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Delete</button>
         </form>
         <button class="bar-btn cancel" onclick="clearReviewSelection()">Cancel</button>
     </div>

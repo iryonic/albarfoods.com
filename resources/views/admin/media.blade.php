@@ -378,7 +378,7 @@
 
     {{-- Filter bar --}}
     <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--color-admin-border-light);">
-        <input type="text" id="gallerySearch" class="admin-input" placeholder="🔍 Search files..." style="max-width:320px; flex:1;" oninput="filterGallery()">
+        <input type="text" id="gallerySearch" class="admin-input" placeholder="Search files..." style="max-width:320px; flex:1;" oninput="filterGallery()">
         
         <select id="typeFilter" class="admin-select" style="max-width:180px;" onchange="filterGallery()">
             <option value="all">All File Formats</option>
@@ -443,8 +443,8 @@
                     <div class="media-thumb-wrapper">
                         <img src="/{{ $item->file_path }}" alt="{{ $item->file_name }}" class="media-thumb" onerror="this.src='/assets/img/logoalbar.png'">
                         <div class="media-hover-overlay">
-                            <button type="button" class="btn-solid-gold" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; box-shadow:none; filter:none;" onclick="copyPath('{{ $item->file_path }}', this)">🔗 Copy Path</button>
-                            <button type="button" class="btn-solid-accent" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; box-shadow:none;" onclick="showMediaDetails({{ json_encode($item) }})">👁️ Details</button>
+                            <button type="button" class="btn-solid-gold" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; box-shadow:none; filter:none;" onclick="copyPath('{{ $item->file_path }}', this)"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>Copy Path</button>
+                            <button type="button" class="btn-solid-accent" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; box-shadow:none;" onclick="showMediaDetails({{ json_encode($item) }})"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>Details</button>
                         </div>
                     </div>
                     
@@ -467,13 +467,13 @@
                         </div>
                         <div class="media-actions">
                             <button class="media-btn media-btn-copy" onclick="copyPath('{{ $item->file_path }}', this)">
-                                🔗 Copy Path
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>Copy Path
                             </button>
                             <form action="{{ route('admin.media.delete', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this media file?');" style="margin: 0; flex: 1;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="media-btn media-btn-delete">
-                                    🗑️ Delete
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Delete
                                 </button>
                             </form>
                         </div>
@@ -526,7 +526,7 @@
                     </div>
 
                     <button class="btn-solid-accent" id="detailCopyBtn" style="width:100%; margin-top:20px; justify-content:center;">
-                        🔗 Copy Path to Clipboard
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; display: inline-block; vertical-align: middle;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>Copy Path to Clipboard
                     </button>
                 </div>
             </div>
@@ -645,13 +645,13 @@
                 </div>
                 <div class="media-actions">
                     <button class="media-btn media-btn-copy" onclick="copyPath('${media.file_path}', this)">
-                        🔗 Copy Path
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>Copy Path
                     </button>
                     <form action="/admin/media/${media.id}" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this media file?');" style="margin: 0; flex: 1;">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="media-btn media-btn-delete">
-                            🗑️ Delete
+                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Delete
                         </button>
                     </form>
                 </div>
@@ -661,14 +661,11 @@
         grid.insertBefore(card, grid.firstChild);
     }
 
-        grid.insertBefore(card, grid.firstChild);
-    }
-
     // Helper functions for clipboard copy
     function copyPath(path, btn) {
         navigator.clipboard.writeText(path).then(() => {
             const originalText = btn.innerHTML;
-            btn.innerHTML = '✅ Copied!';
+            btn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg>Copied!';
             
             // Apply feedback styling if it's an action button
             if (btn.classList.contains('media-btn-copy')) {

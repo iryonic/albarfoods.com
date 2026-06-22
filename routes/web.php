@@ -28,6 +28,9 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'placeOrder']);
 Route::get('/order-success', [CheckoutController::class, 'success'])->name('order-success');
 Route::post('/cart/sync', [\App\Http\Controllers\CartController::class, 'sync']);
+Route::post('/checkout/payment/verify', [CheckoutController::class, 'verifyPayment']);
+Route::get('/checkout/payment/simulate/{order_number}', [CheckoutController::class, 'simulatePayment'])->name('checkout.payment.simulate');
+Route::post('/checkout/payment/simulate/verify', [CheckoutController::class, 'verifySimulatedPayment']);
 
 // 5. Customer Profile & Orders
 Route::get('/orders', [OrderController::class, 'index'])->name('orders');

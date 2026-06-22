@@ -326,7 +326,7 @@
 
     {{-- Filters --}}
     <div class="ticket-filters">
-        <input type="text" id="ticketSearch" class="admin-input" placeholder="🔍 Search by ticket number or subject…" style="max-width: 320px;">
+        <input type="text" id="ticketSearch" class="admin-input" placeholder="Search by ticket number or subject…" style="max-width: 320px;">
         <select id="priorityFilter" class="admin-input" style="max-width: 180px; flex: 0;">
             <option value="all">All Priorities</option>
             <option value="high">High</option>
@@ -435,7 +435,7 @@
                     <tr>
                         <td colspan="10">
                             <div class="empty-state">
-                                <div class="empty-state-icon">🎟️</div>
+                                <div class="empty-state-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4;"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9zM9 7v10M15 7v10"></path></svg></div>
                                 <h3>No Support Tickets Yet</h3>
                                 <p>Customer support requests will appear here once submitted.</p>
                             </div>
