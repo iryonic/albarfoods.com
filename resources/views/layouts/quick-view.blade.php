@@ -1,6 +1,7 @@
 <!-- Quick View Modal Overlay -->
 <div class="modal-overlay" id="quick-view-modal">
     <div class="modal-content-box">
+        <div class="bottom-sheet-drag-handle"></div>
         <button class="modal-close-btn" id="qv-close-btn" aria-label="Close modal">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -11,7 +12,7 @@
                 <div style="position: relative;">
                     <span class="badge badge-discount" id="qv-discount-badge" style="position: absolute; top: 10px; left: 10px; z-index: 5;">-15%</span>
                     <div style="background-color: var(--color-cream); border-radius: var(--radius-md); padding: var(--spacing-md); border: 1px solid var(--color-border-light);">
-                        <img src="/assets/img/almonds.png" alt="Product Image" id="qv-product-image" style="width: 100%; height: auto; object-fit: cover; border-radius: var(--radius-md);">
+                        <img src="{{ asset('assets/img/almonds.png') }}" alt="Product Image" id="qv-product-image" style="width: 100%; height: auto; object-fit: cover; border-radius: var(--radius-md);">
                     </div>
                     <p style="text-align: center; font-size: 0.8rem; color: var(--color-text-muted); margin-top: var(--spacing-sm);">
                         📷 Actual premium packaging shown. Pure & Raw.

@@ -250,7 +250,7 @@
 
             <!-- Right: Image -->
             <div class="story-img-wrap">
-                <img src="/assets/img/figs.png" alt="Pure Kashmiri harvest" class="story-img" style="object-position: center; filter: hue-rotate(45deg); scale: 1.1;">
+                <img src="{{ asset('assets/img/figs.png') }}" alt="Pure Kashmiri harvest" class="story-img" style="object-position: center; filter: hue-rotate(45deg); scale: 1.1;">
             </div>
 
         </div>

@@ -413,6 +413,45 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Flash Sale configurations -->
+                <div class="admin-card" style="margin-top: 24px;">
+                    <div class="settings-section-title">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--color-admin-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; display: inline-block; vertical-align: middle;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        Flash Sale Countdown Config
+                    </div>
+                    <p class="settings-section-desc">Manage the homepage Flash Sale active status, promotional titles, subtitles, and countdown duration.</p>
+                    <div class="settings-form-grid">
+                        <div class="admin-form-group">
+                            <label for="flash_sale_status">Flash Sale Banner Status</label>
+                            <select id="flash_sale_status" name="flash_sale_status" class="admin-select">
+                                <option value="enabled" @selected(getVal('flash_sale_status', 'enabled') === 'enabled')>Enabled (Show Banner)</option>
+                                <option value="disabled" @selected(getVal('flash_sale_status', 'enabled') === 'disabled')>Disabled (Hide Banner)</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="flash_sale_end_time">Countdown Target End Date &amp; Time *</label>
+                            <input type="datetime-local" id="flash_sale_end_time" name="flash_sale_end_time" class="admin-input"
+                                value="{{ getVal('flash_sale_end_time', now()->addDays(3)->format('Y-m-d\TH:i')) }}" required>
+                        </div>
+                        <div class="admin-form-group settings-full-row">
+                            <label for="flash_sale_title">Promotional Main Title *</label>
+                            <input type="text" id="flash_sale_title" name="flash_sale_title" class="admin-input"
+                                value="{{ getVal('flash_sale_title', 'Kashmiri Purity Week') }}" required>
+                        </div>
+                        <div class="admin-form-group settings-full-row">
+                            <label for="flash_sale_subtitle">Description Subtitle *</label>
+                            <textarea id="flash_sale_subtitle" name="flash_sale_subtitle" class="admin-input" style="height: 80px; resize: vertical;" required>{{ getVal('flash_sale_subtitle', 'Premium discounts on certified pure collections. Bank orders get priority dispatch.') }}</textarea>
+                        </div>
+                    </div>
+                    <div class="settings-save-footer">
+                        <p>Changes take effect immediately on save.</p>
+                        <button type="submit" class="btn-save-settings">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                            Save Settings
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {{-- TAB: Bank Details --}}

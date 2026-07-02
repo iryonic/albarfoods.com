@@ -21,7 +21,10 @@ class AppServiceProvider extends ServiceProvider
     {
         if (!app()->runningInConsole()) {
             try {
-                $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+                // Cache settings for 24 hours to eliminate redundant database hits
+                $settings = cache()->remember('global_settings', 86400, function() {
+                    return \App\Models\Setting::pluck('value', 'key')->toArray();
+                });
                 view()->share('settings', $settings);
                 view()->share('siteSettings', $settings);
             } catch (\Exception $e) {

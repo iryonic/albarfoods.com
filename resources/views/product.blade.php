@@ -17,14 +17,15 @@
 @endphp
 
 @section('title', htmlspecialchars($product->title) . ' | Al Barr (Khalis Wa Shifaf)')
+@section('body_class', 'page-product-detail')
 
 @section('content')
     <div class="product-detail-container container">
         <!-- Breadcrumbs -->
         <div class="breadcrumbs-row">
-            <a href="/">Home</a>
+            <a href="{{ url('/') }}">Home</a>
             <span class="divider">/</span>
-            <a href="/shop?category={{ $product->category->slug ?? '' }}">{{ $meta }}</a>
+            <a href="{{ url('/shop') }}?category={{ $product->category->slug ?? '' }}">{{ $meta }}</a>
             <span class="divider">/</span>
             <span class="current-page">{{ $product->title }}</span>
         </div>
@@ -40,14 +41,14 @@
                     </span>
                 </div>
                 <div class="product-gallery-main">
-                    <img id="main-product-img" src="/{{ $product->image }}" alt="{{ $product->title }}" @if ($product->id === 4) style="filter: hue-rotate(45deg);" @endif>
+                    <img id="main-product-img" src="{{ asset($product->image) }}" alt="{{ $product->title }}" @if ($product->id === 4) style="filter: hue-rotate(45deg);" @endif>
                 </div>
                 <div class="product-gallery-thumbs">
-                    <div class="gallery-thumb active" onclick="document.getElementById('main-product-img').src='/{{ $product->image }}'; document.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active');">
-                        <img src="/{{ $product->image }}" alt="Preview" @if ($product->id === 4) style="filter: hue-rotate(45deg);" @endif>
+                    <div class="gallery-thumb active" onclick="document.getElementById('main-product-img').src='{{ asset($product->image) }}'; document.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active');">
+                        <img src="{{ asset($product->image) }}" alt="Preview" @if ($product->id === 4) style="filter: hue-rotate(45deg);" @endif>
                     </div>
-                    <div class="gallery-thumb" onclick="document.getElementById('main-product-img').src='/assets/img/logo.png'; document.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active');">
-                        <img src="/assets/img/logo.png" alt="Brand Logo Seal">
+                    <div class="gallery-thumb" onclick="document.getElementById('main-product-img').src='{{ asset($settings['website_logo'] ?? 'assets/img/logo.png') }}'; document.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active');">
+                        <img src="{{ asset($settings['website_logo'] ?? 'assets/img/logo.png') }}" alt="Brand Logo Seal">
                     </div>
                 </div>
             </div>
@@ -287,14 +288,14 @@
                         weight, 
                         price, 
                         orig, 
-                        "/{{ $product->image }}"
+                        "{{ asset($product->image) }}"
                     );
                     
                     setTimeout(() => {
-                        window.location.href = '/checkout';
+                        window.location.href = '{{ url('/checkout') }}';
                     }, 300);
                 } else {
-                    window.location.href = '/checkout';
+                    window.location.href = '{{ url('/checkout') }}';
                 }
             }
         });

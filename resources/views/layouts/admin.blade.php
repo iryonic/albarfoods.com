@@ -7,9 +7,9 @@
     <title>@yield('title', 'Admin Dashboard - Al Barr')</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/variables.css?v={{ time() }}">
-    <link rel="stylesheet" href="/assets/css/main.css?v={{ time() }}">
-    <link rel="stylesheet" href="/assets/css/components.css?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/variables.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}?v={{ time() }}">
 
     <style>
         :root {
@@ -74,7 +74,7 @@
         /* ─── Sidebar ─── */
         .admin-sidebar {
             width: var(--admin-sidebar-width);
-            background: linear-gradient(175deg, #080c18 0%, #0a1229 50%, #0d1530 100%);
+            background: black;
             color: #fff;
             position: fixed;
             top: 0;
@@ -182,7 +182,7 @@
             font-weight: 800;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.22);
+            color: rgb(18 113 255);
             padding: 20px 24px 8px;
             display: block;
         }

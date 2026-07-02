@@ -4,12 +4,12 @@
         <div class="footer-grid">
             <!-- Col 1: Bio -->
             <div class="footer-col">
-                <h3 class="footer-col-title">Al barr</h3>
+                <h3 class="footer-col-title">{{ $settings['website_name'] ?? 'Al Barr' }}</h3>
                 <p class="footer-about-text">
                     <strong>Khalis Wa Shifaf (Pure and Clean)</strong> represents our absolute commitment to supplying premium, unadulterated, and organic dry fruits, saffron, spices, and seeds direct from the pristine orchards of Kashmir.
                 </p>
                 <div style="margin-top: 15px;">
-                    <span style="font-size: 0.85rem; color: var(--color-text-muted);">© {{ date('Y') }} Al barr. All Rights Reserved.</span>
+                    <span style="font-size: 0.85rem; color: var(--color-text-muted);">© {{ date('Y') }} {{ $settings['website_name'] ?? 'Al Barr' }}. All Rights Reserved.</span>
                 </div>
             </div>
 
@@ -17,7 +17,7 @@
             <div class="footer-col">
                 <h3 class="footer-col-title">Explore</h3>
                 <ul class="footer-links">
-                    <li><a href="/">Home</a></li>
+                    <li><a href="{{ url('/') }}">Home</a></li>
                     <li><a href="/shop">Shop Our Catalog</a></li>
                     <li><a href="/about">About Purity Sourcing</a></li>
                     <li><a href="/contact">Contact & Support</a></li>
@@ -98,7 +98,7 @@
             <div class="footer-bottom-inner">
                 <!-- Left: Brand + tagline -->
                 <div class="footer-bottom-brand">
-                    <span class="footer-bottom-logo">Al barr</span>
+                    <span class="footer-bottom-logo">{{ $settings['website_name'] ?? 'Al Barr' }}</span>
                     <span class="footer-bottom-tagline">Khalis Wa Shifaf — Pure & Clean since Kashmir.</span>
                 </div>
 
@@ -158,7 +158,8 @@ window.copyToClipboard = function(text, label) {
 </script>
 
 <!-- JavaScript Inclusions -->
-<script src="/assets/js/slider.js?v={{ time() }}"></script>
-<script src="/assets/js/cart.js?v={{ time() }}"></script>
-<script src="/assets/js/app.js?v={{ time() }}"></script>
-<script src="/assets/js/pwa.js?v={{ time() }}"></script>
+<script src="{{ asset('assets/js/slider.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('assets/js/cart.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('assets/js/app.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('assets/js/pwa.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('assets/js/instantpage.js') }}?v={{ time() }}" type="module" defer></script>

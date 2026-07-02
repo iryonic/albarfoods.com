@@ -130,7 +130,19 @@ const AlBarrCart = {
         
         if (headerBadge) headerBadge.innerText = itemCount;
         if (mobileBadge) mobileBadge.innerText = itemCount;
-        if (sidebarBadge) sidebarBadge.innerText = `(${itemCount} Item${itemCount !== 1 ? 's' : ''})`;
+        if (sidebarBadge) sidebarBadge.innerText = `${itemCount} Item${itemCount !== 1 ? 's' : ''}`;
+
+        // 1b. Mobile sticky bottom banner
+        const stickyBar   = document.getElementById('mobile-sticky-cart-bar');
+        const stickyCount = document.getElementById('mobile-sticky-count');
+        const stickyTotal = document.getElementById('mobile-sticky-total');
+        if (stickyBar) {
+            stickyBar.style.display = itemCount > 0 ? 'flex' : 'none';
+            if (stickyCount) stickyCount.textContent = `${itemCount} Item${itemCount !== 1 ? 's' : ''} in Cart`;
+            if (stickyTotal) stickyTotal.textContent = `₹${subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+        }
+
+
 
         // 2. Update Header Total display
         const headerTotal = document.getElementById('cart-global-total');
@@ -142,10 +154,12 @@ const AlBarrCart = {
         const itemsListContainer = document.getElementById('cart-drawer-items-list');
         const emptyView = document.getElementById('cart-empty-view');
         const summaryFooter = document.getElementById('cart-summary-footer');
-
+        const crossSell = document.getElementById('cart-cross-sell');
+ 
         if (cart.length === 0) {
             if (emptyView) emptyView.style.display = 'flex';
             if (summaryFooter) summaryFooter.style.display = 'none';
+            if (crossSell) crossSell.style.display = 'none';
             if (itemsListContainer) {
                 // Keep only the empty view child
                 Array.from(itemsListContainer.children).forEach(child => {
@@ -155,6 +169,7 @@ const AlBarrCart = {
         } else {
             if (emptyView) emptyView.style.display = 'none';
             if (summaryFooter) summaryFooter.style.display = 'block';
+            if (crossSell) crossSell.style.display = 'block';
 
             if (itemsListContainer) {
                 // Clear dynamic list items first (excluding empty view container)
@@ -167,18 +182,24 @@ const AlBarrCart = {
                     const card = document.createElement('div');
                     card.className = 'cart-item-card';
                     card.innerHTML = `
-                        <img src="${item.image}" alt="${item.title}" class="cart-item-image" ${item.id === 4 ? 'style="filter: hue-rotate(45deg);"' : ''}>
+                        <div class="cart-item-img-wrap">
+                            <img src="${item.image}" alt="${item.title}" class="cart-item-image" loading="lazy" onerror="this.style.opacity='0.3'">
+                        </div>
                         <div class="cart-item-detail">
-                            <h4 class="cart-item-title">${item.title}</h4>
-                            <span class="cart-item-variant">Weight: ${item.weight}</span>
-                            <div class="cart-item-controls">
+                            <div class="cart-item-top-row">
+                                <h4 class="cart-item-title">${item.title}</h4>
+                                <button class="cart-item-remove-btn" onclick="AlBarrCart.remove(${item.id}, '${item.weight}')" aria-label="Remove item" title="Remove">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                                </button>
+                            </div>
+                            <span class="cart-item-variant-chip">${item.weight}</span>
+                            <div class="cart-item-bottom-row">
                                 <div class="cart-item-qty-selector">
-                                    <button onclick="AlBarrCart.updateQty(${item.id}, '${item.weight}', ${item.qty - 1})">−</button>
+                                    <button class="qty-btn-pill" onclick="AlBarrCart.updateQty(${item.id}, '${item.weight}', ${item.qty - 1})">−</button>
                                     <span class="cart-item-qty-val">${item.qty}</span>
-                                    <button onclick="AlBarrCart.updateQty(${item.id}, '${item.weight}', ${item.qty + 1})">+</button>
+                                    <button class="qty-btn-pill" onclick="AlBarrCart.updateQty(${item.id}, '${item.weight}', ${item.qty + 1})">+</button>
                                 </div>
                                 <span class="cart-item-price-calc">₹${(item.price * item.qty).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                                <span class="cart-item-remove" onclick="AlBarrCart.remove(${item.id}, '${item.weight}')">Remove</span>
                             </div>
                         </div>
                     `;
@@ -201,10 +222,12 @@ const AlBarrCart = {
                 if (subtotal >= threshold) {
                     trackerText.innerHTML = '🎉 You qualify for <strong>FREE Delivery</strong>!';
                     progressFill.style.width = '100%';
+                    progressFill.style.background = 'linear-gradient(90deg, #00C853, #00A846)';
                 } else {
                     const short = threshold - subtotal;
-                    trackerText.innerHTML = `Spend <strong>₹${short.toFixed(2)}</strong> more to unlock <strong>FREE Delivery</strong>!`;
+                    trackerText.innerHTML = `Add <strong>₹${short.toFixed(2)}</strong> more to unlock <strong>FREE Delivery</strong>!`;
                     progressFill.style.width = `${Math.min((subtotal / threshold) * 100, 100)}%`;
+                    progressFill.style.background = '';
                 }
             }
         }
@@ -330,4 +353,69 @@ const AlBarrCart = {
 // Initial sync
 document.addEventListener('DOMContentLoaded', () => {
     AlBarrCart.syncUI();
+
+    // Wire mobile sticky banner → open cart drawer
+    const stickyBtn = document.getElementById('mobile-sticky-view-btn');
+    if (stickyBtn) {
+        stickyBtn.addEventListener('click', () => {
+            const drawer = document.getElementById('cart-sidebar');
+            const backdrop = document.getElementById('cart-backdrop');
+            if (drawer) { drawer.classList.add('open'); document.body.classList.add('cart-open'); }
+            if (backdrop) backdrop.classList.add('active');
+        });
+    }
+
+    // Wire cart close button
+    const closeBtn = document.getElementById('cart-close-trigger');
+    const backdrop = document.getElementById('cart-backdrop');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            const drawer = document.getElementById('cart-sidebar');
+            if (drawer) { drawer.classList.remove('open'); document.body.classList.remove('cart-open'); }
+            if (backdrop) backdrop.classList.remove('active');
+        });
+    }
+    if (backdrop) {
+        backdrop.addEventListener('click', () => {
+            const drawer = document.getElementById('cart-sidebar');
+            if (drawer) { drawer.classList.remove('open'); document.body.classList.remove('cart-open'); }
+            backdrop.classList.remove('active');
+        });
+    }
+
+    // Wire empty-state CTA → close cart + navigate
+    const startShopBtn = document.getElementById('start-shopping-btn');
+    if (startShopBtn) {
+        startShopBtn.addEventListener('click', () => {
+            const drawer = document.getElementById('cart-sidebar');
+            if (drawer) { drawer.classList.remove('open'); document.body.classList.remove('cart-open'); }
+            if (backdrop) backdrop.classList.remove('active');
+            window.location.href = '/products';
+        });
+    }
+
+    // Wire checkout button → navigate to checkout
+    const checkoutBtn = document.getElementById('drawer-checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', () => {
+            window.location.href = '/checkout';
+        });
+    }
+
+    // Wire coupon apply button
+    const applyBtn = document.getElementById('apply-coupon-btn');
+    if (applyBtn) {
+        applyBtn.addEventListener('click', () => {
+            const code = (document.getElementById('cart-coupon-code')?.value || '').trim().toUpperCase();
+            if (code === 'ALBARR10') {
+                const row = document.getElementById('coupon-applied-row');
+                if (row) row.style.display = 'flex';
+                AlBarrCart.appliedCoupon = { code, discount: 0.10 };
+                AlBarrCart.syncUI();
+                if (AlBarrCart.showToast) AlBarrCart.showToast('Coupon ALBARR10 applied — 10% off!', 'success');
+            } else {
+                if (AlBarrCart.showToast) AlBarrCart.showToast('Invalid coupon code.', 'error');
+            }
+        });
+    }
 });

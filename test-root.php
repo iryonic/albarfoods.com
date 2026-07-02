@@ -1,0 +1,1 @@
+<?php // Diagnostics cleaned up 

@@ -18,6 +18,7 @@
 @endphp
 
 @section('title', 'Secure Checkout - Al Barr | Kashmiri Organic Staples')
+@section('body_class', 'page-checkout')
 
 @section('styles')
     <style>
@@ -799,6 +800,18 @@
 
         </div>
     </main>
+
+    <!-- Mobile Sticky Checkout Action Bar -->
+    <div class="mobile-sticky-bottom-bar mobile-checkout-sticky-bar">
+        <div class="sticky-price-group" style="display: flex; flex-direction: column; gap: 2px;">
+            <span class="sticky-price-label" style="font-size: 0.72rem; color: var(--color-text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">To Pay</span>
+            <span class="sticky-price-val" id="mobile-checkout-total" style="font-size: 1.25rem; font-weight: 800; color: var(--color-brand-green);">₹0.00</span>
+        </div>
+        <button class="btn btn-gold mobile-checkout-pay-btn" id="mobile-btn-submit-order" style="height: 44px; padding: 0 20px; font-size: 0.88rem; font-weight: 800; border-radius: var(--radius-sm); border: none; display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow-gold);">
+            <span>Place Order</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+    </div>
 @endsection
 
 @section('scripts')
@@ -916,6 +929,11 @@
 
                 grandTotal = subtotal - discount + delivery;
                 totalText.innerText = `₹${grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+                
+                const mobileTotalVal = document.getElementById('mobile-checkout-total');
+                if (mobileTotalVal) {
+                    mobileTotalVal.innerText = totalText.innerText;
+                }
             }
 
             // Coupon Code input handling
@@ -1214,6 +1232,17 @@
                     });
                 }
             });
+
+            // Mobile Place Order delegate click handler
+            const mobileSubmitBtn = document.getElementById('mobile-btn-submit-order');
+            if (mobileSubmitBtn) {
+                mobileSubmitBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (placeOrderBtn) {
+                        placeOrderBtn.click();
+                    }
+                });
+            }
         });
     </script>
 @endsection

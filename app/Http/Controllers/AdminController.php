@@ -592,6 +592,9 @@ class AdminController extends Controller
                 ]);
             }
         }
+        
+        // Evict settings cache key to apply updates immediately
+        cache()->forget('global_settings');
 
         return back()->with('success', 'Settings updated successfully!');
     }

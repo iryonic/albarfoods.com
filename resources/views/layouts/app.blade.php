@@ -8,32 +8,38 @@
     <title>@yield('title', 'Al Barr | Khalis Wa Shifaf - Premium Kashmiri Dry Fruits & Saffron')</title>
     
     <!-- PWA & Mobile Optimization -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
     <meta name="theme-color" content="#0B192C">
     
     <!-- CSS Foundations -->
-    <link rel="stylesheet" href="/assets/css/variables.css?v={{ time() }}">
-    <link rel="stylesheet" href="/assets/css/main.css?v={{ time() }}">
-    <link rel="stylesheet" href="/assets/css/components.css?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/variables.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}?v={{ time() }}">
     
     @yield('styles')
 </head>
-<body>
+<body class="@yield('body_class')">
 
     <!-- Header Include -->
-    @include('layouts.header')
+    @if (!request()->routeIs('signin') && !request()->routeIs('signup'))
+        @include('layouts.header')
+    @endif
 
     <!-- Main Content Yield -->
     @yield('content')
 
     <!-- Drawer, Modals & Toast Containers -->
-    @include('layouts.sidebar-cart')
-    @include('layouts.quick-view')
+    @if (!request()->routeIs('signin') && !request()->routeIs('signup'))
+        @include('layouts.sidebar-cart')
+        @include('layouts.quick-view')
+    @endif
     
     <div class="toast-container" id="toast-container"></div>
 
     <!-- Footer Include -->
-    @include('layouts.footer')
+    @if (!request()->routeIs('signin') && !request()->routeIs('signup'))
+        @include('layouts.footer')
+    @endif
 
     @yield('scripts')
 

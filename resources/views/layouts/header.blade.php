@@ -26,7 +26,7 @@
             'badge' => $p->badge,
             'rating' => 5,
             'reviews' => $reviews_count,
-            'image' => '/' . $p->image,
+            'image' => asset($p->image),
             'description' => $p->description,
             'variants' => $mapped_variants,
             'origin' => $p->origin,
@@ -154,12 +154,12 @@ window.AlBarrProductsDb = {!! json_encode($hdr_products) !!};
 
         <!-- Center Brand Logo Area -->
         <div class="logo-area">
-            <a href="/" class="logo-link">
+            <a href="{{ url('/') }}" class="logo-link">
                 <div class="logo-badge-container">
-                    <img src="/assets/img/logo.png" alt="Al barr logo" class="logo-image">
+                    <img src="{{ asset($settings['website_logo'] ?? 'assets/img/logoalbar.png') }}" alt="{{ $settings['website_name'] ?? 'Al Barr' }} logo" class="logo-image">
                 </div>
                 <div class="logo-text">
-                    <span class="brand-name">AL BARR</span>
+                    <span class="brand-name">{{ $settings['website_name'] ?? 'AL BARR' }}</span>
                     <span class="brand-tagline">Khalis Wa Shifaf</span>
                 </div>
             </a>
@@ -204,31 +204,109 @@ window.AlBarrProductsDb = {!! json_encode($hdr_products) !!};
                         </div>
                     </div>
                     <div class="dropdown-divider"></div>
-                    <ul class="dropdown-menu-list">
-                        <li>
-                            <a href="/profile" class="dropdown-menu-item">
-                                <span class="item-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                </span>
-                                <span class="item-label">My Profile</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/orders" class="dropdown-menu-item">
-                                <span class="item-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                                </span>
-                                <span class="item-label">My Orders</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/wishlist" class="dropdown-menu-item">
-                                <span class="item-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                                </span>
-                                <span class="item-label">Wishlist</span>
-                            </a>
-                        </li>
+                    <ul class="dropdown-menu-list" id="header-dropdown-menu-list">
+                        @auth
+                            @if (in_array(Auth::user()->role_id, [1, 2, 3, 4]))
+                                <li>
+                                    <a href="/admin/dashboard" class="dropdown-menu-item">
+                                        <span class="item-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                                        </span>
+                                        <span class="item-label">Admin Dashboard</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/orders" class="dropdown-menu-item">
+                                        <span class="item-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                        </span>
+                                        <span class="item-label">Manage Orders</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/products" class="dropdown-menu-item">
+                                        <span class="item-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l-7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.73z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                        </span>
+                                        <span class="item-label">Manage Products</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/tickets" class="dropdown-menu-item">
+                                        <span class="item-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                                        </span>
+                                        <span class="item-label">Manage Tickets</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/profile" class="dropdown-menu-item">
+                                        <span class="item-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                        </span>
+                                        <span class="item-label">My Profile</span>
+                                    </a>
+                                </li>
+                            @else
+                                <li>
+                                    <a href="/profile" class="dropdown-menu-item">
+                                        <span class="item-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                        </span>
+                                        <span class="item-label">My Profile</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/orders" class="dropdown-menu-item">
+                                        <span class="item-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                        </span>
+                                        <span class="item-label">My Orders</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/wishlist" class="dropdown-menu-item">
+                                        <span class="item-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                        </span>
+                                        <span class="item-label">Wishlist</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/tickets" class="dropdown-menu-item">
+                                        <span class="item-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                                        </span>
+                                        <span class="item-label">Support Tickets</span>
+                                    </a>
+                                </li>
+                            @endif
+                        @else
+                            <li>
+                                <a href="/profile" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    </span>
+                                    <span class="item-label">My Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/orders" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                    </span>
+                                    <span class="item-label">My Orders</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/wishlist" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    </span>
+                                    <span class="item-label">Wishlist</span>
+                                </a>
+                            </li>
+                        @endauth
                         <li>
                             <a href="#footer-bank-details" class="dropdown-menu-item nav-bank-link">
                                 <span class="item-icon">
@@ -305,7 +383,7 @@ window.AlBarrProductsDb = {!! json_encode($hdr_products) !!};
     <nav class="header-nav-bar">
         <div class="container nav-container">
             <ul class="nav-links">
-                <li><a href="/">Home</a></li>
+                <li><a href="{{ url('/') }}">Home</a></li>
                 <li><a href="/shop">Shop All</a></li>
                 <li><a href="/shop?category=dry-fruits">Dry Fruits</a></li>
                 <li><a href="/shop?category=spices">Spices</a></li>
@@ -326,9 +404,9 @@ window.AlBarrProductsDb = {!! json_encode($hdr_products) !!};
     <div class="drawer-content">
         <div class="drawer-header">
             <div class="drawer-logo">
-                <img src="/assets/img/logo.png" alt="Al barr logo" class="logo-image">
+                <img src="{{ asset($settings['website_logo'] ?? 'assets/img/logoalbar.png') }}" alt="{{ $settings['website_name'] ?? 'Al Barr' }} logo" class="logo-image">
                 <div class="logo-text">
-                    <span class="brand-name">Al barr</span>
+                    <span class="brand-name">{{ $settings['website_name'] ?? 'Al Barr' }}</span>
                     <span class="brand-tagline">Khalis Wa Shifaf</span>
                 </div>
             </div>
@@ -356,7 +434,7 @@ window.AlBarrProductsDb = {!! json_encode($hdr_products) !!};
             <div class="drawer-divider-line"></div>
 
             <ul class="drawer-nav-links">
-                <li><a href="/"><span class="drawer-icon">🏠</span> Home</a></li>
+                <li><a href="{{ url('/') }}"><span class="drawer-icon">🏠</span> Home</a></li>
                 <li><a href="/shop"><span class="drawer-icon">🛍️</span> Shop All</a></li>
                 <li><a href="/shop?category=dry-fruits"><span class="drawer-icon">🥜</span> Dry Fruits & Nuts</a></li>
                 <li><a href="/shop?category=spices"><span class="drawer-icon">🌸</span> Mogra Saffron</a></li>
@@ -364,10 +442,32 @@ window.AlBarrProductsDb = {!! json_encode($hdr_products) !!};
                 <li><a href="/about"><span class="drawer-icon">🌿</span> About Us</a></li>
                 <li><a href="/contact"><span class="drawer-icon">📞</span> Contact Us</a></li>
                 <li><a href="/#offers-section" class="nav-highlight"><span class="drawer-icon">🎁</span> Special Offers</a></li>
-                <li class="drawer-user-only" style="display: none;"><a href="/profile"><span class="drawer-icon">👤</span> My Profile</a></li>
-                <li class="drawer-user-only" style="display: none;"><a href="/orders"><span class="drawer-icon">📦</span> My Orders</a></li>
-                <li class="drawer-user-only" style="display: none;"><a href="/wishlist"><span class="drawer-icon">❤️</span> Wishlist</a></li>
-                <li class="drawer-user-only" style="display: none;"><a href="/tickets"><span class="drawer-icon">🎟️</span> Support Tickets</a></li>
+                
+                @auth
+                    @if (in_array(Auth::user()->role_id, [1, 2, 3, 4]))
+                        <li class="drawer-admin-only"><a href="/admin/dashboard"><span class="drawer-icon">📊</span> Admin Dashboard</a></li>
+                        <li class="drawer-admin-only"><a href="/admin/orders"><span class="drawer-icon">📦</span> Manage Orders</a></li>
+                        <li class="drawer-admin-only"><a href="/admin/products"><span class="drawer-icon">🍎</span> Manage Products</a></li>
+                        <li class="drawer-admin-only"><a href="/admin/tickets"><span class="drawer-icon">🎟️</span> Manage Tickets</a></li>
+                        <li class="drawer-admin-only"><a href="/profile"><span class="drawer-icon">👤</span> My Profile</a></li>
+                    @else
+                        <li class="drawer-user-only"><a href="/profile"><span class="drawer-icon">👤</span> My Profile</a></li>
+                        <li class="drawer-user-only"><a href="/orders"><span class="drawer-icon">📦</span> My Orders</a></li>
+                        <li class="drawer-user-only"><a href="/wishlist"><span class="drawer-icon">❤️</span> Wishlist</a></li>
+                        <li class="drawer-user-only"><a href="/tickets"><span class="drawer-icon">🎟️</span> Support Tickets</a></li>
+                    @endif
+                @else
+                    <li class="drawer-user-only" style="display: none;"><a href="/profile"><span class="drawer-icon">👤</span> My Profile</a></li>
+                    <li class="drawer-user-only" style="display: none;"><a href="/orders"><span class="drawer-icon">📦</span> My Orders</a></li>
+                    <li class="drawer-user-only" style="display: none;"><a href="/wishlist"><span class="drawer-icon">❤️</span> Wishlist</a></li>
+                    <li class="drawer-user-only" style="display: none;"><a href="/tickets"><span class="drawer-icon">🎟️</span> Support Tickets</a></li>
+                    
+                    <li class="drawer-admin-only" style="display: none;"><a href="/admin/dashboard"><span class="drawer-icon">📊</span> Admin Dashboard</a></li>
+                    <li class="drawer-admin-only" style="display: none;"><a href="/admin/orders"><span class="drawer-icon">📦</span> Manage Orders</a></li>
+                    <li class="drawer-admin-only" style="display: none;"><a href="/admin/products"><span class="drawer-icon">🍎</span> Manage Products</a></li>
+                    <li class="drawer-admin-only" style="display: none;"><a href="/admin/tickets"><span class="drawer-icon">🎟️</span> Manage Tickets</a></li>
+                    <li class="drawer-admin-only" style="display: none;"><a href="/profile"><span class="drawer-icon">👤</span> My Profile</a></li>
+                @endauth
             </ul>
             
             <div class="drawer-contact-info">
@@ -394,19 +494,19 @@ window.AlBarrProductsDb = {!! json_encode($hdr_products) !!};
 <nav class="mobile-bottom-nav">
     <ul class="mobile-bottom-nav-list">
         <li class="mobile-bottom-item">
-            <a href="/" class="mobile-bottom-link">
+            <a href="{{ url('/') }}" class="mobile-bottom-link {{ request()->is('/') ? 'active' : '' }}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                 <span>Home</span>
             </a>
         </li>
         <li class="mobile-bottom-item">
-            <a href="/shop" class="mobile-bottom-link">
+            <a href="/shop" class="mobile-bottom-link {{ request()->is('shop*') || request()->is('product*') ? 'active' : '' }}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                 <span>Shop</span>
             </a>
         </li>
         <li class="mobile-bottom-item">
-            <a href="/track-order" class="mobile-bottom-link">
+            <a href="/track-order" class="mobile-bottom-link {{ request()->is('track-order*') ? 'active' : '' }}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                 <span>Track</span>
             </a>
@@ -421,7 +521,7 @@ window.AlBarrProductsDb = {!! json_encode($hdr_products) !!};
             </a>
         </li>
         <li class="mobile-bottom-item">
-            <a href="/signin" class="mobile-bottom-link" id="mobile-account-link">
+            <a href="/signin" class="mobile-bottom-link {{ request()->is('signin*') || request()->is('signup*') || request()->is('profile*') || request()->is('orders*') ? 'active' : '' }}" id="mobile-account-link">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 <span>Account</span>
             </a>
@@ -493,6 +593,35 @@ window.AlBarrProductsDb = {!! json_encode($hdr_products) !!};
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // Sync backend authentication status to localStorage
+    @auth
+        const localUser = localStorage.getItem('al_barr_user');
+        let shouldUpdate = false;
+        if (!localUser) {
+            shouldUpdate = true;
+        } else {
+            try {
+                const parsed = JSON.parse(localUser);
+                if (!parsed || parsed.email !== @json(Auth::user()->email) || !parsed.loggedIn || !('role_id' in parsed)) {
+                    shouldUpdate = true;
+                }
+            } catch(e) {
+                shouldUpdate = true;
+            }
+        }
+        if (shouldUpdate) {
+            localStorage.setItem('al_barr_user', JSON.stringify({
+                name: @json(Auth::user()->name),
+                email: @json(Auth::user()->email),
+                phone: @json(Auth::user()->phone),
+                role_id: @json(Auth::user()->role_id),
+                loggedIn: true
+            }));
+        }
+    @else
+        localStorage.removeItem('al_barr_user');
+    @endauth
+
     // Dynamic user state check
     const userJson = localStorage.getItem('al_barr_user');
     if (userJson) {
@@ -507,14 +636,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Update Desktop Dropdown Menu Content
                 const dropdownWelcome = document.getElementById('header-dropdown-welcome');
-                if (dropdownWelcome) dropdownWelcome.innerText = `Namaste, ${userData.name}!`;
+                if (dropdownWelcome) dropdownWelcome.innerText = `Hi, ${userData.name}!`;
                 
                 const dropdownSubtext = document.getElementById('header-dropdown-subtext');
                 if (dropdownSubtext) dropdownSubtext.innerText = userData.email || 'Verified Al Barr Customer';
                 
                 const dropdownActions = document.getElementById('header-dropdown-actions');
                 if (dropdownActions) {
-                    dropdownActions.innerHTML = `<button onclick="handleHeaderSignOut(event)" class="dropdown-btn btn-signin" style="width: 100%; border: 1px solid var(--color-border); background: none; color: var(--color-blue-dark); text-align: center; cursor: pointer;">Sign Out</button>`;
+                    dropdownActions.innerHTML = `<button onclick="handleHeaderSignOut(event)" class="dropdown-btn btn-signin" style="width: 100%; border: 1px solid var(--color-border); background: var(--color-accent-mint); color: var(--color-blue-dark); text-align: center; cursor: pointer;">Sign Out</button>`;
                 }
 
                 // Update Mobile Drawer
@@ -529,22 +658,147 @@ document.addEventListener('DOMContentLoaded', () => {
                     drawerActions.innerHTML = `<button onclick="handleHeaderSignOut(event)" class="drawer-user-btn btn-signin" style="width: 100%; border: 1px solid var(--color-border); background: none; color: var(--color-blue-dark); text-align: center; cursor: pointer;">Sign Out</button>`;
                 }
 
+                const isAdmin = [1, 2, 3, 4].includes(Number(userData.role_id));
+
                 // Update Mobile bottom nav link target if logged in
                 const mobileAccountLink = document.getElementById('mobile-account-link');
                 if (mobileAccountLink) {
-                    mobileAccountLink.setAttribute('href', '/profile');
+                    mobileAccountLink.setAttribute('href', isAdmin ? '/admin/dashboard' : '/profile');
                     const span = mobileAccountLink.querySelector('span');
-                    if (span) span.innerText = 'Profile';
+                    if (span) span.innerText = isAdmin ? 'Admin' : 'Profile';
                 }
 
-                // Show authenticated user-only links in mobile drawer
-                document.querySelectorAll('.drawer-user-only').forEach(el => {
-                    el.style.display = 'block';
-                });
+                // Show authenticated links depending on role
+                if (isAdmin) {
+                    document.querySelectorAll('.drawer-admin-only').forEach(el => {
+                        el.style.display = 'block';
+                    });
+                    document.querySelectorAll('.drawer-user-only').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                } else {
+                    document.querySelectorAll('.drawer-admin-only').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    document.querySelectorAll('.drawer-user-only').forEach(el => {
+                        el.style.display = 'block';
+                    });
+                }
+
+                // Update Desktop Dropdown menu list dynamically
+                const menuList = document.getElementById('header-dropdown-menu-list');
+                if (menuList) {
+                    let html = '';
+                    if (isAdmin) {
+                        html += `
+                            <li>
+                                <a href="/admin/dashboard" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                                    </span>
+                                    <span class="item-label">Admin Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/orders" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                    </span>
+                                    <span class="item-label">Manage Orders</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/products" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l-7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.73z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                    </span>
+                                    <span class="item-label">Manage Products</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/tickets" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                                    </span>
+                                    <span class="item-label">Manage Tickets</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/profile" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    </span>
+                                    <span class="item-label">My Profile</span>
+                                </a>
+                            </li>
+                        `;
+                    } else {
+                        html += `
+                            <li>
+                                <a href="/profile" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    </span>
+                                    <span class="item-label">My Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/orders" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                    </span>
+                                    <span class="item-label">My Orders</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/wishlist" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    </span>
+                                    <span class="item-label">Wishlist</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/tickets" class="dropdown-menu-item">
+                                    <span class="item-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                                    </span>
+                                    <span class="item-label">Support Tickets</span>
+                                </a>
+                            </li>
+                        `;
+                    }
+                    html += `
+                        <li>
+                            <a href="#footer-bank-details" class="dropdown-menu-item nav-bank-link">
+                                <span class="item-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                                </span>
+                                <span class="item-label">Bank Details</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://wa.me/${(userData.phone || '919419000000').replace(/[^0-9]/g, '')}?text=Hello%20Al%20barr%20Team" target="_blank" class="dropdown-menu-item">
+                                <span class="item-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                </span>
+                                <span class="item-label">Chat Support</span>
+                            </a>
+                        </li>
+                    `;
+                    menuList.innerHTML = html;
+                }
             }
         } catch (e) {
             console.error("Failed to parse user details from local storage", e);
         }
+    } else {
+        document.querySelectorAll('.drawer-admin-only').forEach(el => {
+            el.style.display = 'none';
+        });
+        document.querySelectorAll('.drawer-user-only').forEach(el => {
+            el.style.display = 'none';
+        });
     }
 
     // Active class for mobile bottom navigation capsule
@@ -581,7 +835,7 @@ function handleHeaderSignOut(e) {
             alert("Signed out successfully!");
         }
         setTimeout(() => {
-            window.location.href = '/';
+            window.location.href = '{{ url('/') }}';
         }, 800);
     });
 }

@@ -416,14 +416,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Flash Sale Countdown Timer
     const clock = document.getElementById('deal-countdown');
     if (clock) {
-        let totalSeconds = parseFloat(clock.getAttribute('data-hours')) * 60 * 60;
+        const endTimeStr = clock.getAttribute('data-end-time');
+        let totalSeconds = 0;
         
-        const timer = setInterval(() => {
+        if (endTimeStr) {
+            // Parse target datetime
+            const targetTime = new Date(endTimeStr).getTime();
+            const now = new Date().getTime();
+            totalSeconds = Math.max(0, Math.floor((targetTime - now) / 1000));
+        } else {
+            // Fallback to static hours
+            totalSeconds = 36 * 60 * 60;
+        }
+        
+        function updateTimer() {
             if (totalSeconds <= 0) {
                 clearInterval(timer);
+                const wrapper = document.getElementById('offers-section');
+                if (wrapper) wrapper.style.display = 'none';
                 return;
             }
-            totalSeconds--;
 
             const days = Math.floor(totalSeconds / (24 * 3600));
             const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
@@ -439,7 +451,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (hEl) hEl.innerText = hours.toString().padStart(2, '0');
             if (mEl) mEl.innerText = minutes.toString().padStart(2, '0');
             if (sEl) sEl.innerText = seconds.toString().padStart(2, '0');
-        }, 1000);
+            
+            totalSeconds--;
+        }
+
+        // Trigger once immediately
+        updateTimer();
+        const timer = setInterval(updateTimer, 1000);
     }
 
     // 5. Variant Pills and Dropdowns Selection Handler

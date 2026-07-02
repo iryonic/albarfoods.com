@@ -13,7 +13,7 @@
     } else {
         $pid = $product->id;
         $title = $product->title;
-        $image = '/' . $product->image;
+        $image = asset($product->image);
         $badge = $product->badge;
         $meta = $product->category->name ?? 'Organic';
         $rating = 5; // default

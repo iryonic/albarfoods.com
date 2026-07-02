@@ -441,7 +441,7 @@
                     </div>
                     
                     <div class="media-thumb-wrapper">
-                        <img src="/{{ $item->file_path }}" alt="{{ $item->file_name }}" class="media-thumb" onerror="this.src='/assets/img/logoalbar.png'">
+                        <img src="{{ asset($item->file_path) }}" alt="{{ $item->file_name }}" class="media-thumb" onerror="this.src='{{ asset('assets/img/logoalbar.png') }}'">
                         <div class="media-hover-overlay">
                             <button type="button" class="btn-solid-gold" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; box-shadow:none; filter:none;" onclick="copyPath('{{ $item->file_path }}', this)"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>Copy Path</button>
                             <button type="button" class="btn-solid-accent" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; box-shadow:none;" onclick="showMediaDetails({{ json_encode($item) }})"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; display: inline-block; vertical-align: middle;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>Details</button>
@@ -635,7 +635,7 @@
         card.id = `mediaCard-${media.id}`;
         card.innerHTML = `
             <div class="media-thumb-wrapper" onclick='showMediaDetails(${JSON.stringify(media)})'>
-                <img src="/${media.file_path}" alt="${media.file_name}" class="media-thumb" onerror="this.src='/assets/img/logoalbar.png'">
+                <img src="{{ asset('') }}${media.file_path}" alt="${media.file_name}" class="media-thumb" onerror="this.src='{{ asset('assets/img/logoalbar.png') }}'">
             </div>
             <div class="media-details">
                 <h5 class="media-filename" title="${media.file_name}">${media.file_name}</h5>
@@ -690,7 +690,7 @@
 
     // Modal detailed preview trigger
     function showMediaDetails(media) {
-        document.getElementById('detailPreview').src = '/' + media.file_path;
+        document.getElementById('detailPreview').src = '{{ asset('') }}' + media.file_path;
         document.getElementById('detailFilename').innerText = media.file_name;
         document.getElementById('detailPath').innerText = media.file_path;
         document.getElementById('detailType').innerText = media.file_type;

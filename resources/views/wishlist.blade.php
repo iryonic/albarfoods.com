@@ -500,7 +500,7 @@
             title: 'Premium Kashmiri Mamra Almonds (Raw)',
             meta: 'Dry Fruits',
             badge: 'Valley Sourced',
-            image: '/assets/img/almonds.png',
+            image: "{{ asset('assets/img/almonds.png') }}",
             variants: {
                 '250g': { price: 850, orig: 990 },
                 '500g': { price: 1650, orig: 1900 },
@@ -512,7 +512,7 @@
             title: 'Kashmiri Kesar (Pure Mogra Saffron)',
             meta: 'Spices',
             badge: 'Grade A+ Certified',
-            image: '/assets/img/saffron.png',
+            image: "{{ asset('assets/img/saffron.png') }}",
             variants: {
                 '1g': { price: 350, orig: 400 },
                 '2g': { price: 680, orig: 800 },
@@ -524,7 +524,7 @@
             title: 'Pure Kashmiri Acacia Honey (Raw & Unfiltered)',
             meta: 'Honey',
             badge: '100% Natural',
-            image: '/assets/img/honey.png',
+            image: "{{ asset('assets/img/honey.png') }}",
             variants: {
                 '250g': { price: 380, orig: 450 },
                 '500g': { price: 720, orig: 850 },
@@ -536,7 +536,7 @@
             title: 'Premium Kashmiri Shelled Walnuts (Light Kernels)',
             meta: 'Dry Fruits',
             badge: '100% Organic',
-            image: '/assets/img/walnuts.png',
+            image: "{{ asset('assets/img/walnuts.png') }}",
             variants: {
                 '250g': { price: 420, orig: 510 },
                 '500g': { price: 810, orig: 1000 },

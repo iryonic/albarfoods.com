@@ -16,9 +16,9 @@
                 <a href="#featured-section" class="slide-banner-link" aria-label="Explore Dry Fruits Collection">
                     <picture>
                         <!-- Mobile Banner (Square 1:1) -->
-                        <source media="(max-width: 768px)" srcset="/assets/img/banner-dryfruits-mobile.png 1x, /assets/img/banner-dryfruits-mobile-2x.png 2x">
+                        <source media="(max-width: 768px)" srcset="{{ asset('assets/img/banner-dryfruits-mobile.png') }} 1x, {{ asset('assets/img/banner-dryfruits-mobile-2x.png') }} 2x">
                         <!-- Desktop Banner (Wide) -->
-                        <img src="/assets/img/banner-dryfruits-desktop.png" srcset="/assets/img/banner-dryfruits-desktop-2x.png 2x" alt="Premium Kashmiri Dry Fruits - Sourced direct from Zakura orchards. 100% Organic & Hand-picked." class="hero-banner-img">
+                        <img src="{{ asset('assets/img/banner-dryfruits-desktop.png') }}" srcset="{{ asset('assets/img/banner-dryfruits-desktop-2x.png') }} 2x" alt="Premium Kashmiri Dry Fruits - Sourced direct from Zakura orchards. 100% Organic & Hand-picked." class="hero-banner-img">
                     </picture>
                 </a>
             </div>
@@ -28,9 +28,9 @@
                 <a href="/product/2" class="slide-banner-link" aria-label="Shop Pure Mogra Saffron">
                     <picture>
                         <!-- Mobile Banner (Square 1:1) -->
-                        <source media="(max-width: 768px)" srcset="/assets/img/banner-saffron-mobile.png 1x, /assets/img/banner-saffron-mobile-2x.png 2x">
+                        <source media="(max-width: 768px)" srcset="{{ asset('assets/img/banner-saffron-mobile.png') }} 1x, {{ asset('assets/img/banner-saffron-mobile-2x.png') }} 2x">
                         <!-- Desktop Banner (Wide) -->
-                        <img src="/assets/img/banner-saffron-desktop.png" srcset="/assets/img/banner-saffron-desktop-2x.png 2x" alt="Pure Mogra Saffron - Grade A+ Certified, Highest Crocin Concentration." class="hero-banner-img">
+                        <img src="{{ asset('assets/img/banner-saffron-desktop.png') }}" srcset="{{ asset('assets/img/banner-saffron-desktop-2x.png') }} 2x" alt="Pure Mogra Saffron - Grade A+ Certified, Highest Crocin Concentration." class="hero-banner-img">
                     </picture>
                 </a>
             </div>
@@ -57,42 +57,42 @@
                 <!-- Dry Fruits -->
                 <a class="category-circle-card" href="/shop?category=dry-fruits">
                     <div class="category-circle-visual" style="--cat-bg: var(--color-brand-green-light);">
-                        <img src="/assets/img/cat-dry-fruits.png" alt="Dry Fruits" class="category-circle-img">
+                        <img src="{{ asset('assets/img/cat-dry-fruits.png') }}" alt="Dry Fruits" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Dry Fruits</span>
                 </a>
                 <!-- Spices & Saffron -->
                 <a class="category-circle-card" href="/shop?category=spices">
                     <div class="category-circle-visual" style="--cat-bg: var(--color-saffron-light);">
-                        <img src="/assets/img/cat-spices.png" alt="Spices & Saffron" class="category-circle-img">
+                        <img src="{{ asset('assets/img/cat-spices.png') }}" alt="Spices & Saffron" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Spices</span>
                 </a>
                 <!-- Dried Fruits -->
                 <a class="category-circle-card" href="/shop?category=dried-fruits">
                     <div class="category-circle-visual" style="--cat-bg: var(--color-gold-light);">
-                        <img src="/assets/img/cat-dried-fruits.png" alt="Dried Fruits" class="category-circle-img">
+                        <img src="{{ asset('assets/img/cat-dried-fruits.png') }}" alt="Dried Fruits" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Dried Fruits</span>
                 </a>
                 <!-- Honey -->
                 <a class="category-circle-card" href="/shop?category=honey">
                     <div class="category-circle-visual" style="--cat-bg: #FFF8E1;">
-                        <img src="/assets/img/cat-honey.png" alt="Pure Honey" class="category-circle-img">
+                        <img src="{{ asset('assets/img/cat-honey.png') }}" alt="Pure Honey" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Honey</span>
                 </a>
                 <!-- Dried Seeds -->
                 <a class="category-circle-card" href="/shop?category=seeds">
                     <div class="category-circle-visual" style="--cat-bg: var(--color-saffron-light);">
-                        <img src="/assets/img/cat-seeds.png" alt="Dried Seeds" class="category-circle-img">
+                        <img src="{{ asset('assets/img/cat-seeds.png') }}" alt="Dried Seeds" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Dried Seeds</span>
                 </a>
                 <!-- Pulses -->
                 <a class="category-circle-card" href="/shop?category=pulses">
                     <div class="category-circle-visual" style="--cat-bg: var(--color-brand-green-light);">
-                        <img src="/assets/img/cat-pulses.png" alt="Pulses" class="category-circle-img">
+                        <img src="{{ asset('assets/img/cat-pulses.png') }}" alt="Pulses" class="category-circle-img">
                     </div>
                     <span class="category-circle-name">Pulses</span>
                 </a>
@@ -101,6 +101,7 @@
     </section>
 
     <!-- Flash Sale & Countdown Section -->
+    @if (($settings['flash_sale_status'] ?? 'enabled') === 'enabled')
     <section class="sale-section-wrapper" id="offers-section">
         <div class="container">
             <div class="sale-countdown-card" id="sale-countdown-box">
@@ -112,15 +113,15 @@
                         <span>FLASH SALE — LIVE NOW</span>
                     </div>
 
-                    <h2 class="sale-headline">Kashmiri Purity Week</h2>
-                    <p class="sale-desc">Premium discounts on certified pure collections. Bank orders get priority dispatch.</p>
+                    <h2 class="sale-headline">{{ $settings['flash_sale_title'] ?? 'Kashmiri Purity Week' }}</h2>
+                    <p class="sale-desc">{{ $settings['flash_sale_subtitle'] ?? 'Premium discounts on certified pure collections. Bank orders get priority dispatch.' }}</p>
                     <a href="/shop" class="sale-cta-btn">Shop the Sale &rarr;</a>
                 </div>
 
                 <!-- Right: Countdown clock -->
                 <div class="sale-right-col">
                     <p class="sale-clock-label">⏱ Offer ends in</p>
-                    <div class="countdown-clock" id="deal-countdown" data-hours="36">
+                    <div class="countdown-clock" id="deal-countdown" data-end-time="{{ $settings['flash_sale_end_time'] ?? '' }}">
                         <div class="countdown-time-box">
                             <span class="countdown-num" id="cd-days">01</span>
                             <span class="countdown-lbl">Days</span>
@@ -142,11 +143,15 @@
             </div>
         </div>
     </section>
+    @endif
 
     <!-- Product Carousel 1: Wholesome Valley Harvest (Products 1-4) -->
     <section class="section-padding" id="featured-section">
         <div class="container">
-            <h2 class="section-title">Wholesome Valley Harvest</h2>
+            <div class="section-header-row">
+                <h2 class="section-title">Wholesome Valley Harvest</h2>
+                <a href="/shop" class="section-see-all-link">See All <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+            </div>
             
             <div class="carousel-outer-wrap" id="carousel-wrap-featured">
                 <!-- Navigation Arrows -->
@@ -170,7 +175,10 @@
     <!-- Sourced Premium Combo Offers Section -->
     <section class="section-padding premium-combos-section" id="premium-combos-section">
         <div class="container">
-            <h2 class="section-title">Sourced Premium Combo Offers</h2>
+            <div class="section-header-row">
+                <h2 class="section-title">Sourced Premium Combo Offers</h2>
+                <a href="/shop" class="section-see-all-link">See All <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+            </div>
             
             <div class="combos-grid" id="combos-wrapper-grid">
                 <!-- Combo 1: Shahi Purity Combo -->
@@ -188,13 +196,13 @@
                     <div class="combo-body">
                         <div class="combo-visual-connect">
                             <div class="combo-thumb-wrapper">
-                                <img src="/assets/img/almonds.png" alt="Mamra Almonds" class="combo-thumb-img">
+                                <img src="{{ asset('assets/img/almonds.png') }}" alt="Mamra Almonds" class="combo-thumb-img">
                             </div>
                             <div class="combo-connect-plus">
                                 <span>+</span>
                             </div>
                             <div class="combo-thumb-wrapper">
-                                <img src="/assets/img/saffron.png" alt="Mogra Saffron" class="combo-thumb-img">
+                                <img src="{{ asset('assets/img/saffron.png') }}" alt="Mogra Saffron" class="combo-thumb-img">
                             </div>
                         </div>
                         
@@ -246,13 +254,13 @@
                     <div class="combo-body">
                         <div class="combo-visual-connect">
                             <div class="combo-thumb-wrapper">
-                                <img src="/assets/img/honey.png" alt="Acacia Honey" class="combo-thumb-img">
+                                <img src="{{ asset('assets/img/honey.png') }}" alt="Acacia Honey" class="combo-thumb-img">
                             </div>
                             <div class="combo-connect-plus">
                                 <span>+</span>
                             </div>
                             <div class="combo-thumb-wrapper">
-                                <img src="/assets/img/zeera.png" alt="Shahi Zeera" class="combo-thumb-img">
+                                <img src="{{ asset('assets/img/zeera.png') }}" alt="Shahi Zeera" class="combo-thumb-img">
                             </div>
                         </div>
                         
@@ -384,7 +392,7 @@
                     <!-- Right Column: Banner Image (Hands holding the wellness box) -->
                     <div class="banner-image-col">
                         <div class="banner-image-wrapper">
-                            <img src="/assets/img/wellness-combo-banner.png" alt="Custom Kashmiri Wellness Box" class="banner-main-image">
+                            <img src="{{ asset('assets/img/wellness-combo-banner.png') }}" alt="Custom Kashmiri Wellness Box" class="banner-main-image">
                         </div>
                     </div>
                 </div>
@@ -540,11 +548,7 @@
                     <span class="newsletter-eyebrow">📬 Stay in the Loop</span>
                     <h2 class="newsletter-title">Get Harvest Alerts &amp; Flash Sale Drops</h2>
                    
-                    <div class="newsletter-perks">
-                        <span class="newsletter-perk">✓ New harvest alerts</span>
-                        <span class="newsletter-perk">✓ Flash sale early access</span>
-                        <span class="newsletter-perk">✓ No spam, ever</span>
-                    </div>
+                    
                 </div>
 
                 <!-- Right: Form -->
@@ -567,15 +571,15 @@
     <script>
     window.addComboToCart = function(comboType) {
         if (comboType === 'shahi') {
-            AlBarrCart.add(1, 'Premium Kashmiri Mamra Almonds (Raw)', '250g', 850, 990, '/assets/img/almonds.png');
+            AlBarrCart.add(1, 'Premium Kashmiri Mamra Almonds (Raw)', '250g', 850, 990, "{{ asset('assets/img/almonds.png') }}");
             setTimeout(() => {
-                AlBarrCart.add(2, 'Kashmiri Kesar (Pure Mogra Saffron)', '1g', 350, 400, '/assets/img/saffron.png');
+                AlBarrCart.add(2, 'Kashmiri Kesar (Pure Mogra Saffron)', '1g', 350, 400, "{{ asset('assets/img/saffron.png') }}");
                 AlBarrCart.showToast("Shahi Purity Combo Added to Cart!");
             }, 150);
         } else if (comboType === 'spices_honey') {
-            AlBarrCart.add(5, 'Pure Kashmiri Acacia Honey (Raw & Unfiltered)', '250g', 380, 450, '/assets/img/honey.png');
+            AlBarrCart.add(5, 'Pure Kashmiri Acacia Honey (Raw & Unfiltered)', '250g', 380, 450, "{{ asset('assets/img/honey.png') }}");
             setTimeout(() => {
-                AlBarrCart.add(6, 'Kashmiri Shahi Zeera (Organic Black Cumin)', '100g', 290, 350, '/assets/img/zeera.png');
+                AlBarrCart.add(6, 'Kashmiri Shahi Zeera (Organic Black Cumin)', '100g', 290, 350, "{{ asset('assets/img/zeera.png') }}");
                 AlBarrCart.showToast("Spices & Honey Combo Added to Cart!");
             }, 150);
         }

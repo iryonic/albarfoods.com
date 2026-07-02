@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\OAuthController;
 
 // 1. Homepage Route
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -22,6 +23,9 @@ Route::post('/signin', [AuthController::class, 'signin']);
 Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// OAuth Social Sign-In Routes
+Route::get('/auth/{provider}/redirect', [OAuthController::class, 'redirectToProvider'])->name('oauth.redirect');
+Route::get('/auth/{provider}/callback', [OAuthController::class, 'handleProviderCallback'])->name('oauth.callback');
 
 // 4. Cart & Checkout Routes
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');

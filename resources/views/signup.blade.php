@@ -635,9 +635,11 @@
             <div class="auth-card">
                 <!-- Brand Logo -->
                 <div class="auth-brand-logo">
-                    <div class="auth-logo-circle">
-                        <img src="/assets/img/logo.png" alt="Al Barr Brand Logo">
-                    </div>
+                    <a href="{{ url('/') }}" class="auth-logo-link" style="display: block;">
+                        <div class="auth-logo-circle">
+                            <img src="{{ asset($settings['website_logo'] ?? 'assets/img/logo.png') }}" alt="{{ $settings['website_name'] ?? 'Al Barr' }} Brand Logo">
+                        </div>
+                    </a>
                 </div>
 
                 <div class="auth-header">
@@ -677,14 +679,14 @@
 
                     <!-- Mobile Number -->
                     <div class="auth-group">
-                        <label for="reg-phone" class="auth-label">Mobile Number *</label>
+                        <label for="reg-phone" class="auth-label">Mobile Number (Optional)</label>
                         <div class="auth-input-wrapper">
                             <span class="auth-input-icon">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                                 </svg>
                             </span>
-                            <input type="tel" id="reg-phone" class="auth-input" placeholder="e.g. 9419012345 (10 digits)" required>
+                            <input type="tel" id="reg-phone" class="auth-input" placeholder="e.g. 9419012345" maxlength="10">
                         </div>
                     </div>
 
@@ -760,7 +762,7 @@
                     <!-- Social Dividers & Buttons -->
                     <div class="auth-divider">or continue with</div>
                     <div class="auth-social-buttons">
-                        <button type="button" class="btn-social-auth" onclick="handleSocialSignUp('Google')">
+                        <button type="button" class="btn-social-auth" onclick="window.location.href='{{ route('oauth.redirect', ['provider' => 'google']) }}'">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="width: 18px; height: 18px; display: block;">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -769,11 +771,11 @@
                             </svg>
                             Google
                         </button>
-                        <button type="button" class="btn-social-auth btn-whatsapp-auth" onclick="handleSocialSignUp('WhatsApp')">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; display: block;">
-                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                        <button type="button" class="btn-social-auth btn-facebook-auth" onclick="window.location.href='{{ route('oauth.redirect', ['provider' => 'facebook']) }}'">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2" style="width: 18px; height: 18px; display: block;">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                             </svg>
-                            WhatsApp
+                            Facebook
                         </button>
                     </div>
 
@@ -789,102 +791,7 @@
     </div>
 </main>
 
-<!-- Mock iOS Push Notification Banner for OTP -->
-<div class="push-notification-banner" id="otp-push-banner">
-    <div class="push-logo">💬</div>
-    <div class="push-content">
-        <div class="push-title">
-            <span>WhatsApp • Al Barr Support</span>
-            <span class="push-time">now</span>
-        </div>
-        <div class="push-msg" id="push-msg-text">Your Al Barr verification code is: 4892</div>
-    </div>
-</div>
-
-<!-- Google OAuth Simulation Modal -->
-<div class="auth-modal-overlay" id="google-modal">
-    <div class="auth-modal-content">
-        <button type="button" class="auth-modal-close" onclick="closeAuthModal('google-modal')" aria-label="Close modal">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-        <div class="google-auth-box">
-            <div style="margin-bottom: 16px;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="display: block; margin: 0 auto;">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.73-.63-1.25-1.46-1.66-2.63z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                </svg>
-            </div>
-            <h3 style="margin-bottom: 4px; font-family: var(--font-secondary); font-size: 1.3rem; font-weight: 700;">Sign up with Google</h3>
-            <p style="color: var(--color-text-secondary); font-size: 0.88rem; margin-bottom: 24px;">to register a new account on <strong style="color: var(--color-blue-dark);">Al Barr Kashmiri Staples</strong></p>
-            
-            <div class="google-accounts-list">
-                <div class="google-account-item" onclick="selectGoogleAccount('Irfan Manzoor', 'irfan.manzoor@gmail.com')">
-                    <div class="g-avatar">I</div>
-                    <div class="g-info">
-                        <span class="g-name">Irfan Manzoor</span>
-                        <span class="g-email">irfan.manzoor@gmail.com</span>
-                    </div>
-                </div>
-                <div class="google-account-item" onclick="selectGoogleAccount('Ruqaiya Jan', 'ruqaiya.jan@gmail.com')">
-                    <div class="g-avatar" style="background-color: #E2725B;">R</div>
-                    <div class="g-info">
-                        <span class="g-name">Ruqaiya Jan</span>
-                        <span class="g-email">ruqaiya.jan@gmail.com</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- WhatsApp OTP Verification Modal -->
-<div class="auth-modal-overlay" id="whatsapp-modal">
-    <div class="auth-modal-content">
-        <button type="button" class="auth-modal-close" onclick="closeAuthModal('whatsapp-modal')" aria-label="Close modal">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-        
-        <!-- Step 1: Input Mobile Number -->
-        <div id="wa-step-phone">
-            <div style="color: #25D366; font-size: 2.2rem; margin-bottom: 12px; display: flex; align-items: center; justify-content: center;">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: #25D366;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-            </div>
-            <h3 style="margin-bottom: 8px; font-family: var(--font-secondary); font-size: 1.4rem; font-weight: 700; color: var(--color-text-primary);">WhatsApp OTP Registration</h3>
-            <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4;">Enter your 10-digit mobile number to register and receive a secure OTP verification code.</p>
-            <div class="auth-group" style="margin-bottom: 20px;">
-                <input type="tel" id="wa-phone-input" class="auth-input" style="padding-left: 16px;" placeholder="e.g. 9419012345" required>
-            </div>
-            <button type="button" onclick="sendWhatsAppOTP()" class="btn-auth-submit" id="btn-wa-send-otp">Send OTP Code</button>
-        </div>
-        
-        <!-- Step 2: Verification code input -->
-        <div id="wa-step-otp" style="display: none;">
-            <h3 style="margin-bottom: 8px; font-family: var(--font-secondary); font-size: 1.4rem; font-weight: 700; color: var(--color-text-primary);">Enter OTP Code</h3>
-            <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4;" id="wa-otp-instructions">We sent a 4-digit code to your WhatsApp number.</p>
-            
-            <div class="otp-inputs-row">
-                <input type="text" maxlength="1" class="otp-digit-input" onkeyup="handleOtpInput(this, event, 1)" id="wa-otp-1" autocomplete="off">
-                <input type="text" maxlength="1" class="otp-digit-input" onkeyup="handleOtpInput(this, event, 2)" id="wa-otp-2" autocomplete="off">
-                <input type="text" maxlength="1" class="otp-digit-input" onkeyup="handleOtpInput(this, event, 3)" id="wa-otp-3" autocomplete="off">
-                <input type="text" maxlength="1" class="otp-digit-input" onkeyup="handleOtpInput(this, event, 4)" id="wa-otp-4" autocomplete="off">
-            </div>
-            
-            <div style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: 20px;">
-                Resend code in <span id="wa-resend-countdown" style="font-weight: 700; color: var(--color-blue-dark);">60</span>s
-                <button type="button" id="btn-wa-resend" onclick="sendWhatsAppOTP()" style="display: none; background: none; border: none; color: var(--color-blue-medium); font-weight: 700; cursor: pointer; text-decoration: underline;">Resend Now</button>
-            </div>
-            <button type="button" onclick="verifyWhatsAppOTP()" class="btn-auth-submit" id="btn-wa-verify-otp">Verify & Sign Up</button>
-        </div>
-    </div>
-</div>
+<!-- Simulation modals removed -->
 @endsection
 
 @section('scripts')
@@ -1030,9 +937,7 @@
     function shakeCard() {
         const card = document.querySelector('.auth-card');
         card.classList.add('shake-element');
-        setTimeout(() => {
-            card.classList.remove('shake-element');
-        }, 500);
+        setTimeout(() => { card.classList.remove('shake-element'); }, 500);
     }
 
     // Sign Up action using actual Laravel Auth controller endpoint
@@ -1043,6 +948,7 @@
         const password = document.getElementById('reg-password').value;
         const confirmPassword = document.getElementById('reg-confirm-password').value;
         const termsChecked = document.getElementById('reg-terms').checked;
+
 
         if (!name || !email || !phone || !password || !confirmPassword || !termsChecked) {
             shakeCard();
